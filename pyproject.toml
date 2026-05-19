@@ -1,0 +1,46 @@
+[project]
+name = "kellblog-audio"
+version = "0.1.0"
+description = "Turn Kellblog posts into a podcast with local TTS and R2 hosting"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "beautifulsoup4>=4.12",
+    "boto3>=1.34",
+    "feedgen>=1.0",
+    "httpx>=0.27",
+    "lxml>=5.0",
+    "readability-lxml>=0.8",
+    "soundfile>=0.12",
+    "typer>=0.12",
+    "rich>=13.7",
+]
+
+[project.optional-dependencies]
+kokoro = ["kokoro>=0.9.4"]
+chatterbox = ["chatterbox-tts>=0.1"]
+piper = ["piper-tts>=1.2.0"]
+# All engines for bake-off comparisons (install with: uv sync --extra compare)
+compare = [
+    "kokoro>=0.9.4",
+    "chatterbox-tts>=0.1",
+    "piper-tts>=1.2.0",
+]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "pillow>=10.0"]
+
+[project.scripts]
+kellblog-audio = "kellblog_audio.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/kellblog_audio"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/kellblog_audio/assets" = "kellblog_audio/assets"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
