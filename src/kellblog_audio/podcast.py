@@ -158,8 +158,8 @@ def _remote_length(post: PostRow) -> int:
     return 0
 
 
-def write_feed(catalog: Catalog, out_path: Path) -> Path:
-    xml = build_feed(catalog, local_audio=True)
+def write_feed(catalog: Catalog, out_path: Path, *, local_audio: bool = False) -> Path:
+    xml = build_feed(catalog, local_audio=local_audio)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(xml, encoding="utf-8")
     return out_path

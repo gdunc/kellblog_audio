@@ -20,7 +20,7 @@ jobs:
 
       - name: Install Python package
         run: |
-          uv sync --extra kokoro
+          uv sync --extra chatterbox
           uv pip install -e .
 
       - name: Restore catalog from R2
@@ -37,7 +37,9 @@ jobs:
       - name: Synthesize pending
         run: uv run kellblog-audio synthesize --pending
         env:
-          KELLBLOG_TTS_PROVIDER: kokoro
+          KELLBLOG_TTS_PROVIDER: chatterbox
+          KELLBLOG_CHATTERBOX_EXAGGERATION: "0.4"
+          KELLBLOG_CHATTERBOX_DEVICE: cpu
 
       - name: Publish to R2
         run: uv run kellblog-audio publish

@@ -19,24 +19,29 @@ uv sync --extra kokoro --extra dev
 uv pip install -e .
 ```
 
-Optional second TTS engine for bake-off / voice cloning:
+All TTS engines for bake-off comparisons:
 
 ```bash
-uv sync --extra chatterbox
+uv sync --extra compare   # kokoro + chatterbox + piper
+uv run kellblog-audio providers
 ```
+
+Individual extras: `--extra kokoro`, `--extra chatterbox`, `--extra piper`
 
 ### Phase 0 — TTS bake-off
 
 ```bash
 # Ingest bake-off posts first
-uv run kellblog-audio ingest --slug taxonomies-and-tags
 uv run kellblog-audio ingest --slug target-pipeline-coverage-is-not-the-inverse-of-win-rate
-uv run kellblog-audio ingest --slug a-diamond-in-the-rough-startup-founder-survival-guide-by-david-politis
 
+uv sync --extra compare   # kokoro + chatterbox + piper (StyleTTS2 uses isolated uv env)
 uv run kellblog-audio bakeoff
-# Listen under output/bakeoff/ — then set provider:
-export KELLBLOG_TTS_PROVIDER=kokoro   # or chatterbox
+uv run kellblog-audio bakeoff-serve   # http://localhost:8765/index.html
 ```
+
+The bake-off generates **multiple voices per engine** (see `bakeoff_voices.py`). StyleTTS2 was previously a stub; it now runs via an isolated `uv run --with styletts2` subprocess because its dependencies conflict with Chatterbox.
+
+Browse voices online (not your text): [Kokoro demo](https://huggingface.co/spaces/hexgrad/Kokoro-TTS), [Piper samples](https://rhasspy.github.io/piper-samples/), [Chatterbox](https://huggingface.co/ResembleAI/chatterbox), [StyleTTS2 demo](https://styletts2.github.io/).
 
 Default production voice: **Kokoro** `am_michael`.
 
@@ -52,10 +57,14 @@ uv run kellblog-audio publish --local-only
 
 Resume is automatic: re-run the same command after any failure.
 
+### Partial feed while synthesis runs
+
+See [docs/WHILE_BACKFILL.md](docs/WHILE_BACKFILL.md) — build and validate `output/feeds/feed.xml` from completed episodes, then publish to R2 when credentials are ready.
+
 ### Cloudflare R2 setup
 
 1. Create bucket `kellblog-audio` in Cloudflare R2.
-2. Enable public access via custom domain `audio.kellblog.com`.
+2. Enable public access via custom domain `kellblog.thisisgrant.com` (see [docs/R2_CLOUDFLARE_SETUP.md](docs/R2_CLOUDFLARE_SETUP.md)).
 3. Create API token with Object Read & Write.
 4. Export:
 
@@ -64,7 +73,7 @@ export R2_ACCOUNT_ID=...
 export R2_ACCESS_KEY_ID=...
 export R2_SECRET_ACCESS_KEY=...
 export R2_BUCKET=kellblog-audio
-export KELLBLOG_AUDIO_PUBLIC_URL=https://audio.kellblog.com
+export KELLBLOG_AUDIO_PUBLIC_URL=https://kellblog.thisisgrant.com
 ```
 
 5. Publish:
@@ -75,7 +84,7 @@ uv run kellblog-audio publish
 
 ### Podcast directory submission (one-time, manual)
 
-Submit `https://audio.kellblog.com/feed.xml` to:
+Submit `https://kellblog.thisisgrant.com/feed.xml` to:
 
 - [Apple Podcasts Connect](https://podcastsconnect.apple.com/)
 - [Spotify for Creators](https://creators.spotify.com/) → Add show → RSS feed

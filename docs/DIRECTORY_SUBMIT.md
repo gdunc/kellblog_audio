@@ -1,12 +1,12 @@
 # Podcast directory submission (one-time)
 
-After `kellblog-audio publish` succeeds and `https://audio.kellblog.com/feed.xml` is live:
+After `kellblog-audio publish` succeeds and `https://kellblog.thisisgrant.com/feed.xml` is live:
 
 ## Apple Podcasts
 
 1. Go to [Apple Podcasts Connect](https://podcastsconnect.apple.com/).
 2. Add a new show → **RSS Feed**.
-3. URL: `https://audio.kellblog.com/feed.xml`
+3. URL: `https://kellblog.thisisgrant.com/feed.xml`
 4. Verify ownership if prompted.
 5. Set primary category: **Business** → **Management**.
 
