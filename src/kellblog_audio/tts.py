@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 import tempfile
@@ -10,13 +11,34 @@ from pathlib import Path
 from typing import Iterator
 
 from kellblog_audio.config import (
+    CHATTERBOX_DEVICE,
     CHATTERBOX_EXAGGERATION,
     KOKORO_VOICE,
     MAX_CHUNK_CHARS,
     PIPER_VOICE,
     PIPER_VOICES_DIR,
+    ROOT,
     TTS_PROVIDER,
 )
+
+
+def _resolve_torch_device(preference: str = "auto") -> str:
+    """Resolve a torch device string. 'auto' prefers CUDA, then Apple MPS, else CPU."""
+    import torch
+
+    pref = (preference or "auto").lower()
+    if pref == "cpu":
+        return "cpu"
+    if pref == "cuda":
+        return "cuda" if torch.cuda.is_available() else "cpu"
+    if pref == "mps":
+        return "mps" if torch.backends.mps.is_available() else "cpu"
+    # auto
+    if torch.cuda.is_available():
+        return "cuda"
+    if torch.backends.mps.is_available():
+        return "mps"
+    return "cpu"
 
 
 class TTSProvider(ABC):
@@ -73,8 +95,14 @@ class KokoroProvider(TTSProvider):
 class ChatterboxProvider(TTSProvider):
     name = "chatterbox"
 
-    def __init__(self, exaggeration: float = CHATTERBOX_EXAGGERATION) -> None:
+    def __init__(
+        self,
+        exaggeration: float = CHATTERBOX_EXAGGERATION,
+        device: str = CHATTERBOX_DEVICE,
+    ) -> None:
         self.exaggeration = exaggeration
+        self.device_preference = device
+        self._device: str | None = None
         self._model = None
 
     def _check_deps(self) -> None:
@@ -82,9 +110,13 @@ class ChatterboxProvider(TTSProvider):
 
     def _get_model(self):
         if self._model is None:
+            self._device = _resolve_torch_device(self.device_preference)
+            if self._device == "mps":
+                # Some Chatterbox ops aren't implemented on MPS; fall back to CPU per-op.
+                os.environ.setdefault("PYTORCH_ENABLE_MPS_FALLBACK", "1")
             from chatterbox.tts import ChatterboxTTS
 
-            self._model = ChatterboxTTS.from_pretrained(device="cpu")
+            self._model = ChatterboxTTS.from_pretrained(device=self._device)
         return self._model
 
     def synthesize_chunk(self, text: str, out_wav: Path) -> None:
@@ -133,37 +165,76 @@ class PiperProvider(TTSProvider):
 
 
 class StyleTTS2Provider(TTSProvider):
+    """StyleTTS2 via isolated subprocess (transformers version conflicts with Chatterbox)."""
+
     name = "styletts2"
 
+    def __init__(self, reference_voice_url: str | None = None) -> None:
+        self.reference_voice_url = reference_voice_url
+
     def _check_deps(self) -> None:
-        raise ImportError(
-            "StyleTTS2 is optional and heavy; install manually per README. "
-            "Use kokoro or chatterbox for bake-off."
-        )
+        if not shutil.which("uv"):
+            raise ImportError("uv is required to run StyleTTS2 in an isolated environment")
+
+    def is_available(self) -> bool:
+        return shutil.which("uv") is not None
+
+    def synthesize_full_text(self, text: str, out_wav: Path) -> None:
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".txt", delete=False, encoding="utf-8"
+        ) as tmp:
+            tmp.write(text)
+            text_file = tmp.name
+        try:
+            cmd = [
+                "uv",
+                "run",
+                "--with",
+                "styletts2",
+                "python",
+                "-m",
+                "kellblog_audio.styletts2_worker",
+                "--text-file",
+                text_file,
+                "--out",
+                str(out_wav),
+            ]
+            if self.reference_voice_url:
+                cmd.extend(["--ref-url", self.reference_voice_url])
+            subprocess.run(cmd, check=True, cwd=str(ROOT), capture_output=True, text=True)
+        except subprocess.CalledProcessError as exc:
+            detail = (exc.stderr or exc.stdout or "").strip()
+            raise RuntimeError(f"StyleTTS2 synthesis failed: {detail}") from exc
+        finally:
+            os.unlink(text_file)
 
     def synthesize_chunk(self, text: str, out_wav: Path) -> None:
-        raise NotImplementedError("StyleTTS2 provider not bundled; use kokoro or chatterbox")
+        self.synthesize_full_text(text, out_wav)
 
 
-def _make_provider(provider_name: str) -> TTSProvider:
-    factories: dict[str, type[TTSProvider]] = {
-        "kokoro": KokoroProvider,
-        "chatterbox": ChatterboxProvider,
-        "piper": PiperProvider,
-        "styletts2": StyleTTS2Provider,
-    }
-    if provider_name not in factories:
-        raise ValueError(f"Unknown TTS provider: {provider_name}")
-    return factories[provider_name]()
+def _make_provider(provider_name: str, **kwargs) -> TTSProvider:
+    provider_name = provider_name.lower()
+    if provider_name == "kokoro":
+        return KokoroProvider(voice=kwargs.get("voice", KOKORO_VOICE))
+    if provider_name == "chatterbox":
+        ex = kwargs.get("exaggeration", CHATTERBOX_EXAGGERATION)
+        device = kwargs.get("device", CHATTERBOX_DEVICE)
+        return ChatterboxProvider(exaggeration=float(ex), device=device)
+    if provider_name == "piper":
+        return PiperProvider(voice=kwargs.get("voice", PIPER_VOICE))
+    if provider_name == "styletts2":
+        return StyleTTS2Provider(reference_voice_url=kwargs.get("reference_voice_url"))
+    raise ValueError(f"Unknown TTS provider: {provider_name}")
 
 
-def get_provider(name: str | None = None) -> TTSProvider:
+def get_provider(name: str | None = None, **kwargs) -> TTSProvider:
     provider_name = (name or TTS_PROVIDER).lower()
-    p = _make_provider(provider_name)
+    p = _make_provider(provider_name, **kwargs)
     if not p.is_available():
+        extra = provider_name if provider_name != "styletts2" else "compare + uv"
         raise ImportError(
             f"TTS provider '{provider_name}' is not installed. "
-            f"Run: uv sync --extra {provider_name}"
+            f"Run: uv sync --extra {extra}"
         )
     return p
 
@@ -197,6 +268,10 @@ def synthesize_text_to_wav(
     text: str,
     out_wav: Path,
 ) -> None:
+    synthesize_full = getattr(provider, "synthesize_full_text", None)
+    if provider.name == "styletts2" and synthesize_full is not None:
+        synthesize_full(text, out_wav)
+        return
     chunks = chunk_text(text)
     if len(chunks) == 1:
         provider.synthesize_chunk(chunks[0], out_wav)
@@ -328,4 +403,4 @@ def list_available_providers() -> Iterator[str]:
             if p.is_available():
                 yield name
         except Exception:
-            pass
+            continue

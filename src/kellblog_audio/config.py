@@ -8,6 +8,21 @@ from pathlib import Path
 
 # Repo root (kellblog_audio/)
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def _load_dotenv() -> None:
+    env_path = ROOT / ".env"
+    if not env_path.is_file():
+        return
+    for line in env_path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        os.environ.setdefault(key.strip(), value.strip())
+
+
+_load_dotenv()
 DATA_DIR = ROOT / "data"
 OUTPUT_DIR = ROOT / "output"
 AUDIO_DIR = OUTPUT_DIR / "audio"
@@ -21,13 +36,17 @@ RSS_URL = "https://www.kellblog.com/rss/"
 BLOG_BASE = "https://www.kellblog.com"
 
 # Default public URLs (override via env)
-PUBLIC_BASE_URL = os.environ.get("KELLBLOG_AUDIO_PUBLIC_URL", "https://audio.kellblog.com")
+PUBLIC_BASE_URL = os.environ.get(
+    "KELLBLOG_AUDIO_PUBLIC_URL", "https://kellblog.thisisgrant.com"
+)
 FEED_URL = f"{PUBLIC_BASE_URL}/feed.xml"
 
 # TTS: kokoro | chatterbox | styletts2
 TTS_PROVIDER = os.environ.get("KELLBLOG_TTS_PROVIDER", "kokoro")
 KOKORO_VOICE = os.environ.get("KELLBLOG_KOKORO_VOICE", "am_michael")
 CHATTERBOX_EXAGGERATION = float(os.environ.get("KELLBLOG_CHATTERBOX_EXAGGERATION", "0.4"))
+# Torch device for Chatterbox: auto | mps | cpu | cuda (auto prefers MPS/CUDA when available)
+CHATTERBOX_DEVICE = os.environ.get("KELLBLOG_CHATTERBOX_DEVICE", "auto")
 PIPER_VOICE = os.environ.get("KELLBLOG_PIPER_VOICE", "en_US-lessac-medium")
 PIPER_VOICES_DIR = DATA_DIR / "piper_voices"
 

@@ -45,18 +45,20 @@ def upload_file(client, local: Path, key: str, content_type: str) -> None:
     )
 
 
-def publish_local(catalog: Catalog) -> Path:
+def publish_local(catalog: Catalog, *, local_audio: bool = True) -> Path:
     """Write feed.xml locally without R2."""
     settings = get_settings()
     settings.ensure_dirs()
+    catalog.assign_episode_numbers()
     feed_path = FEEDS_DIR / "feed.xml"
-    write_feed(catalog, feed_path)
+    write_feed(catalog, feed_path, local_audio=local_audio)
     return feed_path
 
 
 def publish_to_r2(catalog: Catalog, *, upload_audio: bool = True) -> str:
     client = get_s3_client()
     settings = get_settings()
+    catalog.assign_episode_numbers()
 
     if upload_audio:
         posts = catalog.list_by_filter(audio_status="done")
@@ -76,8 +78,10 @@ def publish_to_r2(catalog: Catalog, *, upload_audio: bool = True) -> str:
     if artwork.exists():
         upload_file(client, artwork, "show-artwork.png", "image/png")
 
-    # Atomic feed swap
-    feed_path = publish_local(catalog)
+    # Atomic feed swap (public URLs for podcast clients)
+    settings.ensure_dirs()
+    feed_path = FEEDS_DIR / "feed.xml"
+    write_feed(catalog, feed_path, local_audio=False)
     tmp_key = "feed.xml.tmp"
     upload_file(client, feed_path, tmp_key, "application/rss+xml")
     client.copy_object(

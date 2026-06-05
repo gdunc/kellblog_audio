@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Optional
 
@@ -9,7 +10,9 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from kellblog_audio.bakeoff import DEFAULT_BAKEOFF_SLUGS, run_bakeoff
+from kellblog_audio.bakeoff import run_bakeoff
+from kellblog_audio.bakeoff_voices import BAKEOFF_SLUGS
+from kellblog_audio.bakeoff_html import write_bakeoff_page
 from kellblog_audio.catalog import Catalog
 from kellblog_audio.config import CATALOG_PATH, TTS_PROVIDER, get_settings
 from kellblog_audio.ingest import ingest_all
@@ -63,8 +66,20 @@ def synthesize(
         None, "--provider", "-p", help="kokoro | chatterbox"
     ),
     limit: Optional[int] = typer.Option(None, help="Max episodes"),
+    shard: Optional[str] = typer.Option(
+        None, "--shard", help="Parallel worker shard as i/N, e.g. 0/2 and 1/2"
+    ),
 ) -> None:
     """Run TTS for matching posts."""
+    shard_index = shard_count = None
+    if shard:
+        try:
+            i_str, n_str = shard.split("/")
+            shard_index, shard_count = int(i_str), int(n_str)
+        except ValueError as exc:
+            raise typer.BadParameter("--shard must be i/N, e.g. 0/2") from exc
+        if not (0 <= shard_index < shard_count):
+            raise typer.BadParameter("--shard i must satisfy 0 <= i < N")
     cat = _catalog()
     ok, err = synthesize_batch(
         cat,
@@ -74,6 +89,8 @@ def synthesize(
         force=force,
         provider_name=provider,
         limit=limit,
+        shard_index=shard_index,
+        shard_count=shard_count,
         progress=console.print,
     )
     console.print(f"Done: {ok} ok, {err} errors (provider={provider or TTS_PROVIDER})")
@@ -154,11 +171,38 @@ def bakeoff(
     slugs: Optional[list[str]] = typer.Option(
         None, "--slug", "-s", help="Post slugs (repeatable)"
     ),
+    html_only: bool = typer.Option(
+        False, "--html-only", help="Regenerate index.html from existing MP3s"
+    ),
 ) -> None:
-    """Generate TTS comparison samples (kokoro vs chatterbox)."""
+    """Generate TTS comparison samples and listening page."""
     cat = _catalog()
-    use_slugs = slugs or DEFAULT_BAKEOFF_SLUGS
+    if html_only:
+        page = write_bakeoff_page(cat)
+        console.print(f"Wrote {page}")
+        console.print("Serve: cd output/bakeoff && python3 -m http.server 8765")
+        return
+    use_slugs = slugs or list(BAKEOFF_SLUGS)
     run_bakeoff(cat, use_slugs)
+
+
+@app.command("bakeoff-serve")
+def bakeoff_serve(
+    port: int = typer.Option(8765, help="HTTP port"),
+) -> None:
+    """Serve the bake-off comparison page locally."""
+    import http.server
+    import socketserver
+
+    from kellblog_audio.config import BAKEOFF_DIR
+
+    BAKEOFF_DIR.mkdir(parents=True, exist_ok=True)
+    if not (BAKEOFF_DIR / "index.html").exists():
+        write_bakeoff_page(_catalog())
+    os.chdir(BAKEOFF_DIR)
+    console.print(f"Open http://localhost:{port}/index.html")
+    with socketserver.TCPServer(("", port), http.server.SimpleHTTPRequestHandler) as httpd:
+        httpd.serve_forever()
 
 
 @app.command("run-backfill")

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import tempfile
 from pathlib import Path
 from typing import Callable
@@ -10,6 +11,7 @@ from kellblog_audio.catalog import Catalog
 from kellblog_audio.config import AUDIO_DIR, get_settings
 from kellblog_audio.intro_outro import SPOKEN_OUTRO, spoken_intro
 from kellblog_audio.tts import (
+    TTSProvider,
     get_provider,
     merge_audio_parts,
     synthesize_text_to_wav,
@@ -21,12 +23,19 @@ def audio_output_path(year: int, slug: str) -> Path:
     return AUDIO_DIR / str(year) / f"{slug}.mp3"
 
 
+def shard_index_for(slug: str, shard_count: int) -> int:
+    """Stable shard assignment for a slug (independent of process/list ordering)."""
+    digest = hashlib.md5(slug.encode("utf-8")).hexdigest()
+    return int(digest, 16) % shard_count
+
+
 def synthesize_post(
     catalog: Catalog,
     slug: str,
     provider_name: str | None = None,
     *,
     force: bool = False,
+    provider: TTSProvider | None = None,
 ) -> Path | None:
     post = catalog.get(slug)
     if not post or not post.text:
@@ -37,7 +46,8 @@ def synthesize_post(
     if out_path.exists() and post.audio_status == "done" and not force:
         return out_path
 
-    provider = get_provider(provider_name)
+    if provider is None:
+        provider = get_provider(provider_name)
     intro = spoken_intro(post.title or slug, post.published_at or "1970-01-01T00:00:00Z")
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -76,6 +86,8 @@ def synthesize_batch(
     force: bool = False,
     provider_name: str | None = None,
     limit: int | None = None,
+    shard_index: int | None = None,
+    shard_count: int | None = None,
     progress: Callable[[str], None] | None = None,
 ) -> tuple[int, int]:
     settings = get_settings()
@@ -92,13 +104,21 @@ def synthesize_batch(
         posts = [p for p in posts if p.year == year]
     if slug:
         posts = [p for p in posts if p.slug == slug]
+    if shard_count and shard_count > 1:
+        idx = shard_index or 0
+        posts = [p for p in posts if shard_index_for(p.slug, shard_count) == idx]
     if limit:
         posts = posts[:limit]
+
+    # Build the model once and reuse it for the whole batch.
+    provider = get_provider(provider_name)
 
     ok, err = 0, 0
     for post in posts:
         try:
-            synthesize_post(catalog, post.slug, provider_name, force=force)
+            synthesize_post(
+                catalog, post.slug, provider_name, force=force, provider=provider
+            )
             ok += 1
             if progress:
                 progress(f"synthesized {post.slug}")
