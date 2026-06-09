@@ -26,7 +26,7 @@ def test_clean_for_tts_glossary_and_footnotes():
     text = "We use SaaS and ARR.\n\n## Notes\n\n[1] A note."
     cleaned = clean_for_tts(text)
     assert "sass" in cleaned
-    assert "A. R. R." in cleaned
+    assert "A R R" in cleaned
     assert "Notes follow" in cleaned
     assert "[1]" not in cleaned.split("Notes follow")[0]
 

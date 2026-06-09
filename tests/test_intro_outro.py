@@ -10,7 +10,7 @@ def test_spoken_intro():
     s = spoken_intro("Hello World", "2024-11-05T12:00:00.000Z")
     assert "November 5, 2024" in s
     assert "Hello World" in s
-    assert "Kellblog post" in s
+    assert "Dave Kellogg post" in s
 
 
 def test_attribution_in_description():
