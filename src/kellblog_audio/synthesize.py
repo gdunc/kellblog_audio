@@ -3,13 +3,15 @@
 from __future__ import annotations
 
 import hashlib
+import shutil
 import tempfile
 from pathlib import Path
 from typing import Callable
 
 from kellblog_audio.catalog import Catalog
-from kellblog_audio.config import AUDIO_DIR, get_settings
+from kellblog_audio.config import AUDIO_DIR, DATA_DIR, MAX_AUDIO_BODY_WPM, get_settings
 from kellblog_audio.intro_outro import SPOKEN_OUTRO, spoken_intro
+from kellblog_audio.qa import qa_post_audio, queue_audio_rerun
 from kellblog_audio.tts import (
     TTSProvider,
     get_provider,
@@ -17,6 +19,8 @@ from kellblog_audio.tts import (
     synthesize_text_to_wav,
     wav_to_mp3,
 )
+
+OUTRO_CACHE_DIR = DATA_DIR / "tts_cache"
 
 
 def audio_output_path(year: int, slug: str) -> Path:
@@ -27,6 +31,42 @@ def shard_index_for(slug: str, shard_count: int) -> int:
     """Stable shard assignment for a slug (independent of process/list ordering)."""
     digest = hashlib.md5(slug.encode("utf-8")).hexdigest()
     return int(digest, 16) % shard_count
+
+
+def _provider_cache_key(provider: TTSProvider) -> str:
+    attrs = [
+        provider.name,
+        str(getattr(provider, "voice", "")),
+        str(getattr(provider, "exaggeration", "")),
+        str(getattr(provider, "reference_voice_url", "")),
+    ]
+    digest = hashlib.sha256("|".join(attrs).encode("utf-8")).hexdigest()[:16]
+    return f"{provider.name}-{digest}"
+
+
+def synthesize_outro_to_wav(provider: TTSProvider, out_wav: Path) -> None:
+    """Synthesize the shared outro once per provider/voice and reuse it."""
+    OUTRO_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    cache_path = OUTRO_CACHE_DIR / f"outro-{_provider_cache_key(provider)}.wav"
+    if not cache_path.exists():
+        with tempfile.TemporaryDirectory(dir=OUTRO_CACHE_DIR) as tmp:
+            tmp_cache = Path(tmp) / cache_path.name
+            synthesize_text_to_wav(provider, SPOKEN_OUTRO, tmp_cache)
+            tmp_cache.replace(cache_path)
+    out_wav.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy(cache_path, out_wav)
+
+
+def validate_audio_duration(post, duration_sec: int | None) -> None:
+    if not post.word_count or not duration_sec:
+        return
+    body_wpm = post.word_count * 60.0 / duration_sec
+    if body_wpm > MAX_AUDIO_BODY_WPM:
+        raise RuntimeError(
+            "Implausibly short audio for "
+            f"{post.slug}: {duration_sec}s for {post.word_count} body words "
+            f"({body_wpm:.1f} body wpm, limit {MAX_AUDIO_BODY_WPM:g})"
+        )
 
 
 def synthesize_post(
@@ -58,7 +98,7 @@ def synthesize_post(
 
         synthesize_text_to_wav(provider, intro, intro_wav)
         synthesize_text_to_wav(provider, post.text, body_wav)
-        synthesize_text_to_wav(provider, SPOKEN_OUTRO, outro_wav)
+        synthesize_outro_to_wav(provider, outro_wav)
 
         duration = merge_audio_parts(
             [intro_wav, body_wav, outro_wav],
@@ -66,6 +106,11 @@ def synthesize_post(
             title=post.title or slug,
             track=post.episode_in_season,
         )
+        try:
+            validate_audio_duration(post, duration)
+        except RuntimeError:
+            out_path.unlink(missing_ok=True)
+            raise
 
     catalog.update_post(
         slug,
@@ -88,6 +133,8 @@ def synthesize_batch(
     limit: int | None = None,
     shard_index: int | None = None,
     shard_count: int | None = None,
+    qa_first: int = 0,
+    stop_on_qa_failure: bool = True,
     progress: Callable[[str], None] | None = None,
 ) -> tuple[int, int]:
     settings = get_settings()
@@ -114,14 +161,31 @@ def synthesize_batch(
     provider = get_provider(provider_name)
 
     ok, err = 0, 0
+    qa_checked = 0
     for post in posts:
         try:
             synthesize_post(
                 catalog, post.slug, provider_name, force=force, provider=provider
             )
-            ok += 1
+            if qa_checked < qa_first:
+                qa_checked += 1
+                qa_result = qa_post_audio(catalog, post.slug)
+                if not qa_result.passed:
+                    queue_audio_rerun(catalog, post.slug, qa_result.reason)
+                    err += 1
+                    if progress:
+                        progress(
+                            f"qa failed {post.slug}; queued for rerun: "
+                            f"{qa_result.reason}"
+                        )
+                    if stop_on_qa_failure:
+                        break
+                    continue
+                if progress:
+                    progress(f"qa passed {post.slug}: {qa_result.reason}")
             if progress:
                 progress(f"synthesized {post.slug}")
+            ok += 1
         except Exception as e:
             catalog.update_post(post.slug, audio_status="error", audio_error=str(e)[:500])
             err += 1

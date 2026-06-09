@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Iterator
 
 from kellblog_audio.config import (
+    CHATTERBOX_MAX_CHUNK_CHARS,
     CHATTERBOX_DEVICE,
     CHATTERBOX_EXAGGERATION,
     KOKORO_VOICE,
@@ -263,6 +264,12 @@ def chunk_text(text: str, max_chars: int = MAX_CHUNK_CHARS) -> list[str]:
     return chunks or [text[:max_chars]]
 
 
+def max_chunk_chars_for_provider(provider: TTSProvider) -> int:
+    if provider.name == "chatterbox":
+        return CHATTERBOX_MAX_CHUNK_CHARS
+    return MAX_CHUNK_CHARS
+
+
 def synthesize_text_to_wav(
     provider: TTSProvider,
     text: str,
@@ -272,7 +279,7 @@ def synthesize_text_to_wav(
     if provider.name == "styletts2" and synthesize_full is not None:
         synthesize_full(text, out_wav)
         return
-    chunks = chunk_text(text)
+    chunks = chunk_text(text, max_chars=max_chunk_chars_for_provider(provider))
     if len(chunks) == 1:
         provider.synthesize_chunk(chunks[0], out_wav)
         return
