@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kellblog Audio Review Batch</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --surface: #ffffff;
+      --ink: #17202a;
+      --muted: #647184;
+      --line: #d8dee8;
+      --accent: #12646f;
+      --accent-soft: #e6f3f4;
+      --ok: #20744a;
+      --warn: #8a5a00;
+      --warn-soft: #fff4dc;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    header {
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+    }
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+    header .wrap { padding: 28px 0 24px; }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+    h2 {
+      margin: 0;
+      font-size: 1.15rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+    .lede {
+      max-width: 850px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+    .status {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+    .pill, .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 4px 10px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.875rem;
+      white-space: nowrap;
+    }
+    .pill.ok {
+      border-color: #b7dbc9;
+      background: #eef8f3;
+      color: var(--ok);
+      font-weight: 600;
+    }
+    .badge.warn {
+      border-color: #e0bd70;
+      background: var(--warn-soft);
+      color: var(--warn);
+      font-weight: 700;
+    }
+    main { padding: 24px 0 40px; }
+    a {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+    .review-brief, .audit {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      margin-bottom: 16px;
+      padding: 18px;
+    }
+    .review-brief {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: start;
+    }
+    .review-brief p, .audit p {
+      margin: 6px 0 0;
+      color: var(--muted);
+    }
+    .feed-link {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 6px 10px;
+      white-space: nowrap;
+    }
+    .feed-link:hover {
+      background: var(--accent-soft);
+      border-color: #9fcdd2;
+    }
+    .audit ol {
+      margin: 12px 0 0;
+      padding-left: 24px;
+    }
+    .audit li + li { margin-top: 6px; }
+    .audit li span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin: 18px 0;
+      color: var(--muted);
+    }
+    .episodes {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    article {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .episode-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+    .meta {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+    .links a {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 5px 9px;
+      font-size: 0.875rem;
+      white-space: nowrap;
+    }
+    .links a:hover {
+      background: var(--accent-soft);
+      border-color: #9fcdd2;
+    }
+    audio {
+      display: block;
+      width: 100%;
+      margin: 8px 0 12px;
+    }
+    .concerns {
+      border: 1px solid #e0bd70;
+      border-radius: 6px;
+      background: var(--warn-soft);
+      margin-bottom: 10px;
+      padding: 8px 10px;
+    }
+    .concerns span, .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.76rem;
+    }
+    .concerns strong, .metric strong {
+      display: block;
+      margin-top: 2px;
+      font-size: 0.95rem;
+      overflow-wrap: anywhere;
+    }
+    .qa {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(128px, 1fr));
+      gap: 8px;
+    }
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 8px 10px;
+      background: #fbfcfd;
+      min-width: 0;
+    }
+    footer {
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 18px 0 36px;
+    }
+    .notes {
+      border-top: 1px solid var(--line);
+      padding-top: 16px;
+    }
+    @media (max-width: 760px) {
+      .review-brief, .episode-head { grid-template-columns: 1fr; }
+      .links { justify-content: flex-start; }
+    }
+    @media (max-width: 460px) {
+      .wrap { width: min(100% - 20px, 1120px); }
+      header .wrap { padding-top: 22px; }
+      h1 { font-size: 1.55rem; }
+      article, .review-brief, .audit { padding: 14px; }
+    }
+    </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Kellblog Audio Review Batch</h1>
+      <p class="lede">AI-narrated Kellblog episodes ready for collaborator listening. Please focus on audio quality, pronunciation of technical terms and company names, repeated phrases, pacing, and whether endings feel complete.</p>
+      <div class="status">
+        <span class="pill ok">18 QA passed</span>
+        <span class="pill">18 QA artifacts</span>
+        <span class="pill">761 still rebuilding</span>
+        <span class="pill">1 skipped</span>
+        <span class="pill">18 publish pending</span>
+        <span class="pill">Updated 2026-06-09 13:53</span>
+      </div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="review-brief" aria-labelledby="review-heading">
+      <div>
+        <h2 id="review-heading">What to review</h2>
+        <p>Start with the manual-audit list, then sample a few normal episodes. Send notes in the same thread where this page was shared, with the episode title and timestamp when possible.</p>
+      </div>
+      <a class="feed-link" href="/feed.xml">RSS feed</a>
+    </section>
+    <section class="audit" aria-labelledby="audit-heading">
+      <h2 id="audit-heading">Needs manual audit</h2>
+      <p>These passed or have artifacts, but their metrics make them the best candidates to regenerate or spot-check before promotion.</p>
+      <ol>
+        <li><a href="#episode-enterprise-search-nascent-or-just-small">Enterprise Search: Nascent or Just Small</a> <span>repeat x6</span></li>
+        <li><a href="#episode-marklogic-dbms-or-search-engine">MarkLogic: DBMS or search engine?</a> <span>coverage 93.0%</span></li>
+        <li><a href="#episode-web-2-0-more-than-a-buzzword">Web 2.0: More Than A Buzzword?</a> <span>repeat x7</span></li>
+        <li><a href="#episode-ingres-can-you-ever-go-back">Ingres: Can You Ever Go Back?</a> <span>coverage 91.8%</span></li>
+      </ol>
+    </section>
+    <div class="toolbar">
+      <span>18 published MP3s available for review.</span>
+    </div>
+    <section class="episodes" aria-label="Episodes">
+      <article id="episode-introduction-and-one-year-retrospective">
+        <div class="episode-head">
+          <div>
+            <h2>Introduction and One-Year Retrospective</h2>
+            <div class="meta">2005-08-22 · 3:32 · 651 words</div>
+          </div>
+          <div class="links">
+            
+            <a href="https://www.kellblog.com/introduction-and-one-year-retrospective/">Original</a>
+            <a href="/audio/2005/introduction-and-one-year-retrospective.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2005/introduction-and-one-year-retrospective.mp3"></audio>
+        
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>170 WPM</strong></div>
+        </div>
+      </article>
+      <article id="episode-square-pegs-and-round-holes">
+        <div class="episode-head">
+          <div>
+            <h2>Square Pegs and Round Holes</h2>
+            <div class="meta">2005-08-24 · 5:53 · 1,159 words</div>
+          </div>
+          <div class="links">
+            
+            <a href="https://www.kellblog.com/square-pegs-and-round-holes/">Original</a>
+            <a href="/audio/2005/square-pegs-and-round-holes.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2005/square-pegs-and-round-holes.mp3"></audio>
+        
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>189 WPM</strong></div>
+        </div>
+      </article>
+      <article id="episode-lessons-from-winfs">
+        <div class="episode-head">
+          <div>
+            <h2>Lessons From WinFS</h2>
+            <div class="meta">2005-08-31 · 5:23 · 1,037 words</div>
+          </div>
+          <div class="links">
+            
+            <a href="https://www.kellblog.com/lessons-from-winfs/">Original</a>
+            <a href="/audio/2005/lessons-from-winfs.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2005/lessons-from-winfs.mp3"></audio>
+        
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>187 WPM</strong></div>
+        </div>
+      </article>
+      <article id="episode-we-seek-the-grail">
+        <div class="episode-head">
+          <div>
+            <h2>We Seek The Grail</h2>
+            <div class="meta">2005-09-09 · 2:14 · 445 words</div>
+          </div>
+          <div class="links">
+            
+            <a href="https://www.kellblog.com/we-seek-the-grail/">Original</a>
+            <a href="/audio/2005/we-seek-the-grail.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2005/we-seek-the-grail.mp3"></audio>
+        
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>197 WPM</strong></div>
+        </div>
+      </article>
+      <article id="episode-the-bifurcation-of-search">
+        <div class="episode-head">
+          <div>
+            <h2>The Bifurcation of Search</h2>
+            <div class="meta">2005-09-20 · 4:09 · 772 words</div>
+          </div>
+          <div class="links">
+            
+            <a href="https://www.kellblog.com/the-bifurcation-of-search/">Original</a>
+            <a href="/audio/2005/the-bifurcation-of-search.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2005/the-bifurcation-of-search.mp3"></audio>
+        
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>186 WPM</strong></div>
+        </div>
+      </article>
+      <article id="episode-uh-oh-its-magic">
+        <div class="episode-head">
+          <div>
+            <h2>Uh, Oh -- It’s Magic</h2>
+            <div class="meta">2005-09-29 · 4:26 · 881 words</div>
+          </div>
+          <div class="links">
+            
+            <a href="https://www.kellblog.com/uh-oh-its-magic/">Original</a>
+            <a href="/audio/2005/uh-oh-its-magic.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2005/uh-oh-its-magic.mp3"></audio>
+        
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>199 WPM</strong></div>
+        </div>
+      </article>
+      <article id="episode-a-mission-from-codd">
+        <div class="episode-head">
+          <div>
+            <h2>A Mission From Codd</h2>
+            <div class="meta">2005-10-07 · 5:02 · 960 words</div>
+          </div>
+          <div class="links">
+            
+            <a href="https://www.kellblog.com/a-mission-from-codd/">Original</a>
+            <a href="/audio/2005/a-mission-from-codd.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2005/a-mission-from-codd.mp3"></audio>
+        
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>181 WPM</strong></div>
+        </div>
+      </article>
+      <article id="episode-dont-trust-anyone-over-30">
+        <div class="episode-head">
+          <div>
+            <h2>Don&#x27;t Trust Anyone Over 30</h2>
+            <div class="meta">2005-10-24 · 5:49 · 1,111 words</div>
+          </div>
+          <div class="links">
+            
+            <a href="https://www.kellblog.com/dont-trust-anyone-over-30/">Original</a>
+            <a href="/audio/2005/dont-trust-anyone-over-30.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2005/dont-trust-anyone-over-30.mp3"></audio>
+        
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>190 WPM</strong></div>
+        </div>
+      </article>
+      <article id="episode-the-first-steps-a-doozy">
+        <div class="episode-head">
+          <div>
+            <h2>The First Step&#x27;s A Doozy</h2>
+            <div class="meta">2005-11-04 · 4:32 · 881 words</div>
+          </div>
+          <div class="links">
+            
+            <a href="https://www.kellblog.com/the-first-steps-a-doozy/">Original</a>
+            <a href="/audio/2005/the-first-steps-a-doozy.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2005/the-first-steps-a-doozy.mp3"></audio>
+        
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>193 WPM</strong></div>
+        </div>
+      </article>
+      <article id="episode-gartners-death-of-the-database">
+        <div class="episode-head">
+          <div>
+            <h2>Gartner’s Death of the Database</h2>
+            <div class="meta">2005-12-07 · 5:03 · 1,009 words</div>
+          </div>
+          <div class="links">
+            
+            <a href="https://www.kellblog.com/gartners-death-of-the-database/">Original</a>
+            <a href="/audio/2005/gartners-death-of-the-database.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2005/gartners-death-of-the-database.mp3"></audio>
+        
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>193 WPM</strong></div>
+        </div>
+      </article>
+      <article id="episode-unlikely-foes-custom-publishing-and-enterprise-search">
+        <div class="episode-head">
+          <div>
+            <h2>Unlikely Foes: Custom Publishing and Enterprise Search</h2>
+            <div class="meta">2005-12-20 · 3:02 · 555 words</div>
+          </div>
+          <div class="links">
+            
+            <a href="https://www.kellblog.com/unlikely-foes-custom-publishing-and-enterprise-search/">Original</a>
+            <a href="/audio/2005/unlikely-foes-custom-publishing-and-enterprise-search.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2005/unlikely-foes-custom-publishing-and-enterprise-search.mp3"></audio>
+        
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>182 WPM</strong></div>
+        </div>
+      </article>
+      <article id="episode-enterprise-search-nascent-or-just-small">
+        <div class="episode-head">
+          <div>
+            <h2>Enterprise Search: Nascent or Just Small</h2>
+            <div class="meta">2006-03-03 · 3:19 · 594 words</div>
+          </div>
+          <div class="links">
+            <span class="badge warn">Manual audit</span>
+            <a href="https://www.kellblog.com/enterprise-search-nascent-or-just-small/">Original</a>
+            <a href="/audio/2006/enterprise-search-nascent-or-just-small.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2006/enterprise-search-nascent-or-just-small.mp3"></audio>
+        <div class="concerns"><span>Review focus</span><strong>repeat x6</strong></div>
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>177 WPM</strong></div>
+        </div>
+      </article>
+      <article id="episode-flying-airplanes-or-documents">
+        <div class="episode-head">
+          <div>
+            <h2>Flying Airplanes -- or Documents?</h2>
+            <div class="meta">2006-03-13 · 2:19 · 419 words</div>
+          </div>
+          <div class="links">
+            
+            <a href="https://www.kellblog.com/flying-airplanes-or-documents/">Original</a>
+            <a href="/audio/2006/flying-airplanes-or-documents.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2006/flying-airplanes-or-documents.mp3"></audio>
+        
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>185 WPM</strong></div>
+        </div>
+      </article>
+      <article id="episode-marklogic-dbms-or-search-engine">
+        <div class="episode-head">
+          <div>
+            <h2>MarkLogic: DBMS or search engine?</h2>
+            <div class="meta">2006-03-20 · 4:01 · 838 words</div>
+          </div>
+          <div class="links">
+            <span class="badge warn">Manual audit</span>
+            <a href="https://www.kellblog.com/marklogic-dbms-or-search-engine/">Original</a>
+            <a href="/audio/2006/marklogic-dbms-or-search-engine.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2006/marklogic-dbms-or-search-engine.mp3"></audio>
+        <div class="concerns"><span>Review focus</span><strong>coverage 93.0%</strong></div>
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>192 WPM</strong></div>
+        </div>
+      </article>
+      <article id="episode-web-2-0-more-than-a-buzzword">
+        <div class="episode-head">
+          <div>
+            <h2>Web 2.0: More Than A Buzzword?</h2>
+            <div class="meta">2006-03-30 · 5:27 · 1,025 words</div>
+          </div>
+          <div class="links">
+            <span class="badge warn">Manual audit</span>
+            <a href="https://www.kellblog.com/web-2-0-more-than-a-buzzword/">Original</a>
+            <a href="/audio/2006/web-2-0-more-than-a-buzzword.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2006/web-2-0-more-than-a-buzzword.mp3"></audio>
+        <div class="concerns"><span>Review focus</span><strong>repeat x7</strong></div>
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>186 WPM</strong></div>
+        </div>
+      </article>
+      <article id="episode-ingres-can-you-ever-go-back">
+        <div class="episode-head">
+          <div>
+            <h2>Ingres: Can You Ever Go Back?</h2>
+            <div class="meta">2006-04-08 · 7:13 · 1,376 words</div>
+          </div>
+          <div class="links">
+            <span class="badge warn">Manual audit</span>
+            <a href="https://www.kellblog.com/ingres-can-you-ever-go-back/">Original</a>
+            <a href="/audio/2006/ingres-can-you-ever-go-back.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2006/ingres-can-you-ever-go-back.mp3"></audio>
+        <div class="concerns"><span>Review focus</span><strong>coverage 91.8%</strong></div>
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>187 WPM</strong></div>
+        </div>
+      </article>
+      <article id="episode-half-your-advertising-budget-is-wasted">
+        <div class="episode-head">
+          <div>
+            <h2>Half Your Advertising Budget is Wasted</h2>
+            <div class="meta">2006-04-17 · 5:34 · 1,074 words</div>
+          </div>
+          <div class="links">
+            
+            <a href="https://www.kellblog.com/half-your-advertising-budget-is-wasted/">Original</a>
+            <a href="/audio/2006/half-your-advertising-budget-is-wasted.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2006/half-your-advertising-budget-is-wasted.mp3"></audio>
+        
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>192 WPM</strong></div>
+        </div>
+      </article>
+      <article id="episode-half-man-half-machine-all-cop">
+        <div class="episode-head">
+          <div>
+            <h2>Half Man, Half Machine, All Cop</h2>
+            <div class="meta">2006-04-27 · 3:45 · 754 words</div>
+          </div>
+          <div class="links">
+            
+            <a href="https://www.kellblog.com/half-man-half-machine-all-cop/">Original</a>
+            <a href="/audio/2006/half-man-half-machine-all-cop.mp3">MP3</a>
+          </div>
+        </div>
+        <audio controls preload="metadata" src="/audio/2006/half-man-half-machine-all-cop.mp3"></audio>
+        
+        <div class="qa">
+          <div class="metric"><span>Whisper QA</span><strong>Pass</strong></div>
+          <div class="metric"><span>Pace</span><strong>190 WPM</strong></div>
+        </div>
+      </article>
+    </section>
+  </main>
+  <footer class="wrap">
+    <div class="notes">
+      Whisper QA transcribes each episode and checks the audio passes basic quality gates. Pace is words per minute from the Whisper transcript.
+    </div>
+  </footer>
+</body>
+</html>
