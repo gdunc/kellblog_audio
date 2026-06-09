@@ -11,6 +11,7 @@ from botocore.config import Config
 from kellblog_audio.catalog import Catalog
 from kellblog_audio.config import (
     FEEDS_DIR,
+    OUTPUT_DIR,
     PUBLIC_BASE_URL,
     R2_ACCESS_KEY_ID,
     R2_BUCKET,
@@ -19,6 +20,7 @@ from kellblog_audio.config import (
     get_settings,
 )
 from kellblog_audio.podcast import write_feed
+from kellblog_audio.review_html import write_review_page
 
 
 def get_s3_client():
@@ -52,6 +54,8 @@ def publish_local(catalog: Catalog, *, local_audio: bool = True) -> Path:
     catalog.assign_episode_numbers()
     feed_path = FEEDS_DIR / "feed.xml"
     write_feed(catalog, feed_path, local_audio=local_audio)
+    (OUTPUT_DIR / "feed.xml").write_text(feed_path.read_text(encoding="utf-8"), encoding="utf-8")
+    write_review_page(catalog)
     return feed_path
 
 
@@ -77,6 +81,10 @@ def publish_to_r2(catalog: Catalog, *, upload_audio: bool = True) -> str:
     artwork = Path(__file__).parent / "assets" / "show-artwork.png"
     if artwork.exists():
         upload_file(client, artwork, "show-artwork.png", "image/png")
+
+    review_page = write_review_page(catalog)
+    upload_file(client, review_page, "index.html", "text/html; charset=utf-8")
+    client.delete_object(Bucket=R2_BUCKET, Key="feedback/index.html")
 
     # Atomic feed swap (public URLs for podcast clients)
     settings.ensure_dirs()

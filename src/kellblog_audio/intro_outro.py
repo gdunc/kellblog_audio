@@ -36,7 +36,7 @@ def format_long_date(iso_date: str) -> str:
 
 def spoken_intro(title: str, published_at: str) -> str:
     long_date = format_long_date(published_at)
-    return f"This is a Kellblog post from {long_date}, titled {title}."
+    return f"This is an audio version of a Dave Kellogg post from {long_date}, titled {title}."
 
 
 def build_episode_description_html(

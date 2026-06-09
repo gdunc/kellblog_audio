@@ -58,7 +58,8 @@ def build_feed(catalog: Catalog, *, local_audio: bool = False) -> str:
     fg = FeedGenerator()
     fg.load_extension("podcast")
     fg.title(SHOW_TITLE)
-    fg.link(href=FEED_URL, rel="alternate")
+    fg.link(href=FEED_URL, rel="self")
+    fg.link(href=PUBLIC_BASE_URL, rel="alternate")
     fg.description(SHOW_DESCRIPTION_HTML)
     fg.language(SHOW_LANGUAGE)
     fg.generator("kellblog-audio")
@@ -80,7 +81,7 @@ def build_feed(catalog: Catalog, *, local_audio: bool = False) -> str:
     episodes = [
         p
         for p in posts
-        if p.audio_status in ("done", "skip")
+        if p.audio_status == "done"
         and p.published_at
         and p.title
     ]
@@ -127,14 +128,6 @@ def _add_episode(
     if post.episode_in_season:
         fe.podcast.itunes_episode(post.episode_in_season)
     fe.podcast.itunes_episode_type("full")
-
-    if post.audio_status == "skip":
-        fe.description(
-            desc_html
-            + "<p><em>Audio not synthesized for this post; "
-            "see the original article for linked external audio.</em></p>"
-        )
-        return
 
     year = post.year or 1970
     if local_audio and post.audio_path:

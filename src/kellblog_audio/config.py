@@ -28,6 +28,7 @@ OUTPUT_DIR = ROOT / "output"
 AUDIO_DIR = OUTPUT_DIR / "audio"
 FEEDS_DIR = OUTPUT_DIR / "feeds"
 BAKEOFF_DIR = OUTPUT_DIR / "bakeoff"
+QA_TRANSCRIPTS_DIR = OUTPUT_DIR / "transcribe" / "qa"
 ASSETS_DIR = Path(__file__).resolve().parent / "assets"
 CATALOG_PATH = DATA_DIR / "catalog.sqlite"
 
@@ -81,7 +82,16 @@ SHOW_CATEGORY = "Business"
 SHOW_CATEGORY_SUB = "Management"
 SHOW_EMAIL = os.environ.get("KELLBLOG_PODCAST_EMAIL", "grant@thisisgrant.com")
 
-MAX_CHUNK_CHARS = 1500
+MAX_CHUNK_CHARS = int(os.environ.get("KELLBLOG_MAX_CHUNK_CHARS", "1500"))
+CHATTERBOX_MAX_CHUNK_CHARS = int(
+    os.environ.get("KELLBLOG_CHATTERBOX_MAX_CHUNK_CHARS", "600")
+)
+MAX_AUDIO_BODY_WPM = float(os.environ.get("KELLBLOG_MAX_AUDIO_BODY_WPM", "230"))
+WHISPER_CLI = os.environ.get("KELLBLOG_WHISPER_CLI", "whisper-cli")
+WHISPER_MODEL = os.environ.get(
+    "KELLBLOG_WHISPER_MODEL",
+    str(Path.home() / "Library/Application Support/pywhispercpp/models/ggml-small.en-q8_0.bin"),
+)
 INGEST_RATE_LIMIT = 3.0  # requests per second max
 
 
@@ -100,6 +110,7 @@ class Settings:
         AUDIO_DIR.mkdir(parents=True, exist_ok=True)
         FEEDS_DIR.mkdir(parents=True, exist_ok=True)
         BAKEOFF_DIR.mkdir(parents=True, exist_ok=True)
+        QA_TRANSCRIPTS_DIR.mkdir(parents=True, exist_ok=True)
 
     @property
     def r2_configured(self) -> bool:
