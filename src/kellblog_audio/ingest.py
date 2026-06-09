@@ -85,11 +85,16 @@ def ingest_posts(
     *,
     slug: str | None = None,
     limit: int | None = None,
+    force_refresh: bool = False,
     progress: Callable[[str], None] | None = None,
 ) -> tuple[int, int]:
     settings = get_settings()
     rss_map = fetch_rss_excerpts(client)
-    pending = catalog.list_by_filter(ingest_status="pending")
+    pending = (
+        catalog.list_by_filter()
+        if force_refresh
+        else catalog.list_by_filter(ingest_status="pending")
+    )
     if slug:
         pending = [p for p in pending if p.slug == slug]
     if limit:
@@ -107,9 +112,9 @@ def ingest_posts(
             time.sleep(min_interval - elapsed)
 
         headers: dict[str, str] = {}
-        if post.etag:
+        if post.etag and not force_refresh:
             headers["If-None-Match"] = post.etag
-        if post.last_modified:
+        if post.last_modified and not force_refresh:
             headers["If-Modified-Since"] = post.last_modified
 
         try:
@@ -138,10 +143,14 @@ def ingest_posts(
             if is_skip:
                 audio_status = "skip"
             else:
-                audio_status = "pending"
-                if existing and existing.content_hash and existing.content_hash != h:
+                audio_status = existing.audio_status if existing else "pending"
+                if not audio_status or audio_status == "skip":
+                    audio_status = "pending"
+                if existing and existing.content_hash != h:
                     if existing.audio_status == "done":
                         audio_status = "stale"
+                    elif existing.audio_status not in {"pending", "stale"}:
+                        audio_status = "pending"
 
             etag = resp.headers.get("etag")
             lm = resp.headers.get("last-modified")
@@ -186,6 +195,7 @@ def ingest_all(
     *,
     slug: str | None = None,
     limit: int | None = None,
+    force_refresh: bool = False,
 ) -> Catalog:
     settings = get_settings()
     settings.ensure_dirs()
@@ -195,6 +205,13 @@ def ingest_all(
     with httpx.Client(headers={"User-Agent": "KellblogAudioBot/1.0 (+https://thisisgrant.com)"}) as client:
         n = sync_sitemap(catalog, client)
         print(f"Synced {n} URLs from sitemap")
-        ok, err = ingest_posts(catalog, client, slug=slug, limit=limit, progress=print)
+        ok, err = ingest_posts(
+            catalog,
+            client,
+            slug=slug,
+            limit=limit,
+            force_refresh=force_refresh,
+            progress=print,
+        )
         print(f"Ingest complete: {ok} ok, {err} errors")
     return catalog
