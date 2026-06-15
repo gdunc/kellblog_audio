@@ -121,20 +121,30 @@ class ChatterboxProvider(TTSProvider):
         return self._model
 
     def synthesize_chunk(self, text: str, out_wav: Path) -> None:
+        import gc
+
         import torch
         import torchaudio
 
         model = self._get_model()
+        # Flush stale allocations from the previous chunk BEFORE generating.
+        # Flushing before (not after) means the model's JIT/shader cache and
+        # warm allocation patterns are preserved for the current chunk, while
+        # the previous chunk's now-unused KV-cache pages are returned to Metal
+        # before the new KV cache starts growing. This prevents the Metal heap
+        # from accumulating across chunks (which causes the catastrophic
+        # >10 s/token slowdown that starts at token ~150 when heaps overflow).
+        gc.collect()
+        if self._device == "mps" and torch.backends.mps.is_available():
+            torch.mps.empty_cache()
+        elif self._device == "cuda":
+            torch.cuda.empty_cache()
+
         # inference_mode disables autograd tracking, reducing per-step memory overhead.
         with torch.inference_mode():
             wav = model.generate(text, exaggeration=self.exaggeration)
         out_wav.parent.mkdir(parents=True, exist_ok=True)
         torchaudio.save(str(out_wav), wav.cpu(), model.sr)
-        # Release the device tensor immediately so it's eligible for GC.
-        # Do NOT call empty_cache() here — clearing the Metal heap after every
-        # chunk forces MPS to cold-start on the next chunk, dropping throughput
-        # from ~15 it/s to ~1-2 it/s. Cache flushing is handled once per episode
-        # in synthesize_text_to_wav, keeping the heap warm across chunks.
         del wav
 
 
@@ -279,31 +289,6 @@ def max_chunk_chars_for_provider(provider: TTSProvider) -> int:
     return MAX_CHUNK_CHARS
 
 
-def _flush_device_cache(provider: TTSProvider) -> None:
-    """Flush the MPS/CUDA allocator cache once per episode.
-
-    Called after all chunks of an episode are done. Keeps the heap warm
-    *within* an episode (so chunk-to-chunk runs stay at ~15 it/s on MPS),
-    but releases unused pages between episodes so RSS stays bounded.
-    The process-level restart every BATCH_SIZE episodes fully reclaims
-    Metal's heap even if the allocator retains some fragmented pages.
-    """
-    import gc
-
-    gc.collect()
-    if not isinstance(provider, ChatterboxProvider):
-        return
-    try:
-        import torch
-
-        if provider._device == "mps" and torch.backends.mps.is_available():
-            torch.mps.empty_cache()
-        elif provider._device == "cuda":
-            torch.cuda.empty_cache()
-    except Exception:
-        pass
-
-
 def synthesize_text_to_wav(
     provider: TTSProvider,
     text: str,
@@ -316,18 +301,15 @@ def synthesize_text_to_wav(
     chunks = chunk_text(text, max_chars=max_chunk_chars_for_provider(provider))
     if len(chunks) == 1:
         provider.synthesize_chunk(chunks[0], out_wav)
-    else:
-        with tempfile.TemporaryDirectory() as tmp:
-            tmp_path = Path(tmp)
-            part_files: list[Path] = []
-            for i, chunk in enumerate(chunks):
-                part = tmp_path / f"part_{i:04d}.wav"
-                provider.synthesize_chunk(chunk, part)
-                part_files.append(part)
-            concat_wavs(part_files, out_wav)
-    # Flush the device allocator once per episode (not per chunk) so the Metal
-    # heap stays warm across chunks but is trimmed between episodes.
-    _flush_device_cache(provider)
+        return
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_path = Path(tmp)
+        part_files: list[Path] = []
+        for i, chunk in enumerate(chunks):
+            part = tmp_path / f"part_{i:04d}.wav"
+            provider.synthesize_chunk(chunk, part)
+            part_files.append(part)
+        concat_wavs(part_files, out_wav)
 
 
 def concat_wavs(wav_files: list[Path], out_wav: Path) -> None:
