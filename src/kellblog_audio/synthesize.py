@@ -4,9 +4,31 @@ from __future__ import annotations
 
 import hashlib
 import shutil
+import signal
 import tempfile
+import threading
 from pathlib import Path
 from typing import Callable
+
+# ---------------------------------------------------------------------------
+# Graceful-shutdown support
+#
+# When the OS delivers SIGTERM (e.g. macOS memory-pressure kill, `kill <pid>`,
+# or launchd stopping the process) we set this event.  synthesize_batch checks
+# the flag between episodes so the in-progress chunk can finish and the catalog
+# entry can be committed before we exit – avoiding a partial-write.
+#
+# SIGKILL (kill -9) cannot be caught; in that case Chatterbox's multiprocessing
+# semaphores leak (harmless warning from resource_tracker at shutdown).
+# ---------------------------------------------------------------------------
+_stop_requested = threading.Event()
+
+
+def _handle_stop_signal(signum: int, _frame: object) -> None:
+    _stop_requested.set()
+
+
+signal.signal(signal.SIGTERM, _handle_stop_signal)
 
 from kellblog_audio.catalog import Catalog
 from kellblog_audio.config import AUDIO_DIR, DATA_DIR, MAX_AUDIO_BODY_WPM, get_settings
@@ -160,9 +182,20 @@ def synthesize_batch(
     # Build the model once and reuse it for the whole batch.
     provider = get_provider(provider_name)
 
+    # Reset stop flag for this run (important when called multiple times in-process,
+    # e.g. from the `status` command's interactive restart prompt).
+    _stop_requested.clear()
+
     ok, err = 0, 0
     qa_checked = 0
     for post in posts:
+        if _stop_requested.is_set():
+            if progress:
+                progress(
+                    f"[yellow]Stop signal received; exiting cleanly "
+                    f"({ok} ok, {err} err so far).[/yellow]"
+                )
+            break
         try:
             synthesize_post(
                 catalog, post.slug, provider_name, force=force, provider=provider
