@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 from pathlib import Path
 from typing import Optional
 
@@ -39,6 +40,19 @@ app = typer.Typer(
     help="Kellblog → podcast pipeline (ingest, TTS, publish)",
 )
 console = Console()
+
+
+def _is_synthesize_running() -> bool:
+    """Return True if a 'kellblog-audio synthesize' process is currently active."""
+    try:
+        result = subprocess.run(
+            ["pgrep", "-f", "kellblog-audio synthesize"],
+            capture_output=True,
+        )
+        # pgrep exits 0 when at least one match is found, 1 when none
+        return result.returncode == 0
+    except Exception:
+        return False
 
 
 def _catalog() -> Catalog:
@@ -142,17 +156,31 @@ def publish(
 
 @app.command()
 def status() -> None:
-    """Show pipeline counts."""
+    """Show pipeline counts and synthesis process state."""
     cat = _catalog()
     c = cat.counts()
+    running = _is_synthesize_running()
+
     table = Table(title="Kellblog Audio Status")
     table.add_column("Metric", style="cyan")
     table.add_column("Count", justify="right")
     for k, v in c.items():
         table.add_row(k.replace("_", " "), str(v))
+    process_label = "[green]Running[/green]" if running else "[red]Stopped[/red]"
+    table.add_row("synthesis process", process_label)
     console.print(table)
     console.print(f"TTS provider: {TTS_PROVIDER}")
     console.print(f"Catalog: {CATALOG_PATH}")
+
+    if not running and c["audio_pending"] > 0:
+        restart = typer.confirm(
+            "\nSynthesis is not running. Would you like to restart it now?",
+            default=False,
+        )
+        if restart:
+            console.print("Restarting synthesis (synthesize --pending) …")
+            ok, err = synthesize_batch(cat, pending_only=True, progress=console.print)
+            console.print(f"Done: {ok} ok, {err} errors (provider={TTS_PROVIDER})")
 
 
 @app.command("reset-audio")
