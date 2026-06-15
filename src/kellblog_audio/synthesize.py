@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import resource
 import shutil
 import signal
 import tempfile
@@ -217,7 +218,21 @@ def synthesize_batch(
                 if progress:
                     progress(f"qa passed {post.slug}: {qa_result.reason}")
             if progress:
-                progress(f"synthesized {post.slug}")
+                rss_mb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss // 1024
+                try:
+                    import torch
+
+                    mps_mb = (
+                        torch.mps.current_allocated_memory() // 1024 // 1024
+                        if torch.backends.mps.is_available()
+                        else 0
+                    )
+                except Exception:
+                    mps_mb = 0
+                progress(
+                    f"synthesized {post.slug}  "
+                    f"[rss={rss_mb}MB mps={mps_mb}MB]"
+                )
             ok += 1
         except Exception as e:
             catalog.update_post(post.slug, audio_status="error", audio_error=str(e)[:500])
