@@ -65,14 +65,23 @@ pending_count() {
 
 # ---------------------------------------------------------------------------
 # Main restart loop
+#
+# We run `synthesize --pending --limit BATCH_SIZE` rather than an unbounded
+# run.  Each batch terminates cleanly after BATCH_SIZE episodes, which forces
+# macOS/Metal to fully release its heap (Activity Monitor "Memory" drops back
+# to baseline).  Without this, Metal's internal allocator holds onto mapped
+# pages across episodes, accumulating tens of GB even after empty_cache().
+#
+# Override with: KELLBLOG_SYNTH_BATCH_SIZE=20 bash scripts/synth_watchdog.sh
 # ---------------------------------------------------------------------------
+BATCH_SIZE="${KELLBLOG_SYNTH_BATCH_SIZE:-50}"
 MAX_CONSECUTIVE_FAILURES=5
 consecutive_failures=0
 
 cd "$REPO_DIR"
 
 log "Watchdog started (PID $$). Logging to: $LOG_FILE"
-log "MAX_CONSECUTIVE_FAILURES=$MAX_CONSECUTIVE_FAILURES"
+log "BATCH_SIZE=$BATCH_SIZE  MAX_CONSECUTIVE_FAILURES=$MAX_CONSECUTIVE_FAILURES"
 
 while true; do
     PENDING="$(pending_count)"
@@ -83,13 +92,13 @@ while true; do
     fi
 
     log "─────────────────────────────────────────"
-    log "Starting synthesis run  ($PENDING episodes pending)…"
-    log "Command: uv run kellblog-audio synthesize --pending"
+    log "Starting synthesis batch  ($PENDING pending, limit=$BATCH_SIZE)…"
+    log "Command: uv run kellblog-audio synthesize --pending --limit $BATCH_SIZE"
 
     START_TS=$(date +%s)
 
     # Run synthesis; EXIT captures the synthesize exit code even through tee.
-    uv run kellblog-audio synthesize --pending 2>&1 | tee -a "$LOG_FILE"
+    uv run kellblog-audio synthesize --pending --limit "$BATCH_SIZE" 2>&1 | tee -a "$LOG_FILE"
     EXIT="${PIPESTATUS[0]}"
 
     ELAPSED=$(( $(date +%s) - START_TS ))
