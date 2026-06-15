@@ -121,12 +121,27 @@ class ChatterboxProvider(TTSProvider):
         return self._model
 
     def synthesize_chunk(self, text: str, out_wav: Path) -> None:
+        import gc
+
+        import torch
         import torchaudio
 
         model = self._get_model()
-        wav = model.generate(text, exaggeration=self.exaggeration)
+        # inference_mode disables autograd tracking, reducing per-step memory overhead.
+        with torch.inference_mode():
+            wav = model.generate(text, exaggeration=self.exaggeration)
         out_wav.parent.mkdir(parents=True, exist_ok=True)
         torchaudio.save(str(out_wav), wav.cpu(), model.sr)
+        # Release the device tensor immediately – torchaudio.save already consumed it
+        # via .cpu(). Without this, the MPS/CUDA allocator caches every chunk's
+        # tensor for the lifetime of the process, which adds up to tens of GB over
+        # a full backfill run.
+        del wav
+        gc.collect()
+        if self._device == "mps":
+            torch.mps.empty_cache()
+        elif self._device == "cuda":
+            torch.cuda.empty_cache()
 
 
 class PiperProvider(TTSProvider):
