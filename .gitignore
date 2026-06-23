@@ -9,4 +9,3 @@ output/
 *.sqlite
 .env
 .DS_Store
-uv.lock
