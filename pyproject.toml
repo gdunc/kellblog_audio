@@ -18,12 +18,12 @@ dependencies = [
 
 [project.optional-dependencies]
 kokoro = ["kokoro>=0.9.4"]
-chatterbox = ["chatterbox-tts>=0.1"]
+chatterbox = ["chatterbox-tts>=0.1.7"]
 piper = ["piper-tts>=1.2.0"]
 # All engines for bake-off comparisons (install with: uv sync --extra compare)
 compare = [
     "kokoro>=0.9.4",
-    "chatterbox-tts>=0.1",
+    "chatterbox-tts>=0.1.7",
     "piper-tts>=1.2.0",
 ]
 dev = ["pytest>=8.0", "pytest-cov>=5.0", "pillow>=10.0"]
