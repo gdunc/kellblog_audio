@@ -1,0 +1,97 @@
+[2026-06-23T11:29:43Z] caffeinate started (PID 53890) – machine will stay awake
+[2026-06-23T11:29:43Z] Watchdog started (PID 53884). Logging to: /Users/grant.duncan/documents/kellblog_audio/logs/kellblog_synth_watchdog_20260623T112943Z.log
+[2026-06-23T11:29:43Z] BATCH_SIZE=50  MAX_CONSECUTIVE_FAILURES=5
+[2026-06-23T11:29:46Z] ─────────────────────────────────────────
+[2026-06-23T11:29:46Z] Starting synthesis batch  (341 pending, limit=50)…
+[2026-06-23T11:29:46Z] Command: uv run kellblog-audio synthesize --pending --limit 50
+╭───────────────────── Traceback (most recent call last) ──────────────────────╮
+│ /Users/grant.duncan/Documents/kellblog_audio/src/kellblog_audio/cli.py:117   │
+│ in synthesize                                                                │
+│                                                                              │
+│   114 │   │   if not (0 <= shard_index < shard_count):                       │
+│   115 │   │   │   raise typer.BadParameter("--shard i must satisfy 0 <= i <  │
+│       N")                                                                    │
+│   116 │   cat = _catalog()                                                   │
+│ ❱ 117 │   ok, err = synthesize_batch(                                        │
+│   118 │   │   cat,                                                           │
+│   119 │   │   pending_only=pending,                                          │
+│   120 │   │   year=year,                                                     │
+│                                                                              │
+│ /Users/grant.duncan/Documents/kellblog_audio/src/kellblog_audio/synthesize.p │
+│ y:185 in synthesize_batch                                                    │
+│                                                                              │
+│   182 │   │   posts = posts[:limit]                                          │
+│   183 │                                                                      │
+│   184 │   # Build the model once and reuse it for the whole batch.           │
+│ ❱ 185 │   provider = get_provider(provider_name)                             │
+│   186 │                                                                      │
+│   187 │   # Reset stop flag for this run (important when called multiple     │
+│       times in-process,                                                      │
+│   188 │   # e.g. from the `status` command's interactive restart prompt).    │
+│                                                                              │
+│ /Users/grant.duncan/Documents/kellblog_audio/src/kellblog_audio/tts.py:268   │
+│ in get_provider                                                              │
+│                                                                              │
+│   265 │   p = _make_provider(provider_name, **kwargs)                        │
+│   266 │   if not p.is_available():                                           │
+│   267 │   │   extra = provider_name if provider_name != "styletts2" else     │
+│       "compare + uv"                                                         │
+│ ❱ 268 │   │   raise ImportError(                                             │
+│   269 │   │   │   f"TTS provider '{provider_name}' is not installed. "       │
+│   270 │   │   │   f"Run: uv sync --extra {extra}"                            │
+│   271 │   │   )                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+ImportError: TTS provider 'chatterbox' is not installed. Run: uv sync --extra 
+chatterbox
+[2026-06-23T11:29:47Z] Synthesis exited with code 1 after 1s.
+[2026-06-23T11:29:47Z] Consecutive failures: 1 / 5
+[2026-06-23T11:29:47Z] Sleeping 30s before restart to let MPS/memory settle…
+[2026-06-23T11:30:11Z] caffeinate stopped
+[2026-06-23T11:30:11Z] Watchdog exiting.
+[2026-06-23T11:30:11Z] ─────────────────────────────────────────
+[2026-06-23T11:30:11Z] Starting synthesis batch  (341 pending, limit=50)…
+[2026-06-23T11:30:11Z] Command: uv run kellblog-audio synthesize --pending --limit 50
+╭───────────────────── Traceback (most recent call last) ──────────────────────╮
+│ /Users/grant.duncan/Documents/kellblog_audio/src/kellblog_audio/cli.py:117   │
+│ in synthesize                                                                │
+│                                                                              │
+│   114 │   │   if not (0 <= shard_index < shard_count):                       │
+│   115 │   │   │   raise typer.BadParameter("--shard i must satisfy 0 <= i <  │
+│       N")                                                                    │
+│   116 │   cat = _catalog()                                                   │
+│ ❱ 117 │   ok, err = synthesize_batch(                                        │
+│   118 │   │   cat,                                                           │
+│   119 │   │   pending_only=pending,                                          │
+│   120 │   │   year=year,                                                     │
+│                                                                              │
+│ /Users/grant.duncan/Documents/kellblog_audio/src/kellblog_audio/synthesize.p │
+│ y:185 in synthesize_batch                                                    │
+│                                                                              │
+│   182 │   │   posts = posts[:limit]                                          │
+│   183 │                                                                      │
+│   184 │   # Build the model once and reuse it for the whole batch.           │
+│ ❱ 185 │   provider = get_provider(provider_name)                             │
+│   186 │                                                                      │
+│   187 │   # Reset stop flag for this run (important when called multiple     │
+│       times in-process,                                                      │
+│   188 │   # e.g. from the `status` command's interactive restart prompt).    │
+│                                                                              │
+│ /Users/grant.duncan/Documents/kellblog_audio/src/kellblog_audio/tts.py:268   │
+│ in get_provider                                                              │
+│                                                                              │
+│   265 │   p = _make_provider(provider_name, **kwargs)                        │
+│   266 │   if not p.is_available():                                           │
+│   267 │   │   extra = provider_name if provider_name != "styletts2" else     │
+│       "compare + uv"                                                         │
+│ ❱ 268 │   │   raise ImportError(                                             │
+│   269 │   │   │   f"TTS provider '{provider_name}' is not installed. "       │
+│   270 │   │   │   f"Run: uv sync --extra {extra}"                            │
+│   271 │   │   )                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+ImportError: TTS provider 'chatterbox' is not installed. Run: uv sync --extra 
+chatterbox
+[2026-06-23T11:30:12Z] Synthesis exited with code 1 after 1s.
+[2026-06-23T11:30:12Z] Consecutive failures: 2 / 5
+[2026-06-23T11:30:12Z] Sleeping 30s before restart to let MPS/memory settle…
+[2026-06-23T11:30:18Z] caffeinate stopped
+[2026-06-23T11:30:18Z] Watchdog exiting.

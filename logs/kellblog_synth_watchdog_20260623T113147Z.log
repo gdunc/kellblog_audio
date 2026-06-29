@@ -1,0 +1,19 @@
+[2026-06-23T11:31:47Z] caffeinate started (PID 56576) – machine will stay awake
+[2026-06-23T11:31:47Z] Watchdog started (PID 56570). Logging to: /Users/grant.duncan/Documents/kellblog_audio/logs/kellblog_synth_watchdog_20260623T113147Z.log
+[2026-06-23T11:31:47Z] BATCH_SIZE=50  MAX_CONSECUTIVE_FAILURES=5
+[2026-06-23T11:31:48Z] ─────────────────────────────────────────
+[2026-06-23T11:31:48Z] Starting synthesis batch  (341 pending, limit=50)…
+[2026-06-23T11:31:48Z] Command: uv run kellblog-audio synthesize --pending --limit 50
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/diffusers/models/lora.py:393: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+error should-your-startup-have-a-quota-club-and-how-much-to-spend-on-it: 
+'NoneType' object is not callable
+error host-analytics-vector-capital-growth: 'NoneType' object is not callable
+[2026-06-23T11:32:42Z] caffeinate stopped
+[2026-06-23T11:32:42Z] Watchdog exiting.
+[2026-06-23T11:32:42Z] Synthesis exited with code 130 after 54s.
+[2026-06-23T11:32:42Z] Consecutive failures: 1 / 5
+[2026-06-23T11:32:42Z] Sleeping 30s before restart to let MPS/memory settle…
+[2026-06-23T11:32:47Z] caffeinate stopped
+[2026-06-23T11:32:47Z] Watchdog exiting.

@@ -942,11 +942,13 @@ dependencies = [
 [package.optional-dependencies]
 chatterbox = [
     { name = "chatterbox-tts" },
+    { name = "setuptools" },
 ]
 compare = [
     { name = "chatterbox-tts" },
     { name = "kokoro" },
     { name = "piper-tts" },
+    { name = "setuptools" },
 ]
 dev = [
     { name = "pillow" },
@@ -978,6 +980,8 @@ requires-dist = [
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=5.0" },
     { name = "readability-lxml", specifier = ">=0.8" },
     { name = "rich", specifier = ">=13.7" },
+    { name = "setuptools", marker = "extra == 'chatterbox'", specifier = "<82" },
+    { name = "setuptools", marker = "extra == 'compare'", specifier = "<82" },
     { name = "soundfile", specifier = ">=0.12" },
     { name = "typer", specifier = ">=0.12" },
 ]

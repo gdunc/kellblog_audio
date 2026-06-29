@@ -1,0 +1,1655 @@
+[2026-06-15T17:17:27Z] caffeinate started (PID 26149) – machine will stay awake
+[2026-06-15T17:17:27Z] Watchdog started (PID 26132). Logging to: /Users/grant.duncan/documents/kellblog_audio/logs/kellblog_synth_watchdog_20260615T171727Z.log
+[2026-06-15T17:17:27Z] BATCH_SIZE=50  MAX_CONSECUTIVE_FAILURES=5
+[2026-06-15T17:17:29Z] ─────────────────────────────────────────
+[2026-06-15T17:17:29Z] Starting synthesis batch  (512 pending, limit=50)…
+[2026-06-15T17:17:29Z] Command: uv run kellblog-audio synthesize --pending --limit 50
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/perth/perth_net/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/diffusers/models/lora.py:393: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+loaded PerthNet (Implicit) at step 250,000
+error interest-misalignments-in-silicon-valley-startups: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error open-source-business-models-revisited: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error why-palantir-makes-my-head-hurt: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error what-the-ceo-really-thinks-of-marketing-and-5-things-you-can-do-about-it: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error the-silicon-valley-strategic-pivot: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error marketing-vision-while-selling-product-the-31-repositioning: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error bobby-fischer-applied-to-silicon-valley-pattern-matching-vs-good-moves: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error 12-questions-executives-can-ask-to-improve-their-decision-making: Sizes of
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error a-note-to-the-results-oriented-just-be-nice: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error hp-rumored-to-be-buying-uks-autonomy-for-10b: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error will-oracle-or-ibm-start-a-bidding-war-with-hp-over-autonomy: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error 
+thoughts-on-the-jive-registration-statement-s-1-and-initial-public-offering-ipo:
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error the-butterfly-effect-and-endeca: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error 
+first-day-share-price-appreciation-is-not-the-correct-measure-of-ipo-success: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error 
+two-bosses-are-better-than-one-thoughts-on-the-virtues-of-matrixed-organizations
+: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+error the-one-key-to-dealing-with-senior-executives-answer-the-question: Sizes 
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error the-one-thing-to-get-done-before-sales-kickoff: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error the-independently-wealthy-salesperson: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-right-time-to-raise-money-at-a-startup: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error sayings-to-beware-the-future-of-the-company: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error the-simple-definitive-one-step-hot-market-test: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error the-importance-of-nurture-in-nascent-markets: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error kellblog-2-0: Sizes of tensors must match except in dimension 1. Expected 
+size 1 but got size 2 for tensor number 1 in the list.
+error new-startup-ceos-and-the-three-doors: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-self-fulfilling-3x-pipeline-coverage-prophecy: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error lifers-fbi-guys-and-acquired-ceos: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-dumb-vc-controversy-financial-vs-operating-vcs-2: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error what-drives-saas-company-valuation-growth: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error what-to-do-if-youre-winning-the-product-evaluation-but-losing-the-deal-2: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error management-and-bill-walshs-three-types-of-players: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error a-few-of-my-favorite-quotes: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error how-much-does-my-general-manager-need-to-know-about-my-department: Sizes 
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error sales-is-from-mars-and-engineering-is-from-venus: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error 5-things-executives-should-say-about-their-budgets: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error measuring-saas-or-cloud-renewal-rates-way-more-than-meets-the-eye: Sizes 
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error thoughts-on-mongodbs-humongous-150m-round: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error the-customer-acquisition-cost-cac-ratio-another-subtle-saas-metric: Sizes 
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error 
+the-pillorying-of-marklogic-why-selling-disruptive-technology-to-the-government-
+is-hard-and-risky: Sizes of tensors must match except in dimension 1. Expected 
+size 1 but got size 2 for tensor number 1 in the list.
+error kellblogs-10-predictions-for-2014: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error did-you-just-make-a-plan-or-a-budget: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error 10-things-never-to-do-at-a-business-dinner: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error is-salesforce-siebel-a-classic-disruption-case-or-not: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error the-old-dont-bring-up-a-problem-unless-you-have-a-proposed-solution-rule: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error to-pre-meet-or-not-to-pre-meet-that-is-the-question: Sizes of tensors must
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error burn-baby-burn-a-look-at-the-box-s-1: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error strategic-focus-im-just-trying-to-get-my-space-together: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error if-marc-benioff-carried-a-rabbits-foot-would-you: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error a-look-at-the-zendesk-s-1-ipo: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error woe-is-media-lessons-from-tidemarks-pr: Sizes of tensors must match except
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-box-s-1-delayed-ipo-and-the-genius-of-tien-zuo: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+Done: 0 ok, 50 errors (provider=chatterbox)
+[2026-06-15T17:18:07Z] Synthesis run finished cleanly (exit 0) in 38s.
+[2026-06-15T17:18:07Z] ─────────────────────────────────────────
+[2026-06-15T17:18:07Z] Starting synthesis batch  (462 pending, limit=50)…
+[2026-06-15T17:18:07Z] Command: uv run kellblog-audio synthesize --pending --limit 50
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/perth/perth_net/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/diffusers/models/lora.py:393: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+loaded PerthNet (Implicit) at step 250,000
+error product-is-not-a-four-letter-word: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error ten-classic-business-books-for-entrepreneurs-startup-founders: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error why-i-as-ceo-love-driver-based-planning: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error you-cant-analyze-churn-by-analyzing-churn: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error the-ultimate-saas-metric-ltv-cac: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error a-missive-to-human-resources-hr: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error thoughts-on-hiring-working-for-tbh: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error average-contract-duration-and-saas-renewals-all-is-not-as-it-appears: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error why-im-against-succession-planning-at-startups: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error make-a-plan-that-you-can-beat: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error churn-net-first-or-sum-first: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error dont-be-a-metrics-slave: Sizes of tensors must match except in dimension 
+1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error it-aint-easy-making-money-in-open-source-thoughts-on-the-hortonworks-s-1: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error cfos-more-strategic-than-ever: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error some-high-tech-career-counseling-tips: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error kellblog-ten-predictions-for-2015: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error managing-the-fundamental-tension-in-marketing: Sizes of tensors must match
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error why-cant-pr-people-do-math-2-2: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error career-development-what-it-really-means-to-be-a-manager-director-or-vp: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error 
+a-disney-parking-lot-attendant-gets-more-training-than-your-typical-250k-enterpr
+ise-sales-rep-thoughts-on-bootcamps: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error one-more-time-what-drives-saas-company-valuation-growth: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error survivor-bias-in-churn-calculations-say-its-not-so: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error conflict-avoidance-causes-conflict-managers-too-nice-for-their-own-good: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error career-advice-simplifiers-go-far-complexifiers-get-stuck: Sizes of tensors
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error the-curse-of-the-megaround: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error bottom-fishing-acquisitions-and-catching-falling-knives: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error 
+please-give-me-a-10-interpreting-customer-satisfaction-surveys-in-an-era-of-bias
+: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+error the-second-agenda-why-no-executive-should-ever-have-one: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error collected-wisdom-on-business-and-life-from-the-hbs-class-of-1963: Sizes of
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error are-your-managers-good-enough-a-simple-test: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error managing-change-the-sailboat-tack-principle: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error stop-making-the-1-mistake-in-presentations: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error my-favorite-quotes-on-planning: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error i-dont-want-to-talk-to-you-anymore: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error curse-of-the-megaround-expectations-and-power: Sizes of tensors must match
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error 
+six-words-that-can-make-or-break-your-credibility-ill-get-it-to-you-tomorrow: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error the-perils-of-measuring-a-saas-business-on-total-contract-value-tcv: Sizes
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error what-marketing-costs-should-be-included-in-cac-calculations: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error the-best-work-parable: Sizes of tensors must match except in dimension 1. 
+Expected size 1 but got size 2 for tensor number 1 in the list.
+error theoretical-tcv-a-necessary-new-saas-metric: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error the-great-reckoning-thoughts-on-the-deflation-of-technology-bubble-2-0: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error kellblog-predictions-for-2016: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-ceo-should-be-the-most-bullish-person-on-the-future-of-the-company: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error how-to-run-a-sales-kickoff: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error saas-stocks-how-much-punishment-is-in-store: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error the-saasacre-part-ii-time-for-the-rebound: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error book-review-from-impossible-to-inevitable: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error thoughts-on-jeff-weiners-pay-no-attention-to-the-stock-message: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error cac-payback-period-the-most-misunderstood-saas-metric: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error too-much-money-makes-you-stupid-an-alec-baldwin-mini-series: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+Done: 0 ok, 50 errors (provider=chatterbox)
+[2026-06-15T17:18:41Z] Synthesis run finished cleanly (exit 0) in 34s.
+[2026-06-15T17:18:42Z] ─────────────────────────────────────────
+[2026-06-15T17:18:42Z] Starting synthesis batch  (412 pending, limit=50)…
+[2026-06-15T17:18:42Z] Command: uv run kellblog-audio synthesize --pending --limit 50
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/perth/perth_net/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/diffusers/models/lora.py:393: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+loaded PerthNet (Implicit) at step 250,000
+error introducing-a-new-saas-metric-the-hype-factor: Sizes of tensors must match
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error marketing-is-too-important-to-be-left-to-the-marketing-department: Sizes 
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error the-worst-advice-ever-for-job-interviews: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error myths-of-the-headless-company: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error can-the-media-please-stop-referring-to-company-sizes-by-market-cap: Sizes 
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error whose-team-is-it-anyway-the-90-day-rule: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error you-can-never-fire-someone-too-early: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error were-not-buddies-thoughts-on-managers-too-preoccupied-with-being-liked: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error lead-nurturing-fast-and-slow: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error how-i-got-one-marketing-vp-job-a-quick-lesson: Sizes of tensors must match
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error the-three-golden-rules-of-feedback: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error on-hiring-promote-stars-not-strangers: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-four-levers-of-saas: Sizes of tensors must match except in dimension 
+1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error win-them-alone-lose-them-together: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-era-of-consumer-deception-why-do-we-tolerate-such-price-opacity: Sizes
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error how-to-manage-your-first-sales-vp-at-a-startup: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error the-opportunity-cost-of-debating-facts: Sizes of tensors must match except
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error saas-startup-one-slide-financial-dashboard: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error a-fresh-look-at-how-to-measure-saas-churn-rates: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error kellblogs-2017-predictions: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error 
+in-memory-analytics-the-other-kind-and-a-key-success-factor-for-your-career: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error the-evolution-of-marketing-thanks-to-saas: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error the-dogshit-bar-a-memorable-market-research-concept: Sizes of tensors must
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error 10-questions-to-ask-yourself-before-moving-into-management: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error the-role-of-professional-services-in-a-saas-business: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error do-you-want-to-judged-on-intentions-or-results: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error why-has-standalone-cloud-bi-been-such-a-tough-slog: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error how-to-get-your-startup-a-halo: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error how-to-train-your-vp-of-sales-to-think-about-the-forecast: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error blocking-the-end-run-11-words-to-reduce-politics-in-your-organization: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error dear-marketing-stop-putting-the-template-over-the-story: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error the-strategy-compiler-how-to-avoid-the-great-strategy-you-couldnt-execute:
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error a-look-at-the-tintri-s-1: Sizes of tensors must match except in dimension 
+1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error detecting-and-eliminating-the-rolling-hairball: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error the-saas-rule-of-40: Sizes of tensors must match except in dimension 1. 
+Expected size 1 but got size 2 for tensor number 1 in the list.
+error simple-rules-to-make-it-easier-to-assemble-your-startups-board-deck-2: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error are-you-a-challenging-or-a-just-plain-difficult-direct-report: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error can-you-solution-sell-without-selling-solutions: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error kellblog-dave-kellogg-featured-on-the-official-saastr-podcast: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error dont-let-product-management-turn-into-the-roadmap-guys: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error just-effing-demo: Sizes of tensors must match except in dimension 1. 
+Expected size 1 but got size 2 for tensor number 1 in the list.
+error 
+how-to-align-marketing-budgets-with-sales-targets-using-win-rates-close-rates-an
+d-milestone-vs-flow-analysis: Sizes of tensors must match except in dimension 1.
+Expected size 1 but got size 2 for tensor number 1 in the list.
+error using-close-rates-to-align-sales-targets-and-marketing-budgets: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error using-pipeline-conversion-rates-as-triangulation-forecasts: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error 
+handling-nagging-endless-disagreements-with-the-disagree-and-commit-and-new-info
+rmation-principles: Sizes of tensors must match except in dimension 1. Expected 
+size 1 but got size 2 for tensor number 1 in the list.
+error kellblog-predictions-for-2018: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error eight-words-that-can-limit-your-career-let-me-get-back-to-you-on-that: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error speaking-of-india-three-lessons-on-india-based-product-development: Sizes 
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error quota-over-assignment-and-culture: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error my-saastr-talk-abstract-10-non-obvious-things-about-scaling-saas: Sizes of
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+Done: 0 ok, 50 errors (provider=chatterbox)
+[2026-06-15T17:19:23Z] Synthesis run finished cleanly (exit 0) in 41s.
+[2026-06-15T17:19:24Z] ─────────────────────────────────────────
+[2026-06-15T17:19:24Z] Starting synthesis batch  (362 pending, limit=50)…
+[2026-06-15T17:19:24Z] Command: uv run kellblog-audio synthesize --pending --limit 50
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/perth/perth_net/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/diffusers/models/lora.py:393: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+loaded PerthNet (Implicit) at step 250,000
+error how-to-walk-from-a-deal: Sizes of tensors must match except in dimension 
+1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error my-saastr-2018-presentation-ten-non-obvious-things-about-scaling-saas: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error the-single-biggest-mbo-okr-myth: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-question-that-ceos-too-often-dont-discuss-with-the-board-2: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error my-appearance-on-disruptv-episode-100: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-leaky-bucket-net-new-arr-and-the-saas-growth-efficiency-index: Sizes 
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error bookings-vs-billings-in-a-saas-company: Sizes of tensors must match except
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error always-scrubbing-the-pipeline-means-never-scrubbing-the-pipeline: Sizes of
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error talking-competition-methinks-thou-doth-protest-too-much: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error the-two-engines-of-saas-qcrs-and-devs: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-domo-s-1-burn-baby-burn: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-two-archetypal-marketing-messages-bags-fly-free-and-soup-is-good-food:
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error 
+important-subtleties-in-calculating-quarterly-annual-and-atr-based-churn-rates: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error how-to-sales-manage-upside-and-unlikely-deals: Sizes of tensors must match
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error the-use-of-ramped-rep-equivalents-rres-in-sales-analytics-and-modeling: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error 
+the-biggest-mistake-youre-likely-making-in-calculating-churn-annualizing-and-wei
+ghting-multi-year-atr-churn-rates: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error 
+video-of-my-saastr-2018-presentation-ten-non-obvious-things-about-scaling-saas: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error the-three-types-of-customer-success-manager: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error 
+using-win-themes-to-improve-your-sales-management-and-increase-win-rates-2: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error how-to-present-a-quarterly-forecast-to-your-saas-company-board: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error lost-and-founder-a-painful-yet-valuable-read: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error should-your-startup-have-a-quota-club-and-how-much-to-spend-on-it: Sizes 
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error host-analytics-vector-capital-growth: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error seven-books-not-to-give-the-boss-for-christmas: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error a-simple-trick-to-get-your-ceo-closer-to-your-team: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error the-next-chapter: Sizes of tensors must match except in dimension 1. 
+Expected size 1 but got size 2 for tensor number 1 in the list.
+error kellblog-predictions-for-2019: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error not-in-my-kitchen-you-dont-leaders-as-norm-setters: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error two-natural-reactions-that-great-managers-suppress: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error an-update-on-the-saas-rule-of-40: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error saastr-2019-presentation-preview-five-questions-saas-ceo-wrestle-with: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error rule-of-40-glideslope-planning: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error 
+slides-from-my-saastr-annual-2019-presentation-5-questions-ceos-struggle-with: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error price-qualification-the-tiffany-way: Sizes of tensors must match except in
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error lets-take-the-cult-out-of-culture: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error hiring-profiles-step-0-of-a-successful-onboarding-program: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error 
+video-of-my-saastr-2019-presentation-the-five-questions-startup-ceos-worry-about
+: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+error the-three-marketing-books-all-founder-ceos-should-read: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error what-it-takes-to-make-a-great-saas-company: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error are-you-counting-payments-as-renewals: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-introverts-guide-to-glad-handing: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-two-dimensions-of-startup-performance: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error is-another-saasacre-in-the-offing: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error reacting-to-feedback-as-ceo: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error my-final-verdict-on-multi-year-pre-paid-deals: Sizes of tensors must match
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error whats-the-cause-of-death-in-your-churn-reporting: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error the-rule-of-40-down-but-not-out: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-board-view-slides-from-my-presentation-at-host-perform-2019: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error the-market-leader-play-how-to-run-it-how-to-respond: Sizes of tensors must
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error communications-lessons-from-mayor-pete: Sizes of tensors must match except
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+Done: 0 ok, 50 errors (provider=chatterbox)
+[2026-06-15T17:20:30Z] Synthesis run finished cleanly (exit 0) in 66s.
+[2026-06-15T17:20:31Z] ─────────────────────────────────────────
+[2026-06-15T17:20:31Z] Starting synthesis batch  (312 pending, limit=50)…
+[2026-06-15T17:20:31Z] Command: uv run kellblog-audio synthesize --pending --limit 50
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/perth/perth_net/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/diffusers/models/lora.py:393: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+loaded PerthNet (Implicit) at step 250,000
+error 
+appearance-on-the-twenty-minute-vc-financing-thoughts-the-private-equity-sales-p
+rocess-and-more: Sizes of tensors must match except in dimension 1. Expected 
+size 1 but got size 2 for tensor number 1 in the list.
+error slides-from-my-presentation-at-a-private-equity-sm-summit: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error career-decisions-what-to-look-for-in-a-software-startup: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error ten-ways-to-get-the-most-out-of-conferences: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error stopping-inception-churn-the-prospective-customer-success-review: Sizes of
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error new-arr-and-cac-in-price-ramped-vs-auto-expanding-deals: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error good-ceo-habits-proactively-update-your-board-at-the-end-of-every-quarter:
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error things-to-avoid-in-selecting-an-executive-level-job-at-a-software-startup:
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error avoiding-the-ten-year-stock-option-trap: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error my-appearance-on-the-private-equity-funcast: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error joining-the-profisee-board-of-directors: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error if-rebrandings-the-answer-what-was-the-question: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error ive-got-a-crazy-idea-how-about-we-focus-on-next-quarters-pipeline: Sizes 
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error whose-company-is-it-anyway-differences-between-founders-and-hired-ceos: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error do-we-have-enough-pipeline-the-one-simple-metric-many-folks-forget: Sizes 
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error 
+the-most-important-chart-for-managing-the-pipeline-the-opportunity-histogram: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error number-7-on-the-all-time-top-saastr-podcasts-on-the-importance-of-ltv-cac:
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error 
+the-red-badge-of-courage-helping-overachievers-to-manage-and-process-failure: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error 
+a-historical-perspective-on-why-sal-and-sql-appear-to-be-defined-backwards: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error should-sdrs-report-to-sales-or-marketing: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error why-every-startup-needs-an-inverted-demand-generation-funnel-part-i: Sizes
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error why-every-startup-needs-an-inverted-demand-generation-funnel-part-ii: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error kellblogs-10-predictions-for-2020: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-evolution-of-software-marketing-hey-marketing-go-get-this: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error why-every-startup-needs-an-inverted-demand-generation-funnel-part-iii: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error 
+ten-questions-founder-ceos-should-always-be-able-to-answer-about-their-startups:
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error what-to-do-when-someone-says-youre-not-listening: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error 
+how-to-make-and-use-a-proper-sales-bookings-productivity-and-quota-capacity-mode
+l: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+error does-enterprise-software-need-same-rep-sales-as-metric: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error how-startup-ceos-should-think-about-the-coronavirus: Sizes of tensors must
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error how-startup-ceos-should-think-about-the-coronavirus-part-ii: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error stopping-the-sales-marketing-double-drowning: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error a-missive-to-marketing-impose-simplicity: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error how-startup-ceos-should-think-about-the-coronavirus-part-iii-useful-links:
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error zero-sum-disease-arr-vs-services: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error should-customer-success-report-into-sales-or-the-ceo: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error on-recruiting-the-must-have-nice-to-have-list: Sizes of tensors must match
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error marketing-exists-to-make-sales-easier: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error on-the-perils-of-taking-advice-from-successful-business-people: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error 
+will-your-ceo-search-produce-the-best-candidate-or-the-least-objectionable: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error the-first-three-slides-of-a-saas-board-deck-with-company-key-metrics: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error appearance-on-the-ai-and-the-future-of-work-podcast-with-dan-turchin: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error kellblog-on-saas-metrics-a-comprehensive-introduction-podcast: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error measuring-ramped-and-steady-state-sales-productivity-the-rep-ramp-chart: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error congratulations-youve-created-a-category-now-what: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error 
+why-you-should-consider-eliminating-the-title-implementation-consultant-from-you
+r-startup: Sizes of tensors must match except in dimension 1. Expected size 1 
+but got size 2 for tensor number 1 in the list.
+error upcoming-pmm-hive-interview-marketing-strategy-in-hot-vs-cold-markets: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error branded-features-resist-the-temptation: Sizes of tensors must match except
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error ten-pearls-of-enterprise-software-startup-wisdom-from-my-friend-mark-tice:
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error book-review-of-good-strategy-bad-strategy-by-richard-rumelt: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+Done: 0 ok, 50 errors (provider=chatterbox)
+[2026-06-15T17:21:33Z] Synthesis run finished cleanly (exit 0) in 62s.
+[2026-06-15T17:21:33Z] ─────────────────────────────────────────
+[2026-06-15T17:21:33Z] Starting synthesis batch  (262 pending, limit=50)…
+[2026-06-15T17:21:34Z] Command: uv run kellblog-audio synthesize --pending --limit 50
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/perth/perth_net/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/diffusers/models/lora.py:393: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+loaded PerthNet (Implicit) at step 250,000
+error the-pipeline-chicken-egg-problem: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error are-we-due-for-a-saasacre: Sizes of tensors must match except in dimension
+1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error how-to-get-sales-and-marketing-working-together-presentation: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error saastr-2020-session-preview-churn-is-dead-long-live-net-dollar-retention: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error 
+churn-is-dead-long-live-net-dollar-retention-slides-from-my-saastr-2020-presenta
+tion: Sizes of tensors must match except in dimension 1. Expected size 1 but got
+size 2 for tensor number 1 in the list.
+error 
+video-of-my-saastr-2020-presentation-churn-is-dead-long-live-net-dollar-retentio
+n: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+error forward-to-the-next-cmo-a-guide-to-marketing-operational-excellence: Sizes
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error 
+what-exactly-do-you-mean-by-anal-thoughts-on-leadership-and-self-awareness: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error unlearning-as-you-scale-presentation-from-a-vc-portfolio-ceo-summit: Sizes
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error should-your-sdrs-look-for-projects-or-pain: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error 
+marketing-targeting-its-not-just-where-you-fish-its-what-you-put-on-the-hook: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error the-key-to-branding-success-staying-in-character: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error chatting-about-marketing-slides-from-a-pe-portfolio-company-ceo-summit: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error the-holy-grail-of-the-repeatable-sales-process-is-repeatability-enough: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error the-holy-grail-of-enterprise-sales-defining-the-repeatable-sales-process: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error the-holy-grail-of-enterprise-sales-proving-a-repeatable-sales-process: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error the-holy-grail-of-enterprise-sales-is-a-repeatable-sales-process-enough: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error an-epitaph-for-intrapreneurship: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error kellblog-2021-predictions: Sizes of tensors must match except in dimension
+1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error next-generation-planning-and-finance-a-broader-and-slightly-deeper-look: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error what-to-do-when-you-need-pipeline-in-a-hurry: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error thoughts-on-hiring-your-first-vp-of-sales: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error why-im-advising-bluecore: Sizes of tensors must match except in dimension 
+1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error what-are-the-units-on-your-lead-saas-metric-and-culture: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error 
+my-two-appearances-on-the-saashimi-podcast-comprehensive-saas-metrics-overview-a
+nd-the-differences-between-pe-and-vc: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error congratulations-to-nuxeo-on-its-acquisition-by-hyland: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error what-is-a-minimum-viable-product-my-favorite-mvp-analogy: Sizes of tensors
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error what-a-pipeline-coverage-target-of-3x-says-to-me: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error the-three-uns-of-successful-founders: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error use-triangulation-forecasts-for-better-conversations-about-the-forecast: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error 
+using-to-go-coverage-to-better-understand-pipeline-and-improve-forecasting: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error using-this-next-all-quarter-analysis-to-understand-your-pipeline: Sizes of
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error 
+the-product-superpowers-that-few-flex-join-special-guest-brett-queener-on-the-sa
+as-product-power-breakfast: Sizes of tensors must match except in dimension 1. 
+Expected size 1 but got size 2 for tensor number 1 in the list.
+error abm-is-not-b2b-and-other-rants-on-account-based-marketing: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error a-ten-point-sales-management-framework-for-enterprise-saas-startups: Sizes
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error navel-gazing-market-research-and-the-hypothesis-file: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error appearance-on-the-metrics-that-measure-up-podcast: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error 
+saas-product-power-breakfast-with-stephanie-mcreynolds-on-category-creation: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error private-equity-funcast-a-board-perspective-on-peopleops: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error how-to-be-a-good-independent-board-member: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error three-people-to-call-when-you-need-help-with-positioning: Sizes of tensors
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error pulse-2021-slides-net-dollar-retention-ndr-benchmarks-and-thoughts: Sizes 
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error evan-kaplan-product-power-breakfast: Sizes of tensors must match except in
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error a-quick-critique-of-clubhouse: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error 
+structuring-organization-and-duties-of-product-marketing-and-competitive-analysi
+s: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+error 
+tomorrows-product-power-breakfast-with-paul-jozefak-on-introducing-saas-as-a-lay
+er-to-lighten-the-legacy-load: Sizes of tensors must match except in dimension 
+1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error 
+b2b-saas-metrics-2020-benchmark-report-a-discussion-with-ray-rike-and-the-saas-c
+fo: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+error 
+diary-of-a-novice-ned-a-look-inside-the-world-of-independent-directors-at-startu
+ps: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+error the-board-brought-me-in-telltale: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error 
+core-saas-metrics-interview-at-saasboomi-now-available-on-the-orbit-shift-podcas
+t: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+Done: 0 ok, 50 errors (provider=chatterbox)
+[2026-06-15T17:22:16Z] Synthesis run finished cleanly (exit 0) in 42s.
+[2026-06-15T17:22:17Z] ─────────────────────────────────────────
+[2026-06-15T17:22:17Z] Starting synthesis batch  (212 pending, limit=50)…
+[2026-06-15T17:22:17Z] Command: uv run kellblog-audio synthesize --pending --limit 50
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/perth/perth_net/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/diffusers/models/lora.py:393: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+loaded PerthNet (Implicit) at step 250,000
+error appearance-on-the-yes-and-marketing-podcast: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error 
+the-three-levels-of-director-protection-charter-provisions-do-insurance-and-inde
+mnification-agreements: Sizes of tensors must match except in dimension 1. 
+Expected size 1 but got size 2 for tensor number 1 in the list.
+error why-im-joining-balderton-as-an-executive-in-residence-eir: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error preview-of-my-saastr-2021-session-a-ceos-guide-to-marketing: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error slides-from-my-saastr-2021-presentation-a-ceos-guide-to-marketing: Sizes 
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error join-me-at-saastock-emea-for-how-to-make-a-marketing-machine: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error video-of-my-presentation-at-saastr-2021-a-ceos-guide-to-marketing: Sizes 
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error the-top-two-high-level-questions-about-sales-and-associated-metrics: Sizes
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error the-four-sources-of-pipeline-and-the-balance-across-them: Sizes of tensors
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error are-we-growing-fast-enough: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error my-perspectives-on-growth-presentation: Sizes of tensors must match except
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error how-to-know-if-you-have-the-right-executives-on-your-leadership-team: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error should-your-website-drive-prospects-to-a-demo: Sizes of tensors must match
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error 
+how-to-build-a-marketing-machine-presentation-from-a-balderton-capital-meetup: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error kellblog-saastr-podcast-episode-named-to-all-time-top-25: Sizes of tensors
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error demo-is-not-a-sales-process-stage-sorry: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error kellblog-predictions-for-2022: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error why-execution-matters: Sizes of tensors must match except in dimension 1. 
+Expected size 1 but got size 2 for tensor number 1 in the list.
+error seed-stage-positioning-lock-and-load: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-market-education-bet-and-the-fundamental-tension-quadrant: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error how-to-lead-a-strategic-board-discussion: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error a-ceos-guide-to-marketing-my-saastr-2021-official-video: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error why-you-should-always-create-sales-opportunities-at-zero-dollar-value: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error everything-ive-learned-about-recruiting-and-interviewing: Sizes of tensors
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error 
+appearance-on-the-precursive-podcast-the-role-of-services-in-todays-saas-market:
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error the-sales-marketing-expense-ratio: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error traditional-b2b-sales-is-dead-long-live-the-uce: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error 
+understanding-saas-marketing-as-an-investor-appearance-on-the-novice-investor-po
+dcast: Sizes of tensors must match except in dimension 1. Expected size 1 but 
+got size 2 for tensor number 1 in the list.
+error 
+crash-course-in-customer-success-saas-metrics-appearance-on-the-churnzero-podcas
+t: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+error marketings-uncomfortable-relationship-with-the-truth: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error how-should-ceos-answer-what-keeps-you-up-at-night: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error 
+the-pipeline-progression-chart-why-i-like-it-better-than-just-tracking-rolling-f
+our-quarter-pipeline: Sizes of tensors must match except in dimension 1. 
+Expected size 1 but got size 2 for tensor number 1 in the list.
+error whose-company-is-it-anyway-is-the-board-your-boss: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error preview-of-my-saastr-europa-talk-the-top-5-scale-up-mistakes: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error 
+talking-burn-appearance-on-the-metric-stack-podcast-on-cash-conversion-score-and
+-related-metrics: Sizes of tensors must match except in dimension 1. Expected 
+size 1 but got size 2 for tensor number 1 in the list.
+error how-and-where-to-answer-three-basic-questions-on-your-website: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error the-qualified-sales-leader-a-must-read-book-for-product-oriented-founders:
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error 
+you-dont-want-that-a-rant-from-lance-walter-on-product-management-communications
+: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+error saastr-europa-slides-the-top-5-mistakes-in-scale-up: Sizes of tensors must
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error the-top-5-mistakes-european-startups-make-in-us-expansion: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error practical-thoughts-on-branding-for-software-startups: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error the-parable-of-the-amicable-cmo-cro-relationship: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error official-video-of-my-saastr-europa-presentation: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error the-marketing-bake-sale-hey-we-can-put-on-a-show: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error the-pros-and-cons-of-the-backdoor-search: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error how-quickly-should-you-grow-to-key-arr-milestones-the-rule-of-56789: Sizes
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error 
+playing-bigger-vs-playing-to-win-how-shall-we-play-the-marketing-strategy-game: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error the-decomposition-of-marketing: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error did-your-board-order-a-decision-or-a-discussion: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error slides-from-my-saastock-workshop-on-us-expansion-for-european-startups: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+Done: 0 ok, 50 errors (provider=chatterbox)
+[2026-06-15T17:22:59Z] Synthesis run finished cleanly (exit 0) in 42s.
+[2026-06-15T17:23:00Z] ─────────────────────────────────────────
+[2026-06-15T17:23:00Z] Starting synthesis batch  (162 pending, limit=50)…
+[2026-06-15T17:23:00Z] Command: uv run kellblog-audio synthesize --pending --limit 50
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/perth/perth_net/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/diffusers/models/lora.py:393: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+loaded PerthNet (Implicit) at step 250,000
+error accept-no-imitations-or-subtitutes-lazy-nrr-is-not-nrr: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error 
+you-cant-fix-a-cac-payback-period-the-operator-vs-investor-view-of-saas-metrics:
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error mapping-from-annual-to-monthly-and-usage-based-saas-metrics: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error slides-from-my-saastock-dublin-presentation-on-gtm-efficiency: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error slides-from-a-cfo-summit-on-leading-and-lagging-indicators: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error key-takeaways-from-the-2022-keybanc-saas-metrics-survey: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error how-to-fix-a-broken-go-to-market-motion-using-a-steady-state-funnel: Sizes
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error the-balderton-founders-guide-to-b2b-sales: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error how-to-present-an-operating-plan-to-your-board: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error 
+fighting-envelopment-strategies-when-and-how-to-don-your-startup-coyote-vest: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error emerging-stronger-from-the-downturn-than-you-went-in-a-balderton-webinar: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error slides-from-emerging-stronger-from-the-downturn: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error appearance-on-the-ai-and-the-future-of-work-podcast: Sizes of tensors must
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error 
+video-of-my-saastock-presentation-strategies-and-tactics-to-drive-gtm-efficiency
+: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+error kellblog-predictions-for-2023: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error a-tale-of-two-companies-the-professional-services-paradox: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error slides-from-the-balderton-founders-guide-to-b2b-sales-webinar: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error my-saas-metrics-syllabus: Sizes of tensors must match except in dimension 
+1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error appearance-on-the-saas-revolution-podcast: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error the-key-to-making-market-research-actionable: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error the-keys-to-making-market-research-actionable-part-ii: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error 
+is-a-dream-a-lie-if-it-dont-come-true-founders-aspirations-and-company-potential
+: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+error my-thoughts-on-the-svb-meltdown: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error metrics-that-matter-in-2023-my-kiwisaas-presentation-slides: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error write-actionable-emails-aka-if-youre-going-to-make-a-proposal-make-one: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error dont-hide-behind-ending-arr: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error 
+the-seven-things-founders-need-to-know-about-sales-saastr-workshop-wednesdays-5-
+3-at-10am-pacific: Sizes of tensors must match except in dimension 1. Expected 
+size 1 but got size 2 for tensor number 1 in the list.
+error 
+how-to-simplify-your-marketing-funnel-seeing-the-unit-cost-forest-for-the-conver
+sion-rates-trees: Sizes of tensors must match except in dimension 1. Expected 
+size 1 but got size 2 for tensor number 1 in the list.
+error 
+chatgpt-writes-a-kellblog-post-the-indispensable-role-of-marketing-in-the-age-of
+-the-customer: Sizes of tensors must match except in dimension 1. Expected size 
+1 but got size 2 for tensor number 1 in the list.
+error 
+slides-from-saastr-workshop-wednesdays-the-7-things-founders-should-know-about-s
+ales: Sizes of tensors must match except in dimension 1. Expected size 1 but got
+size 2 for tensor number 1 in the list.
+error 
+appearance-on-the-saas-growth-hub-podcast-on-founder-sales-knowledge-and-sales-m
+arketing-alignment: Sizes of tensors must match except in dimension 1. Expected 
+size 1 but got size 2 for tensor number 1 in the list.
+error fly-the-aircraft-first-the-potentially-paralyzing-effects-of-fundraising: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error slides-from-the-balderton-version-of-metrics-that-matter-in-2023: Sizes of
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error register-for-balderton-saas-metrics-that-matter-webinar-on-june-28-2023: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error bottle-the-love-selling-customer-satisfaction-vs-vision: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error my-appearance-on-the-exit-5-podcast-traits-of-a-high-performing-cmo: Sizes
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error 
+come-to-my-saastock-presentation-how-to-connect-your-c-suite-to-the-ground-truth
+: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+error 
+slides-from-my-saastock-presentation-how-to-connect-your-c-suite-to-the-ground-t
+ruth: Sizes of tensors must match except in dimension 1. Expected size 1 but got
+size 2 for tensor number 1 in the list.
+error mark-tice-returns-its-time-for-saas-companies-to-do-a-channel-check: Sizes
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error slides-from-my-radia-accelerator-presentation-saas-metrics-101: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error interpreting-the-insight-2023-sales-kpi-report: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error video-of-the-balderton-saas-metrics-that-matter-webinar: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error 
+what-do-pipeline-coverage-and-forecast-mean-when-your-sales-cycle-is-30-days: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error the-ceo-job-description-in-reductionist-form: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error appearance-on-data-radicals-frameworks-and-the-art-of-simplification: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error plg-resources-and-wrap-up: Sizes of tensors must match except in dimension
+1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error three-marketing-lessons-from-the-political-realm: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error 
+come-to-my-saastr-annual-presentation-the-strategic-use-and-abuse-of-saas-metric
+s: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+error balderton-post-on-european-vs-american-board-meeting-minutes: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error 
+slides-from-saastr-2023-presentation-the-strategic-use-and-abuse-of-saas-metrics
+: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+Done: 0 ok, 50 errors (provider=chatterbox)
+[2026-06-15T17:23:38Z] Synthesis run finished cleanly (exit 0) in 38s.
+[2026-06-15T17:23:39Z] ─────────────────────────────────────────
+[2026-06-15T17:23:39Z] Starting synthesis batch  (112 pending, limit=50)…
+[2026-06-15T17:23:39Z] Command: uv run kellblog-audio synthesize --pending --limit 50
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/perth/perth_net/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/diffusers/models/lora.py:393: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+loaded PerthNet (Implicit) at step 250,000
+error 
+the-keys-to-nailing-and-scaling-go-to-market-slides-from-my-10x-ceo-accelerate-p
+resentation: Sizes of tensors must match except in dimension 1. Expected size 1 
+but got size 2 for tensor number 1 in the list.
+error 
+video-of-my-saastr-2023-presentation-the-strategic-use-and-abuse-of-saas-metrics
+: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+error 
+slides-from-saas-metrics-palooza-2023-how-to-present-saas-metrics-like-a-pro: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error 
+come-to-my-sesssion-at-saastock-dublin-what-founders-need-to-know-about-product-
+marketing: Sizes of tensors must match except in dimension 1. Expected size 1 
+but got size 2 for tensor number 1 in the list.
+error does-your-startup-need-a-sales-playbook-or-just-a-few-plays: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error slides-from-saastock-what-founders-need-to-know-about-product-marketing: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error four-lessons-from-the-carta-communications-train-wreck: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error how-to-make-a-good-apology-in-business: Sizes of tensors must match except
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error cut-costs-the-smart-way: Sizes of tensors must match except in dimension 
+1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error 
+appearance-on-run-the-numbers-podcast-a-startup-ceos-guide-to-board-meetings: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error do-superachievers-read-business-books: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error slides-from-five-ways-to-get-product-and-marketing-working-together: Sizes
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error 
+some-marketers-use-data-to-end-conversations-others-use-data-to-start-them: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error 
+the-oft-maligned-operating-partner-and-a-great-use-of-tension-questions-in-marke
+t-research: Sizes of tensors must match except in dimension 1. Expected size 1 
+but got size 2 for tensor number 1 in the list.
+error lessons-from-playing-with-a-simple-quota-attainment-model: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error the-top-7-marketing-metrics-for-a-qbr-or-board-meeting: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error kellblog-predictions-for-2024: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-one-question-to-ask-before-you-blow-up-your-customer-success-team: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error 
+demystifying-the-growth-adjusted-enterprise-value-to-revenue-multiple-and-introd
+ucing-the-erg-ratio: Sizes of tensors must match except in dimension 1. Expected
+size 1 but got size 2 for tensor number 1 in the list.
+error messaging-analysis-2024-election: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error 
+a-discussion-of-my-2024-predictions-on-the-ai-and-the-future-of-work-podcast: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error startup-century-a-new-book-on-technology-policy-by-james-wise: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error 
+join-me-for-a-chat-with-nick-mehta-how-to-prevent-your-customer-success-team-fro
+m-getting-the-axe: Sizes of tensors must match except in dimension 1. Expected 
+size 1 but got size 2 for tensor number 1 in the list.
+error my-most-recent-appearance-on-20vc-with-harry-stebbings: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error great-marketing-machines-are-like-costco: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error 
+see-you-wednesday-for-a-webinar-on-efficient-growth-through-new-market-expansion
+: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+error 
+slides-from-balderton-webinar-on-entering-new-markets-the-key-to-efficient-growt
+h: Sizes of tensors must match except in dimension 1. Expected size 1 but got 
+size 2 for tensor number 1 in the list.
+error video-of-balderton-webinar-on-efficient-growth-via-entering-new-markets: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error how-to-detect-if-your-startup-has-a-faux-focus: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error 
+six-principles-to-optimize-your-results-and-your-career-presentation-slides: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error slides-from-balderton-event-on-the-impact-of-ai-on-go-to-market: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error does-your-marketing-pass-the-duck-test: Sizes of tensors must match except
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error youre-an-operator-and-maybe-dont-know-it: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error strategy-as-a-series-of-beliefs: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error 
+these-people-arent-gods-how-european-founders-can-stop-making-the-1-mistake-in-u
+s-recruiting: Sizes of tensors must match except in dimension 1. Expected size 1
+but got size 2 for tensor number 1 in the list.
+error the-two-big-choices-enterprise-software-companies-make-in-opening-japan: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error 
+playing-to-win-vs-playing-to-make-plan-the-two-very-different-worlds-of-silicon-
+valley: Sizes of tensors must match except in dimension 1. Expected size 1 but 
+got size 2 for tensor number 1 in the list.
+error target-pipeline-coverage-is-not-the-inverse-of-win-rate: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error the-brand-curmudgeon-appearance-on-the-standout-startup-brands-podcast: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error go-to-market-troubleshooting-lets-take-it-from-the-top: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error startup-growth-trajectories-and-the-saas-mendoza-line: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error the-saas-talk-50th-episode-anniversary-credits: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error does-your-startup-need-a-patent-strategy: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error slides-from-a-balderton-launched-go-to-market-workshop: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error the-4-key-questions-on-every-angel-investment-opportunity: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error youve-been-asked-to-be-a-startup-advisor-now-what: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error we-are-not-the-same-the-obligatory-post-on-founder-mode: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error 
+hump-what-hump-why-you-should-listen-when-someone-says-youre-doing-it-wrong: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error 
+why-great-marketers-look-at-pipeline-coverage-not-just-pipeline-generation: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error back-to-finance-why-im-joining-the-board-of-vic-ai: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+Done: 0 ok, 50 errors (provider=chatterbox)
+[2026-06-15T17:24:14Z] Synthesis run finished cleanly (exit 0) in 35s.
+[2026-06-15T17:24:15Z] ─────────────────────────────────────────
+[2026-06-15T17:24:15Z] Starting synthesis batch  (62 pending, limit=50)…
+[2026-06-15T17:24:15Z] Command: uv run kellblog-audio synthesize --pending --limit 50
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/perth/perth_net/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/diffusers/models/lora.py:393: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+loaded PerthNet (Implicit) at step 250,000
+error the-idea-bake-sale-and-why-its-a-terrible-idea-to-have-one: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error 
+come-to-my-session-at-saas-metrics-palooza-the-impact-of-ai-on-saas-metrics: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error talking-about-the-numbers-vs-talking-about-the-business: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error 
+marketing-lessons-from-the-grateful-dead-by-scott-and-halligan-a-belated-book-re
+view: Sizes of tensors must match except in dimension 1. Expected size 1 but got
+size 2 for tensor number 1 in the list.
+error slides-from-saas-metrics-palooza-2024-the-impact-of-ai-on-saas-metrics: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error design-your-organization-for-the-conflicts-you-want-to-hear-about: Sizes 
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error the-impact-of-ai-on-saas-metrics-video-now-available: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error a-box-of-rain-will-ease-the-pain: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error a-simple-rule-for-when-to-consider-selling-your-startup: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error video-of-my-appearance-with-jason-lemkin-on-saastr-workshop-wednesdays: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error should-marketers-say-business-outcomes: Sizes of tensors must match except
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error messaging-lessons-from-the-2024-election: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error the-proper-role-of-the-board-observer: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error five-success-principles-for-startup-founders: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error why-your-cfo-should-be-the-testimonial-on-your-debt-providers-homepage: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error why-im-joining-the-board-of-techwolf: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error board-level-questions-on-the-marketing-budget: Sizes of tensors must match
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error dont-run-your-own-race-run-the-race-plan-that-wins: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error the-ten-most-read-kellblog-posts-in-2024: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error the-paradox-of-saying-its-time-to-sell-the-company: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error appearance-on-productea-with-leah-tharin: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error kellblog-predictions-for-2025: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error six-tips-on-presenting-to-the-board-of-directors: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error you-cant-eat-pipegen: Sizes of tensors must match except in dimension 1. 
+Expected size 1 but got size 2 for tensor number 1 in the list.
+error think-of-demandgen-like-any-another-sales-support-resource: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error my-fourth-appearance-on-ai-and-the-future-of-work-podcast: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error how-to-calculate-cost-per-opportunity: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error transitioning-from-founder-led-sales-the-more-schmedleys-problem: Sizes of
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error change-management-and-selling-hope-along-the-way: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error your-competitive-analyst-should-not-be-named-harvey-balls: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error a-ceos-high-level-guide-to-gtm-troubleshooting: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error three-ways-to-get-fired-as-ceo: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error all-models-are-wrong-some-are-useful: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error who-to-hire-as-the-first-salesperson-in-your-startup: Sizes of tensors 
+must match except in dimension 1. Expected size 1 but got size 2 for tensor 
+number 1 in the list.
+error the-first-rule-of-messaging-when-in-doubt-be-clear: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error navigating-the-mythical-sea-of-sameness: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error aligning-product-and-go-to-market-with-metrics: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error 
+smart-conversations-by-ian-howells-a-must-read-book-on-where-b2b-marketing-strat
+egy-meets-generative-ai: Sizes of tensors must match except in dimension 1. 
+Expected size 1 but got size 2 for tensor number 1 in the list.
+error your-icp-starts-as-an-aspiration-and-becomes-a-regression: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error from-whence-will-come-tomorrows-sellers: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error 
+slides-from-balderton-webinar-on-aligning-product-and-gtm-using-customer-value-m
+etrics: Sizes of tensors must match except in dimension 1. Expected size 1 but 
+got size 2 for tensor number 1 in the list.
+error 
+slides-from-my-saas-metrics-palooza-2025-session-on-selling-work-vs-selling-soft
+ware: Sizes of tensors must match except in dimension 1. Expected size 1 but got
+size 2 for tensor number 1 in the list.
+error the-startup-boards-hippocratic-oath: Sizes of tensors must match except in
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error how-to-navigate-the-pipeline-crisis: Sizes of tensors must match except in
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-era-of-haves-and-have-nots: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error your-buyer-has-an-i-want-song-does-your-messaging: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error a-review-of-courageous-marketing-by-udi-ledergor: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error fare-thee-well-bobby: Sizes of tensors must match except in dimension 1. 
+Expected size 1 but got size 2 for tensor number 1 in the list.
+error kellblog-predictions-for-2026: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error the-ten-most-read-kellblog-posts-in-2025: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+Done: 0 ok, 50 errors (provider=chatterbox)
+[2026-06-15T17:24:48Z] Synthesis run finished cleanly (exit 0) in 33s.
+[2026-06-15T17:24:49Z] ─────────────────────────────────────────
+[2026-06-15T17:24:49Z] Starting synthesis batch  (12 pending, limit=50)…
+[2026-06-15T17:24:49Z] Command: uv run kellblog-audio synthesize --pending --limit 50
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/perth/perth_net/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/diffusers/models/lora.py:393: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+loaded PerthNet (Implicit) at step 250,000
+error 
+why-the-rule-of-40-is-becoming-the-rule-of-60-and-what-you-can-do-about-it: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error the-silicon-valley-canon-circa-1998-a-stroll-down-software-memory-lane: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error why-im-not-worried-about-running-out-of-work-in-the-age-of-ai: Sizes of 
+tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error how-to-be-the-cmo-everyone-wants-to-work-with: Sizes of tensors must match
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error the-odd-little-book-all-founders-should-read-the-magic-box-paradigm: Sizes
+of tensors must match except in dimension 1. Expected size 1 but got size 2 for 
+tensor number 1 in the list.
+error on-the-socially-acceptable-use-of-ai-in-business: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error the-re-emergence-of-product-line-marketing: Sizes of tensors must match 
+except in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the
+list.
+error the-brute-force-era-of-ai-and-what-comes-after: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error the-board-deck-is-the-living-board-meeting-agenda: Sizes of tensors must 
+match except in dimension 1. Expected size 1 but got size 2 for tensor number 1 
+in the list.
+error a-diamond-in-the-rough-startup-founder-survival-guide-by-david-politis: 
+Sizes of tensors must match except in dimension 1. Expected size 1 but got size 
+2 for tensor number 1 in the list.
+error the-metrics-brother-hiatus: Sizes of tensors must match except in 
+dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+error why-im-joining-the-board-of-dreamdata: Sizes of tensors must match except 
+in dimension 1. Expected size 1 but got size 2 for tensor number 1 in the list.
+Done: 0 ok, 12 errors (provider=chatterbox)
+[2026-06-15T17:25:22Z] Synthesis run finished cleanly (exit 0) in 33s.
+[2026-06-15T17:25:23Z] All episodes synthesized (audio_pending=0). Watchdog done. ✓
+[2026-06-15T17:25:23Z] caffeinate stopped
+[2026-06-15T17:25:23Z] Watchdog exiting.
