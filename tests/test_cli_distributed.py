@@ -221,3 +221,50 @@ def test_backup_catalog_key_resolution_examples(args, expected_key, monkeypatch)
 
     assert result.exit_code == 0
     assert calls == [(fake_catalog, expected_key)]
+
+
+def test_progress_backfill_command_uses_helper(monkeypatch):
+    snapshot = SimpleNamespace(
+        run_id="run-1",
+        shard_count=2,
+        assigned_count=19,
+        processed_count=14,
+        counts={"done": 13, "error": 1, "skipped": 0},
+        shards=[
+            SimpleNamespace(
+                shard_index=0,
+                shard_count=2,
+                processed_count=5,
+                assigned_count=10,
+                counts={"done": 4, "error": 1, "skipped": 0},
+                last_slug="alpha",
+                complete=False,
+            )
+        ],
+    )
+    calls: list[str] = []
+
+    monkeypatch.setattr(cli, "read_backfill_progress", lambda run_id: calls.append(run_id) or snapshot)
+
+    result = runner.invoke(cli.app, ["progress-backfill", "--run-id", "run-1"])
+
+    assert result.exit_code == 0
+    assert calls == ["run-1"]
+    assert "run-1" in result.output
+    assert "13 done / 1 errors / 0 skipped" in result.output
+    assert "0/2" in result.output
+    assert "5/10" in result.output
+
+
+def test_progress_backfill_command_surfaces_empty_progress(monkeypatch):
+    monkeypatch.setattr(
+        cli,
+        "read_backfill_progress",
+        lambda _run_id: (_ for _ in ()).throw(ValueError("no shard progress found for run_id: run-1")),
+    )
+
+    result = runner.invoke(cli.app, ["progress-backfill", "--run-id", "run-1"])
+
+    assert result.exit_code != 0
+    assert isinstance(result.exception, ValueError)
+    assert "no shard progress found" in str(result.exception)

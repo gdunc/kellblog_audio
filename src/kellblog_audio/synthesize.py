@@ -34,7 +34,12 @@ signal.signal(signal.SIGTERM, _handle_stop_signal)
 
 from kellblog_audio.catalog import Catalog
 from kellblog_audio.config import AUDIO_DIR, DATA_DIR, MAX_AUDIO_BODY_WPM, get_settings
-from kellblog_audio.distributed_backfill import ShardManifest, ShardManifestItem
+from kellblog_audio.distributed_backfill import (
+    ShardManifest,
+    ShardManifestItem,
+    ShardProgress,
+    shard_progress_key,
+)
 from kellblog_audio.intro_outro import SPOKEN_OUTRO, spoken_intro
 from kellblog_audio.publish import get_s3_client, upload_bytes, upload_file
 from kellblog_audio.qa import qa_post_audio, queue_audio_rerun
@@ -119,6 +124,42 @@ def _manifest_done_item(
         audio_bytes=post.audio_bytes,
         audio_etag=audio_etag or post.audio_etag,
     )
+
+
+def _progress_payload(
+    *,
+    run_id: str,
+    shard_index: int,
+    shard_count: int,
+    assigned_count: int,
+    processed_count: int,
+    done: int,
+    errors: int,
+    skipped: int,
+    provider_name: str | None,
+    started_at: str | None,
+    last_slug: str | None,
+    last_status: str | None,
+    complete: bool,
+    error: str | None = None,
+) -> str:
+    progress = ShardProgress(
+        run_id=run_id,
+        shard_index=shard_index,
+        shard_count=shard_count,
+        provider=provider_name,
+        started_at=started_at,
+        updated_at=_now_iso(),
+        finished_at=_now_iso() if complete else None,
+        assigned_count=assigned_count,
+        processed_count=processed_count,
+        counts={"done": done, "error": errors, "skipped": skipped},
+        last_slug=last_slug,
+        last_status=last_status,
+        complete=complete,
+        error=error,
+    )
+    return progress.to_json()
 
 
 def synthesize_post(
@@ -227,15 +268,52 @@ def synthesize_batch(
     if limit:
         posts = posts[:limit]
 
+    assigned_count = len(posts)
+
     # Build the model once and reuse it for the whole batch.
     provider = get_provider(provider_name)
     s3_client = get_s3_client() if (upload_r2 or manifest_r2_key) else None
+    progress_enabled = s3_client is not None and run_id is not None and shard_index is not None and shard_count is not None
+    progress_key = (
+        shard_progress_key(run_id, shard_index, shard_count)
+        if progress_enabled and run_id is not None and shard_index is not None and shard_count is not None
+        else None
+    )
     manifest_items: list[ShardManifestItem] = []
     manifest_started_at = _now_iso() if manifest_enabled else None
 
     ok, err = 0, 0
     qa_checked = 0
+    skipped = 0
+    processed_count = 0
+    last_slug: str | None = None
+    last_status: str | None = None
     incomplete_reason: str | None = None
+
+    def emit_progress(*, complete: bool = False, error: str | None = None) -> None:
+        if not progress_enabled or progress_key is None:
+            return
+        payload = _progress_payload(
+            run_id=run_id or "local",
+            shard_index=shard_index or 0,
+            shard_count=shard_count or 0,
+            assigned_count=assigned_count,
+            processed_count=processed_count,
+            done=ok,
+            errors=err,
+            skipped=skipped,
+            provider_name=getattr(provider, "name", provider_name),
+            started_at=manifest_started_at,
+            last_slug=last_slug,
+            last_status=last_status,
+            complete=complete,
+            error=error,
+        )
+        upload_bytes(s3_client, payload.encode("utf-8"), progress_key, "application/json")
+
+    if progress_enabled:
+        emit_progress()
+
     for post in posts:
         if _stop_requested.is_set():
             if progress:
@@ -259,6 +337,10 @@ def synthesize_batch(
                 catalog, post.slug, provider_name, force=force, provider=provider
             )
             if out_path is None:
+                skipped += 1
+                processed_count += 1
+                last_slug = post.slug
+                last_status = "skipped"
                 if manifest_enabled:
                     manifest_items.append(
                         ShardManifestItem(
@@ -268,6 +350,8 @@ def synthesize_batch(
                             error=post.audio_error,
                         )
                     )
+                if progress_enabled and processed_count % 5 == 0:
+                    emit_progress()
                 continue
 
             audio_etag: str | None = None
@@ -291,6 +375,11 @@ def synthesize_batch(
                             f"qa failed {post.slug}; queued for rerun: "
                             f"{qa_result.reason}"
                         )
+                    processed_count += 1
+                    last_slug = post.slug
+                    last_status = "error"
+                    if progress_enabled and processed_count % 5 == 0:
+                        emit_progress()
                     if stop_on_qa_failure:
                         if manifest_enabled:
                             incomplete_reason = (
@@ -336,9 +425,17 @@ def synthesize_batch(
                     f"[rss={rss_mb}MB mps={mps_mb}MB]"
                 )
             ok += 1
+            processed_count += 1
+            last_slug = post.slug
+            last_status = "done"
+            if progress_enabled and processed_count % 5 == 0:
+                emit_progress()
         except Exception as e:
             catalog.update_post(post.slug, audio_status="error", audio_error=str(e)[:500])
             err += 1
+            processed_count += 1
+            last_slug = post.slug
+            last_status = "error"
             if manifest_enabled:
                 manifest_items.append(
                     ShardManifestItem(
@@ -350,9 +447,15 @@ def synthesize_batch(
                 )
             if progress:
                 progress(f"error {post.slug}: {e}")
+            if progress_enabled and processed_count % 5 == 0:
+                emit_progress()
 
     if manifest_enabled and incomplete_reason:
+        emit_progress(complete=False, error=incomplete_reason)
         raise RuntimeError(incomplete_reason)
+
+    if progress_enabled:
+        emit_progress(complete=True)
 
     if manifest_enabled:
         manifest = ShardManifest(

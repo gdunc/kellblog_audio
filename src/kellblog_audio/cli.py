@@ -23,6 +23,7 @@ from kellblog_audio.config import (
     get_settings,
 )
 from kellblog_audio.distributed_backfill import (
+    read_backfill_progress,
     create_backfill_baseline,
     merge_shard_manifests,
 )
@@ -449,6 +450,29 @@ def merge_shard_manifests_cmd(
     console.print(
         f"Merged {result.done} done / {result.errors} errors / {result.skipped} skipped"
     )
+
+
+@app.command("progress-backfill")
+def progress_backfill_cmd(
+    run_id: str = typer.Option(..., "--run-id", help="Distributed backfill run id"),
+) -> None:
+    """Show per-shard distributed backfill progress from R2."""
+    snapshot = read_backfill_progress(run_id)
+    console.print(f"Run {snapshot.run_id}")
+    console.print(
+        f"{snapshot.counts['done']} done / {snapshot.counts['error']} errors / "
+        f"{snapshot.counts['skipped']} skipped"
+    )
+    console.print(f"Processed {snapshot.processed_count}/{snapshot.assigned_count}")
+    for shard in snapshot.shards:
+        complete = "yes" if shard.complete else "no"
+        console.print(
+            f"{shard.shard_index}/{shard.shard_count} "
+            f"{shard.processed_count}/{shard.assigned_count} "
+            f"{shard.counts['done']} done / {shard.counts['error']} errors / "
+            f"{shard.counts['skipped']} skipped "
+            f"last={shard.last_slug or '-'} complete={complete}"
+        )
 
 
 @app.command()

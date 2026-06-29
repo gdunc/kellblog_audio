@@ -10,10 +10,13 @@ from kellblog_audio import publish as publish_mod
 from kellblog_audio.catalog import Catalog
 from kellblog_audio.config import R2_BUCKET
 from kellblog_audio.distributed_backfill import (
+    ShardProgress,
     ShardManifest,
     ShardManifestItem,
     create_backfill_baseline,
+    read_backfill_progress,
     merge_shard_manifests,
+    shard_progress_key,
 )
 from kellblog_audio.publish import backup_catalog, restore_catalog
 
@@ -251,6 +254,102 @@ def test_create_backfill_baseline_runs_ingest_and_uses_run_scoped_key(
         "ingest": [cat],
         "backup": [(cat, "backfill/runs/r1/baseline/catalog.sqlite")],
     }
+
+
+def test_shard_progress_key_uses_run_scoped_progress_prefix():
+    assert shard_progress_key("run-1", 2, 6) == "backfill/runs/run-1/progress/shard-2-of-6.json"
+
+
+def test_read_backfill_progress_aggregates_per_shard_progress(monkeypatch):
+    shard0 = ShardProgress(
+        run_id="run-1",
+        shard_index=0,
+        shard_count=2,
+        provider="chatterbox",
+        started_at="2026-06-29T15:00:00Z",
+        updated_at="2026-06-29T15:05:00Z",
+        assigned_count=10,
+        processed_count=5,
+        counts={"done": 4, "error": 1, "skipped": 0},
+        last_slug="alpha",
+        last_status="error",
+        complete=False,
+    )
+    shard1 = ShardProgress(
+        run_id="run-1",
+        shard_index=1,
+        shard_count=2,
+        provider="chatterbox",
+        started_at="2026-06-29T15:00:00Z",
+        updated_at="2026-06-29T15:06:00Z",
+        finished_at="2026-06-29T15:06:00Z",
+        assigned_count=9,
+        processed_count=9,
+        counts={"done": 9, "error": 0, "skipped": 0},
+        last_slug="omega",
+        last_status="done",
+        complete=True,
+    )
+
+    payloads = {
+        shard_progress_key("run-1", 0, 2): shard0.to_json().encode("utf-8"),
+        shard_progress_key("run-1", 1, 2): shard1.to_json().encode("utf-8"),
+    }
+
+    class FakePaginator:
+        def paginate(self, **_kwargs):
+            return [{"Contents": [{"Key": key} for key in sorted(payloads)]}]
+
+    class FakeBody:
+        def __init__(self, payload: bytes) -> None:
+            self.payload = payload
+
+        def read(self) -> bytes:
+            return self.payload
+
+    class FakeS3Client:
+        def get_paginator(self, name):
+            assert name == "list_objects_v2"
+            return FakePaginator()
+
+        def get_object(self, *, Bucket, Key):
+            assert Bucket == R2_BUCKET
+            return {"Body": FakeBody(payloads[Key])}
+
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.get_s3_client",
+        lambda: FakeS3Client(),
+    )
+
+    snapshot = read_backfill_progress("run-1")
+
+    assert snapshot.run_id == "run-1"
+    assert snapshot.shard_count == 2
+    assert snapshot.assigned_count == 19
+    assert snapshot.processed_count == 14
+    assert snapshot.counts == {"done": 13, "error": 1, "skipped": 0}
+    assert [progress.shard_index for progress in snapshot.shards] == [0, 1]
+    assert snapshot.shards[0].complete is False
+    assert snapshot.shards[1].complete is True
+
+
+def test_read_backfill_progress_rejects_missing_run_progress(monkeypatch):
+    class FakePaginator:
+        def paginate(self, **_kwargs):
+            return [{"Contents": []}]
+
+    class FakeS3Client:
+        def get_paginator(self, name):
+            assert name == "list_objects_v2"
+            return FakePaginator()
+
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.get_s3_client",
+        lambda: FakeS3Client(),
+    )
+
+    with pytest.raises(ValueError, match="no shard progress found"):
+        read_backfill_progress("run-1")
 
 
 def test_merge_shard_manifests_applies_results_and_summarizes_counts(tmp_path):
