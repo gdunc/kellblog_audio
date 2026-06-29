@@ -284,9 +284,14 @@ def qa_post_audio(
 def queue_audio_rerun(catalog: Catalog, slug: str, reason: str) -> None:
     catalog.update_post(
         slug,
+        audio_path=None,
+        audio_bytes=None,
+        audio_etag=None,
         audio_status="stale",
         audio_error=f"Audio QA failed; queued for rerun: {reason}"[:500],
+        duration_sec=None,
         feed_published_at=None,
+        backfill_run_id=None,
     )
 
 

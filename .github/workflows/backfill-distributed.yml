@@ -1,0 +1,385 @@
+name: Distributed Backfill
+
+on:
+  workflow_dispatch:
+    inputs:
+      shard_count:
+        description: "Total shard count for the run"
+        required: true
+        default: "6"
+        type: string
+      qa_first:
+        description: "QA the first N freshly synthesized episodes per shard"
+        required: true
+        default: "0"
+        type: string
+      year:
+        description: "Optional year filter"
+        required: false
+        default: ""
+        type: string
+      local_helper_shards:
+        description: "Optional comma-separated shard indexes reserved for a local Mac helper, e.g. 0 or 0,1"
+        required: false
+        default: ""
+        type: string
+
+concurrency:
+  group: distributed-backfill
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+  R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+  R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+  R2_BUCKET: ${{ secrets.R2_BUCKET }}
+  KELLBLOG_AUDIO_PUBLIC_URL: ${{ vars.KELLBLOG_AUDIO_PUBLIC_URL }}
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      run_id: ${{ steps.plan.outputs.run_id }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      qa_first: ${{ steps.plan.outputs.qa_first }}
+      year: ${{ steps.plan.outputs.year }}
+      local_helper_shards: ${{ steps.plan.outputs.local_helper_shards }}
+      gha_shard_count: ${{ steps.plan.outputs.gha_shard_count }}
+      gha_matrix: ${{ steps.plan.outputs.gha_matrix }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+
+      - name: Install system deps
+        run: sudo apt-get update && sudo apt-get install -y espeak-ng ffmpeg
+
+      - name: Install Python package
+        run: uv sync --frozen --extra chatterbox
+
+      - name: Compute run plan
+        id: plan
+        env:
+          INPUT_SHARD_COUNT: ${{ inputs.shard_count }}
+          INPUT_QA_FIRST: ${{ inputs.qa_first }}
+          INPUT_YEAR: ${{ inputs.year }}
+          INPUT_LOCAL_HELPER_SHARDS: ${{ inputs.local_helper_shards }}
+        run: |
+          python3 <<'PY'
+          import json
+          import os
+          from datetime import datetime, timezone
+
+          shard_count = int(os.environ["INPUT_SHARD_COUNT"])
+          qa_first = int(os.environ["INPUT_QA_FIRST"])
+          year = os.environ.get("INPUT_YEAR", "").strip()
+          helper_raw = os.environ.get("INPUT_LOCAL_HELPER_SHARDS", "").strip()
+          if shard_count < 1:
+              raise SystemExit("shard_count must be >= 1")
+          if qa_first < 0:
+              raise SystemExit("qa_first must be >= 0")
+          if year:
+              try:
+                  year = str(int(year))
+              except ValueError as exc:
+                  raise SystemExit("year must be blank or an integer") from exc
+
+          helper_shards = []
+          if helper_raw:
+              for token in helper_raw.split(","):
+                  value = token.strip()
+                  if not value:
+                      continue
+                  shard = int(value)
+                  if not 0 <= shard < shard_count:
+                      raise SystemExit(
+                          f"local_helper_shards contains out-of-range shard {shard}; expected 0..{shard_count - 1}"
+                      )
+                  helper_shards.append(shard)
+          helper_shards = sorted(set(helper_shards))
+          gha_shards = [shard for shard in range(shard_count) if shard not in helper_shards]
+          run_id = f"{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}-{os.environ['GITHUB_RUN_ID']}"
+          outputs = {
+              "run_id": run_id,
+              "shard_count": str(shard_count),
+              "qa_first": str(qa_first),
+              "year": year,
+              "local_helper_shards": ",".join(str(shard) for shard in helper_shards),
+              "gha_shard_count": str(len(gha_shards)),
+              "gha_matrix": json.dumps({"shard": gha_shards}),
+          }
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
+              for key, value in outputs.items():
+                  fh.write(f"{key}={value}\n")
+          PY
+
+      - name: Create run baseline catalog
+        run: uv run kellblog-audio create-backfill-baseline --run-id "${{ steps.plan.outputs.run_id }}"
+
+      - name: Write run plan summary
+        env:
+          PLAN_RUN_ID: ${{ steps.plan.outputs.run_id }}
+          PLAN_SHARD_COUNT: ${{ steps.plan.outputs.shard_count }}
+          PLAN_GHA_MATRIX: ${{ steps.plan.outputs.gha_matrix }}
+          PLAN_LOCAL_HELPER_SHARDS: ${{ steps.plan.outputs.local_helper_shards }}
+          PLAN_YEAR: ${{ steps.plan.outputs.year }}
+          PLAN_QA_FIRST: ${{ steps.plan.outputs.qa_first }}
+        run: |
+          {
+            echo "## Distributed backfill plan"
+            echo "- Run ID: \`${PLAN_RUN_ID}\`"
+            echo "- Shard count: \`${PLAN_SHARD_COUNT}\`"
+            echo "- GitHub-hosted shards: \`${PLAN_GHA_MATRIX}\`"
+            echo "- Local helper shards: \`${PLAN_LOCAL_HELPER_SHARDS:-none}\`"
+            echo "- Year filter: \`${PLAN_YEAR:-all years}\`"
+            echo "- QA first: \`${PLAN_QA_FIRST}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  synthesize:
+    needs: prepare
+    if: ${{ needs.prepare.outputs.gha_shard_count != '0' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.prepare.outputs.gha_matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+
+      - name: Install system deps
+        run: sudo apt-get update && sudo apt-get install -y espeak-ng ffmpeg
+
+      - name: Install Python package
+        run: uv sync --frozen --extra chatterbox
+
+      - name: Restore run baseline catalog
+        run: uv run kellblog-audio restore-catalog --run-id "${{ needs.prepare.outputs.run_id }}" --kind baseline
+
+      - name: Synthesize shard on GitHub runner
+        env:
+          RUN_ID: ${{ needs.prepare.outputs.run_id }}
+          SHARD_COUNT: ${{ needs.prepare.outputs.shard_count }}
+          QA_FIRST: ${{ needs.prepare.outputs.qa_first }}
+          YEAR: ${{ needs.prepare.outputs.year }}
+          KELLBLOG_TTS_PROVIDER: chatterbox
+          KELLBLOG_CHATTERBOX_DEVICE: cpu
+          KELLBLOG_CHATTERBOX_EXAGGERATION: "0.4"
+        run: |
+          mkdir -p artifacts/manifests
+          manifest_path="artifacts/manifests/shard-${{ matrix.shard }}-of-${SHARD_COUNT}.json"
+          manifest_r2_key="backfill/runs/${RUN_ID}/manifests/shard-${{ matrix.shard }}-of-${SHARD_COUNT}.json"
+          cmd=(
+            uv run kellblog-audio synthesize --pending
+            --run-id "$RUN_ID"
+            --shard "${{ matrix.shard }}/${SHARD_COUNT}"
+            --qa-first "$QA_FIRST"
+            --upload-r2
+            --manifest-out "$manifest_path"
+            --manifest-r2-key "$manifest_r2_key"
+          )
+          if [[ -n "$YEAR" ]]; then
+            cmd+=(--year "$YEAR")
+          fi
+          "${cmd[@]}"
+
+      - name: Upload shard manifest artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: shard-manifest-${{ matrix.shard }}
+          path: artifacts/manifests/shard-${{ matrix.shard }}-of-${{ needs.prepare.outputs.shard_count }}.json
+          if-no-files-found: error
+
+  finalize:
+    needs: [prepare, synthesize]
+    if: ${{ always() && needs.prepare.result == 'success' && (needs.synthesize.result == 'success' || needs.synthesize.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+
+      - name: Install system deps
+        run: sudo apt-get update && sudo apt-get install -y espeak-ng ffmpeg
+
+      - name: Install Python package
+        run: uv sync --frozen --extra chatterbox
+
+      - name: Restore run baseline catalog
+        run: uv run kellblog-audio restore-catalog --run-id "${{ needs.prepare.outputs.run_id }}" --kind baseline
+
+      - name: Download and validate shard manifests
+        env:
+          RUN_ID: ${{ needs.prepare.outputs.run_id }}
+          SHARD_COUNT: ${{ needs.prepare.outputs.shard_count }}
+        run: |
+          mkdir -p artifacts/manifests
+          uv run python - <<'PY'
+          import json
+          import os
+          import re
+          from pathlib import Path
+
+          import boto3
+          from botocore.config import Config
+
+          run_id = os.environ["RUN_ID"]
+          shard_count = int(os.environ["SHARD_COUNT"])
+          manifest_dir = Path("artifacts/manifests")
+          prefix = f"backfill/runs/{run_id}/manifests/"
+          endpoint = f"https://{os.environ['R2_ACCOUNT_ID']}.r2.cloudflarestorage.com"
+          client = boto3.client(
+              "s3",
+              endpoint_url=endpoint,
+              aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"],
+              aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"],
+              config=Config(signature_version="s3v4"),
+          )
+
+          pattern = re.compile(rf"^{re.escape(prefix)}shard-([0-9]+)-of-([0-9]+)\\.json$")
+          found = {}
+          unexpected = []
+          paginator = client.get_paginator("list_objects_v2")
+          for page in paginator.paginate(Bucket=os.environ["R2_BUCKET"], Prefix=prefix):
+              for item in page.get("Contents", []):
+                  key = item["Key"]
+                  match = pattern.match(key)
+                  if not match:
+                      unexpected.append(key)
+                      continue
+                  shard_index = int(match.group(1))
+                  key_shard_count = int(match.group(2))
+                  if key_shard_count != shard_count or not 0 <= shard_index < shard_count:
+                      unexpected.append(key)
+                      continue
+                  found[shard_index] = key
+
+          missing = sorted(set(range(shard_count)) - set(found))
+          if missing or unexpected or len(found) != shard_count:
+              lines = [
+                  "## Finalize blocked",
+                  f"- Run ID: `{run_id}`",
+                  f"- Expected manifests: `{shard_count}`",
+                  f"- Found manifests: `{len(found)}`",
+              ]
+              if missing:
+                  lines.append(f"- Missing shard indexes: `{','.join(str(i) for i in missing)}`")
+              if unexpected:
+                  lines.append(f"- Unexpected manifest keys: `{', '.join(sorted(unexpected))}`")
+              if summary_path := os.environ.get("GITHUB_STEP_SUMMARY"):
+                  with open(summary_path, "a", encoding="utf-8") as fh:
+                      fh.write("\n".join(lines) + "\n")
+              raise SystemExit("missing or unexpected shard manifests; see job summary")
+
+          manifest_keys = []
+          for shard_index in range(shard_count):
+              key = found[shard_index]
+              target = manifest_dir / f"shard-{shard_index}-of-{shard_count}.json"
+              client.download_file(os.environ["R2_BUCKET"], key, str(target))
+              manifest_keys.append(key)
+
+          index_path = Path("artifacts/manifest-index.json")
+          index_path.write_text(
+              json.dumps(
+                  {"run_id": run_id, "shard_count": shard_count, "manifest_keys": manifest_keys},
+                  indent=2,
+              ),
+              encoding="utf-8",
+          )
+          print(f"Downloaded {len(manifest_keys)} manifests to {manifest_dir}")
+          PY
+
+      - name: Merge shard manifests
+        run: uv run kellblog-audio merge-shard-manifests --run-id "${{ needs.prepare.outputs.run_id }}" --manifest-dir artifacts/manifests
+
+      - name: Publish feed only
+        run: uv run kellblog-audio publish --skip-audio
+
+      - name: Backup final run catalog
+        run: uv run kellblog-audio backup-catalog --run-id "${{ needs.prepare.outputs.run_id }}" --kind final
+
+      - name: Backup daily catalog snapshot
+        run: uv run kellblog-audio backup-catalog
+
+      - name: Upload run summary report
+        env:
+          RUN_ID: ${{ needs.prepare.outputs.run_id }}
+          SHARD_COUNT: ${{ needs.prepare.outputs.shard_count }}
+          YEAR: ${{ needs.prepare.outputs.year }}
+          QA_FIRST: ${{ needs.prepare.outputs.qa_first }}
+          LOCAL_HELPER_SHARDS: ${{ needs.prepare.outputs.local_helper_shards }}
+        run: |
+          uv run python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          import boto3
+          from botocore.config import Config
+
+          manifest_dir = Path("artifacts/manifests")
+          counts = {"done": 0, "error": 0, "skipped": 0}
+          for path in sorted(manifest_dir.glob("*.json")):
+              data = json.loads(path.read_text(encoding="utf-8"))
+              manifest_counts = data.get("counts", {})
+              counts["done"] += int(manifest_counts.get("done", 0))
+              counts["error"] += int(manifest_counts.get("error", 0))
+              counts["skipped"] += int(manifest_counts.get("skipped", 0))
+
+          summary = {
+              "run_id": os.environ["RUN_ID"],
+              "shard_count": int(os.environ["SHARD_COUNT"]),
+              "year": os.environ.get("YEAR") or None,
+              "qa_first": int(os.environ["QA_FIRST"]),
+              "local_helper_shards": [
+                  int(token)
+                  for token in os.environ.get("LOCAL_HELPER_SHARDS", "").split(",")
+                  if token
+              ],
+              "counts": counts,
+              "final_catalog_key": f"backfill/runs/{os.environ['RUN_ID']}/catalog/final.sqlite",
+          }
+
+          summary_path = Path("artifacts/summary.json")
+          summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+
+          endpoint = f"https://{os.environ['R2_ACCOUNT_ID']}.r2.cloudflarestorage.com"
+          client = boto3.client(
+              "s3",
+              endpoint_url=endpoint,
+              aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"],
+              aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"],
+              config=Config(signature_version="s3v4"),
+          )
+          client.upload_file(
+              str(summary_path),
+              os.environ["R2_BUCKET"],
+              f"backfill/runs/{os.environ['RUN_ID']}/reports/summary.json",
+              ExtraArgs={"ContentType": "application/json"},
+          )
+
+          if summary_md := os.environ.get("GITHUB_STEP_SUMMARY"):
+              with open(summary_md, "a", encoding="utf-8") as fh:
+                  fh.write("## Distributed backfill complete\n")
+                  fh.write(f"- Run ID: `{summary['run_id']}`\n")
+                  fh.write(f"- Shards: `{summary['shard_count']}`\n")
+                  fh.write(f"- Local helper shards: `{summary['local_helper_shards'] or 'none'}`\n")
+                  fh.write(f"- Year filter: `{summary['year'] or 'all years'}`\n")
+                  fh.write(f"- QA first: `{summary['qa_first']}`\n")
+                  fh.write(f"- Done: `{counts['done']}`\n")
+                  fh.write(f"- Errors: `{counts['error']}`\n")
+                  fh.write(f"- Skipped: `{counts['skipped']}`\n")
+          PY
+
+      - name: Upload finalize artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: backfill-finalize-${{ needs.prepare.outputs.run_id }}
+          path: |
+            artifacts/manifest-index.json
+            artifacts/summary.json
+            artifacts/manifests/
+          if-no-files-found: error

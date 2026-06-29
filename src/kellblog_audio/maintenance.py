@@ -40,10 +40,13 @@ def reset_generated_audio(
         catalog.update_post(
             post.slug,
             audio_path=None,
+            audio_bytes=None,
+            audio_etag=None,
             audio_status="pending",
             audio_error=None,
             duration_sec=None,
             feed_published_at=None,
+            backfill_run_id=None,
         )
         result.reset_posts += 1
 

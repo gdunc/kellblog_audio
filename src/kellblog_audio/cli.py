@@ -22,6 +22,10 @@ from kellblog_audio.config import (
     TTS_PROVIDER,
     get_settings,
 )
+from kellblog_audio.distributed_backfill import (
+    create_backfill_baseline,
+    merge_shard_manifests,
+)
 from kellblog_audio.maintenance import reset_generated_audio
 from kellblog_audio.ingest import ingest_all
 from kellblog_audio.publish import (
@@ -55,12 +59,40 @@ def _is_synthesize_running() -> bool:
         return False
 
 
-def _catalog() -> Catalog:
+def _catalog_uninitialized() -> Catalog:
     settings = get_settings()
     settings.ensure_dirs()
-    cat = Catalog(settings.catalog_path)
+    return Catalog(settings.catalog_path)
+
+
+def _catalog() -> Catalog:
+    cat = _catalog_uninitialized()
     cat.init_schema()
     return cat
+
+
+def _run_scoped_catalog_key(run_id: str, kind: str) -> str:
+    normalized = kind.lower()
+    if normalized == "baseline":
+        return f"backfill/runs/{run_id}/baseline/catalog.sqlite"
+    if normalized == "final":
+        return f"backfill/runs/{run_id}/catalog/final.sqlite"
+    raise typer.BadParameter("--kind must be baseline or final")
+
+
+def _resolve_catalog_backup_key(
+    *,
+    key: str | None,
+    run_id: str | None,
+    kind: str,
+) -> str | None:
+    if key and run_id:
+        raise typer.BadParameter("Use either --key or --run-id, not both")
+    if key:
+        return key
+    if run_id:
+        return _run_scoped_catalog_key(run_id, kind)
+    return None
 
 
 @app.command()
@@ -102,9 +134,26 @@ def synthesize(
     shard: Optional[str] = typer.Option(
         None, "--shard", help="Parallel worker shard as i/N, e.g. 0/2 and 1/2"
     ),
+    run_id: Optional[str] = typer.Option(None, "--run-id", help="Distributed backfill run id"),
+    upload_r2: bool = typer.Option(
+        False,
+        "--upload-r2",
+        help="Upload completed MP3s to canonical R2 audio keys",
+    ),
+    manifest_out: Optional[Path] = typer.Option(
+        None,
+        "--manifest-out",
+        help="Write shard manifest JSON locally",
+    ),
+    manifest_r2_key: Optional[str] = typer.Option(
+        None,
+        "--manifest-r2-key",
+        help="Upload shard manifest JSON to this R2 key",
+    ),
 ) -> None:
     """Run TTS for matching posts."""
     shard_index = shard_count = None
+    manifest_enabled = manifest_out is not None or manifest_r2_key is not None
     if shard:
         try:
             i_str, n_str = shard.split("/")
@@ -113,6 +162,8 @@ def synthesize(
             raise typer.BadParameter("--shard must be i/N, e.g. 0/2") from exc
         if not (0 <= shard_index < shard_count):
             raise typer.BadParameter("--shard i must satisfy 0 <= i < N")
+    if manifest_enabled and shard_index is None:
+        raise typer.BadParameter("--shard is required when writing shard manifests")
     cat = _catalog()
     ok, err = synthesize_batch(
         cat,
@@ -125,6 +176,10 @@ def synthesize(
         shard_index=shard_index,
         shard_count=shard_count,
         qa_first=qa_first,
+        run_id=run_id,
+        manifest_out=manifest_out,
+        manifest_r2_key=manifest_r2_key,
+        upload_r2=upload_r2,
         progress=console.print,
     )
     console.print(f"Done: {ok} ok, {err} errors (provider={provider or TTS_PROVIDER})")
@@ -336,21 +391,64 @@ def _format_pct(value: float | None) -> str:
 
 
 @app.command("restore-catalog")
-def restore_catalog_cmd() -> None:
+def restore_catalog_cmd(
+    key: Optional[str] = typer.Option(None, "--key", help="Explicit R2 key to restore"),
+    run_id: Optional[str] = typer.Option(None, "--run-id", help="Distributed backfill run id"),
+    kind: str = typer.Option("baseline", "--kind", help="baseline | final"),
+) -> None:
     """Download latest SQLite catalog backup from R2."""
-    cat = _catalog()
-    if restore_catalog(cat):
+    cat = _catalog_uninitialized()
+    resolved_key = _resolve_catalog_backup_key(key=key, run_id=run_id, kind=kind)
+    if restore_catalog(cat, key=resolved_key):
+        cat.init_schema()
         console.print(f"Restored catalog to {cat.path}")
     else:
         console.print("No backup found in R2")
 
 
 @app.command("backup-catalog")
-def backup_catalog_cmd() -> None:
+def backup_catalog_cmd(
+    key: Optional[str] = typer.Option(None, "--key", help="Explicit R2 key to upload to"),
+    run_id: Optional[str] = typer.Option(None, "--run-id", help="Distributed backfill run id"),
+    kind: str = typer.Option("baseline", "--kind", help="baseline | final"),
+) -> None:
     """Upload SQLite catalog to R2."""
     cat = _catalog()
-    key = backup_catalog(cat)
+    resolved_key = _resolve_catalog_backup_key(key=key, run_id=run_id, kind=kind)
+    uploaded_key = backup_catalog(cat, key=resolved_key)
+    console.print(f"Backed up to s3://{uploaded_key}")
+
+
+@app.command("create-backfill-baseline")
+def create_backfill_baseline_cmd(
+    run_id: str = typer.Option(..., "--run-id", help="Distributed backfill run id"),
+) -> None:
+    """Run ingest and upload a run-scoped baseline catalog."""
+    key = create_backfill_baseline(_catalog(), run_id)
     console.print(f"Backed up to s3://{key}")
+
+
+@app.command("merge-shard-manifests")
+def merge_shard_manifests_cmd(
+    run_id: str = typer.Option(..., "--run-id", help="Distributed backfill run id"),
+    manifest_dir: Path = typer.Option(
+        ...,
+        "--manifest-dir",
+        help="Directory containing shard manifest JSON files",
+        exists=True,
+        file_okay=False,
+        dir_okay=True,
+    ),
+) -> None:
+    """Merge shard manifest results into the local catalog."""
+    result = merge_shard_manifests(
+        _catalog(),
+        run_id,
+        sorted(manifest_dir.glob("*.json")),
+    )
+    console.print(
+        f"Merged {result.done} done / {result.errors} errors / {result.skipped} skipped"
+    )
 
 
 @app.command()

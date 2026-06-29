@@ -45,7 +45,18 @@ Browse voices online (not your text): [Kokoro demo](https://huggingface.co/space
 
 Default production voice: **Kokoro** `am_michael`.
 
-### Full backfill (local, ~1–2 days on M-series Mac with Kokoro)
+### Full backfill (default: distributed GitHub Actions)
+
+Use `.github/workflows/backfill-distributed.yml` for the archive run.
+
+- `workflow_dispatch` defaults to `shard_count=6`, `qa_first=0`, all years, no local helper shards.
+- The default path uses free public GitHub-hosted Ubuntu runners with **Chatterbox** on CPU.
+- `prepare` creates a run-scoped baseline catalog, shard jobs upload audio + manifests to R2, and `finalize` merges manifests and runs `publish --skip-audio` once.
+- Optional `local_helper_shards` reserves one or more shard indexes for a Mac helper (for example `0`). After `prepare` finishes, copy its `run_id`, use a clean checkout/worktree of the same branch/commit on the Mac, restore the baseline catalog locally, and run exactly one reserved shard with the same `N`/optional `--year`, letting `synthesize --upload-r2` upload that shard's files.
+- The Mac helper machine must already have working local `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, and `R2_BUCKET` configured before running `restore-catalog` or `synthesize --upload-r2`.
+- During helper use, do **not** commit/push unrelated changes, and do **not** bulk-upload or publish unrelated pre-existing local audio. See [docs/BACKFILL.md](docs/BACKFILL.md).
+
+### Full backfill (local fallback, ~1–2 days on M-series Mac with Kokoro)
 
 ```bash
 uv run kellblog-audio run-backfill
@@ -91,7 +102,9 @@ Submit `https://kellblog.thisisgrant.com/feed.xml` to:
 
 Spotify and Apple poll the feed; new Kellblog posts are picked up automatically by the nightly GitHub Action.
 
-### GitHub Action secrets
+### GitHub Actions secrets / vars
+
+These power both `.github/workflows/sync-podcast.yml` and `.github/workflows/backfill-distributed.yml`.
 
 | Secret | Purpose |
 |--------|---------|
@@ -110,11 +123,14 @@ Repository variable: `KELLBLOG_AUDIO_PUBLIC_URL` (optional).
 | `kellblog-audio synthesize --pending` | TTS for new/stale posts |
 | `kellblog-audio publish` | Upload MP3s + feed to R2 |
 | `kellblog-audio publish --local-only` | Write `output/feeds/feed.xml` only |
+| `kellblog-audio publish --skip-audio` | Refresh feed only from catalog metadata |
 | `kellblog-audio status` | Pipeline counts |
 | `kellblog-audio bakeoff` | Compare Kokoro vs Chatterbox samples |
 | `kellblog-audio run-backfill` | ingest → synthesize → publish |
 | `kellblog-audio backup-catalog` | Push SQLite to R2 |
 | `kellblog-audio restore-catalog` | Pull latest SQLite from R2 |
+| `kellblog-audio create-backfill-baseline --run-id <id>` | Ingest + upload a run-scoped baseline catalog |
+| `kellblog-audio merge-shard-manifests --run-id <id> --manifest-dir <dir>` | Merge distributed shard results into one catalog |
 
 ## Episode metadata
 
