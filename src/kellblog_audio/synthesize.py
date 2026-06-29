@@ -64,6 +64,7 @@ def _provider_cache_key(provider: TTSProvider) -> str:
         provider.name,
         str(getattr(provider, "voice", "")),
         str(getattr(provider, "exaggeration", "")),
+        str(getattr(provider, "cfg_weight", "")),
         str(getattr(provider, "reference_voice_url", "")),
     ]
     digest = hashlib.sha256("|".join(attrs).encode("utf-8")).hexdigest()[:16]

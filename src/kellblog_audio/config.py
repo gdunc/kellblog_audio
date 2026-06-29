@@ -48,6 +48,8 @@ KOKORO_VOICE = os.environ.get("KELLBLOG_KOKORO_VOICE", "am_michael")
 CHATTERBOX_EXAGGERATION = float(os.environ.get("KELLBLOG_CHATTERBOX_EXAGGERATION", "0.4"))
 # Torch device for Chatterbox: auto | mps | cpu | cuda (auto prefers MPS/CUDA when available)
 CHATTERBOX_DEVICE = os.environ.get("KELLBLOG_CHATTERBOX_DEVICE", "auto")
+# CFG weight for Chatterbox (Chatterbox default is 0.5; 0.0 crashes T3 — do not use)
+CHATTERBOX_CFG_WEIGHT = float(os.environ.get("KELLBLOG_CHATTERBOX_CFG_WEIGHT", "0.5"))
 PIPER_VOICE = os.environ.get("KELLBLOG_PIPER_VOICE", "en_US-lessac-medium")
 PIPER_VOICES_DIR = DATA_DIR / "piper_voices"
 

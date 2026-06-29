@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Iterator
 
 from kellblog_audio.config import (
+    CHATTERBOX_CFG_WEIGHT,
     CHATTERBOX_MAX_CHUNK_CHARS,
     CHATTERBOX_DEVICE,
     CHATTERBOX_EXAGGERATION,
@@ -100,8 +101,10 @@ class ChatterboxProvider(TTSProvider):
         self,
         exaggeration: float = CHATTERBOX_EXAGGERATION,
         device: str = CHATTERBOX_DEVICE,
+        cfg_weight: float = CHATTERBOX_CFG_WEIGHT,
     ) -> None:
         self.exaggeration = exaggeration
+        self.cfg_weight = cfg_weight
         self.device_preference = device
         self._device: str | None = None
         self._model = None
@@ -136,13 +139,22 @@ class ChatterboxProvider(TTSProvider):
         # >10 s/token slowdown that starts at token ~150 when heaps overflow).
         gc.collect()
         if self._device == "mps" and torch.backends.mps.is_available():
+            torch.mps.synchronize()  # ensure all pending MPS ops complete before clearing
             torch.mps.empty_cache()
         elif self._device == "cuda":
+            torch.cuda.synchronize()
             torch.cuda.empty_cache()
 
         # inference_mode disables autograd tracking, reducing per-step memory overhead.
+        # cfg_weight=0.0 skips the doubled-batch CFG pass in T3, halving memory and compute
+        # per autoregressive step — critical for long posts on MPS where heap pressure
+        # causes severe slowdowns (~150x) when Metal runs out of contiguous pages.
         with torch.inference_mode():
-            wav = model.generate(text, exaggeration=self.exaggeration)
+            wav = model.generate(
+                text,
+                exaggeration=self.exaggeration,
+                cfg_weight=self.cfg_weight,
+            )
         out_wav.parent.mkdir(parents=True, exist_ok=True)
         torchaudio.save(str(out_wav), wav.cpu(), model.sr)
         del wav
@@ -239,7 +251,8 @@ def _make_provider(provider_name: str, **kwargs) -> TTSProvider:
     if provider_name == "chatterbox":
         ex = kwargs.get("exaggeration", CHATTERBOX_EXAGGERATION)
         device = kwargs.get("device", CHATTERBOX_DEVICE)
-        return ChatterboxProvider(exaggeration=float(ex), device=device)
+        cfg_weight = kwargs.get("cfg_weight", CHATTERBOX_CFG_WEIGHT)
+        return ChatterboxProvider(exaggeration=float(ex), device=device, cfg_weight=float(cfg_weight))
     if provider_name == "piper":
         return PiperProvider(voice=kwargs.get("voice", PIPER_VOICE))
     if provider_name == "styletts2":
