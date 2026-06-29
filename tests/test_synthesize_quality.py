@@ -233,7 +233,7 @@ def test_distributed_synthesize_batch_qa_halt_raises_before_manifest_write_or_up
             manifest_r2_key="backfill/runs/run-1/manifests/shard-0-of-1.json",
         )
 
-    assert manifest_uploads == []
+    assert [entry for entry in manifest_uploads if "/manifests/" in entry[0]] == []
     assert not manifest_path.exists()
 
 
@@ -357,8 +357,9 @@ def test_synthesize_batch_writes_and_uploads_distributed_manifest(tmp_path, monk
 
     assert (ok, err) == (1, 0)
     assert audio_uploads == [("audio/2024/alpha.mp3", "audio/mpeg")]
-    assert manifest_uploads[0][0] == "backfill/runs/run-1/manifests/shard-0-of-1.json"
-    assert manifest_uploads[0][2] == "application/json"
+    manifest_r2_uploads = [entry for entry in manifest_uploads if "/manifests/" in entry[0]]
+    assert manifest_r2_uploads[0][0] == "backfill/runs/run-1/manifests/shard-0-of-1.json"
+    assert manifest_r2_uploads[0][2] == "application/json"
 
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     assert manifest["run_id"] == "run-1"
@@ -374,3 +375,85 @@ def test_synthesize_batch_writes_and_uploads_distributed_manifest(tmp_path, monk
             "year": 2024,
         }
     ]
+
+
+def test_distributed_synthesize_batch_uploads_progress_every_five_posts_and_on_completion(
+    tmp_path, monkeypatch
+):
+    cat = Catalog(tmp_path / "catalog.sqlite")
+    cat.init_schema()
+    for index in range(7):
+        slug = f"post-{index}"
+        cat.upsert_sitemap_entry(slug, f"https://example.com/{slug}", None)
+        cat.update_post(
+            slug,
+            title=slug,
+            published_at="2024-01-01T00:00:00Z",
+            year=2024,
+            text="Alpha body",
+            word_count=2,
+            ingest_status="done",
+            audio_status="pending",
+        )
+
+    audio_dir = tmp_path / "output" / "audio"
+    settings = SimpleNamespace(root=tmp_path, ensure_dirs=lambda: audio_dir.mkdir(parents=True, exist_ok=True))
+    uploads: list[tuple[str, bytes, str]] = []
+
+    monkeypatch.setattr(synth, "AUDIO_DIR", audio_dir)
+    monkeypatch.setattr(synth, "get_settings", lambda: settings)
+    monkeypatch.setattr(synth, "get_provider", lambda _name=None: SimpleNamespace(name="fake"))
+    monkeypatch.setattr(synth, "get_s3_client", lambda: object(), raising=False)
+    monkeypatch.setattr(
+        synth,
+        "upload_bytes",
+        lambda _client, payload, key, content_type: uploads.append((key, payload, content_type)),
+        raising=False,
+    )
+
+    def fake_synthesize_post(catalog, slug, *_args, **_kwargs):
+        out_path = audio_dir / "2024" / f"{slug}.mp3"
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_bytes(b"mp3-bytes")
+        catalog.update_post(
+            slug,
+            audio_path=str(out_path.relative_to(tmp_path)),
+            audio_bytes=out_path.stat().st_size,
+            audio_status="done",
+            audio_error=None,
+            duration_sec=123,
+        )
+        return out_path
+
+    monkeypatch.setattr(synth, "synthesize_post", fake_synthesize_post)
+
+    ok, err = synth.synthesize_batch(
+        cat,
+        shard_index=0,
+        shard_count=1,
+        run_id="run-1",
+        manifest_out=tmp_path / "shard.json",
+        manifest_r2_key="backfill/runs/run-1/manifests/shard-0-of-1.json",
+    )
+
+    assert (ok, err) == (7, 0)
+    progress_uploads = [entry for entry in uploads if "/progress/" in entry[0]]
+    manifest_uploads = [entry for entry in uploads if "/manifests/" in entry[0]]
+    assert [entry[0] for entry in progress_uploads] == [
+        "backfill/runs/run-1/progress/shard-0-of-1.json",
+        "backfill/runs/run-1/progress/shard-0-of-1.json",
+        "backfill/runs/run-1/progress/shard-0-of-1.json",
+    ]
+    assert len(manifest_uploads) == 1
+
+    startup_progress = json.loads(progress_uploads[0][1].decode("utf-8"))
+    first_progress = json.loads(progress_uploads[1][1].decode("utf-8"))
+    final_progress = json.loads(progress_uploads[2][1].decode("utf-8"))
+    assert startup_progress["processed_count"] == 0
+    assert startup_progress["complete"] is False
+    assert first_progress["processed_count"] == 5
+    assert first_progress["complete"] is False
+    assert final_progress["processed_count"] == 7
+    assert final_progress["assigned_count"] == 7
+    assert final_progress["counts"] == {"done": 7, "error": 0, "skipped": 0}
+    assert final_progress["complete"] is True
