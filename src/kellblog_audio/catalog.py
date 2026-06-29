@@ -28,18 +28,27 @@ CREATE TABLE IF NOT EXISTS posts (
     ingest_status TEXT DEFAULT 'pending',
     ingest_error TEXT,
     audio_path TEXT,
+    audio_bytes INTEGER,
+    audio_etag TEXT,
     audio_status TEXT DEFAULT 'pending',
     audio_error TEXT,
     duration_sec INTEGER,
     episode_in_season INTEGER,
     feed_published_at TEXT,
-    skip_reason TEXT
+    skip_reason TEXT,
+    backfill_run_id TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_posts_audio_status ON posts(audio_status);
 CREATE INDEX IF NOT EXISTS idx_posts_ingest_status ON posts(ingest_status);
 CREATE INDEX IF NOT EXISTS idx_posts_year ON posts(year);
 """
+
+POSTS_ADDITIONAL_COLUMNS = {
+    "audio_bytes": "INTEGER",
+    "audio_etag": "TEXT",
+    "backfill_run_id": "TEXT",
+}
 
 
 @dataclass
@@ -61,12 +70,15 @@ class PostRow:
     ingest_status: str = "pending"
     ingest_error: str | None = None
     audio_path: str | None = None
+    audio_bytes: int | None = None
+    audio_etag: str | None = None
     audio_status: str = "pending"
     audio_error: str | None = None
     duration_sec: int | None = None
     episode_in_season: int | None = None
     feed_published_at: str | None = None
     skip_reason: str | None = None
+    backfill_run_id: str | None = None
 
     @classmethod
     def from_row(cls, row: sqlite3.Row) -> PostRow:
@@ -95,6 +107,12 @@ class Catalog:
     def init_schema(self) -> None:
         with self.connect() as conn:
             conn.executescript(SCHEMA)
+            existing_columns = {
+                row["name"] for row in conn.execute("PRAGMA table_info(posts)").fetchall()
+            }
+            for name, column_type in POSTS_ADDITIONAL_COLUMNS.items():
+                if name not in existing_columns:
+                    conn.execute(f"ALTER TABLE posts ADD COLUMN {name} {column_type}")
 
     def upsert_sitemap_entry(
         self, slug: str, url: str, sitemap_lastmod: str | None

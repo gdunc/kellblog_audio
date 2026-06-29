@@ -8,6 +8,7 @@ import shutil
 import signal
 import tempfile
 import threading
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable
 
@@ -33,7 +34,9 @@ signal.signal(signal.SIGTERM, _handle_stop_signal)
 
 from kellblog_audio.catalog import Catalog
 from kellblog_audio.config import AUDIO_DIR, DATA_DIR, MAX_AUDIO_BODY_WPM, get_settings
+from kellblog_audio.distributed_backfill import ShardManifest, ShardManifestItem
 from kellblog_audio.intro_outro import SPOKEN_OUTRO, spoken_intro
+from kellblog_audio.publish import get_s3_client, upload_bytes, upload_file
 from kellblog_audio.qa import qa_post_audio, queue_audio_rerun
 from kellblog_audio.tts import (
     TTSProvider,
@@ -92,6 +95,31 @@ def validate_audio_duration(post, duration_sec: int | None) -> None:
         )
 
 
+def _now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _manifest_done_item(
+    catalog: Catalog,
+    slug: str,
+    *,
+    year: int | None,
+    audio_etag: str | None = None,
+) -> ShardManifestItem:
+    post = catalog.get(slug)
+    if post is None:
+        raise ValueError(f"Post {slug} missing after synthesis")
+    return ShardManifestItem(
+        slug=slug,
+        status="done",
+        year=post.year if post.year is not None else year,
+        audio_path=post.audio_path,
+        duration_sec=post.duration_sec,
+        audio_bytes=post.audio_bytes,
+        audio_etag=audio_etag or post.audio_etag,
+    )
+
+
 def synthesize_post(
     catalog: Catalog,
     slug: str,
@@ -138,6 +166,7 @@ def synthesize_post(
     catalog.update_post(
         slug,
         audio_path=str(out_path.relative_to(get_settings().root)),
+        audio_bytes=out_path.stat().st_size,
         audio_status="done",
         audio_error=None,
         duration_sec=duration,
@@ -158,8 +187,25 @@ def synthesize_batch(
     shard_count: int | None = None,
     qa_first: int = 0,
     stop_on_qa_failure: bool = True,
+    run_id: str | None = None,
+    manifest_out: Path | None = None,
+    manifest_r2_key: str | None = None,
+    upload_r2: bool = False,
     progress: Callable[[str], None] | None = None,
 ) -> tuple[int, int]:
+    manifest_enabled = manifest_out is not None or manifest_r2_key is not None
+    if manifest_enabled and not run_id:
+        raise ValueError("run_id is required when writing shard manifests")
+    if manifest_enabled and (shard_index is None or shard_count is None):
+        raise ValueError("shard_index and shard_count are required when writing shard manifests")
+    if manifest_enabled and _stop_requested.is_set():
+        raise RuntimeError("Distributed synthesize stopped before completing the shard run")
+
+    # Reset stop flag for this run (important when called multiple times in-process,
+    # e.g. from the `status` command's interactive restart prompt). Clear before
+    # startup so stop signals raised during model init are preserved.
+    _stop_requested.clear()
+
     settings = get_settings()
     settings.ensure_dirs()
 
@@ -182,41 +228,96 @@ def synthesize_batch(
 
     # Build the model once and reuse it for the whole batch.
     provider = get_provider(provider_name)
-
-    # Reset stop flag for this run (important when called multiple times in-process,
-    # e.g. from the `status` command's interactive restart prompt).
-    _stop_requested.clear()
+    s3_client = get_s3_client() if (upload_r2 or manifest_r2_key) else None
+    manifest_items: list[ShardManifestItem] = []
+    manifest_started_at = _now_iso() if manifest_enabled else None
 
     ok, err = 0, 0
     qa_checked = 0
+    incomplete_reason: str | None = None
     for post in posts:
         if _stop_requested.is_set():
             if progress:
-                progress(
-                    f"[yellow]Stop signal received; exiting cleanly "
-                    f"({ok} ok, {err} err so far).[/yellow]"
+                if manifest_enabled:
+                    progress(
+                        f"[red]Stop signal received; aborting distributed shard run "
+                        f"without a manifest ({ok} ok, {err} err so far).[/red]"
+                    )
+                else:
+                    progress(
+                        f"[yellow]Stop signal received; exiting cleanly "
+                        f"({ok} ok, {err} err so far).[/yellow]"
+                    )
+            if manifest_enabled:
+                incomplete_reason = (
+                    "Distributed synthesize stopped before completing the shard run"
                 )
             break
         try:
-            synthesize_post(
+            out_path = synthesize_post(
                 catalog, post.slug, provider_name, force=force, provider=provider
             )
+            if out_path is None:
+                if manifest_enabled:
+                    manifest_items.append(
+                        ShardManifestItem(
+                            slug=post.slug,
+                            status="skip",
+                            year=post.year,
+                            error=post.audio_error,
+                        )
+                    )
+                continue
+
+            audio_etag: str | None = None
             if qa_checked < qa_first:
                 qa_checked += 1
                 qa_result = qa_post_audio(catalog, post.slug)
                 if not qa_result.passed:
                     queue_audio_rerun(catalog, post.slug, qa_result.reason)
                     err += 1
+                    if manifest_enabled:
+                        manifest_items.append(
+                            ShardManifestItem(
+                                slug=post.slug,
+                                status="error",
+                                year=post.year,
+                                error=qa_result.reason,
+                            )
+                        )
                     if progress:
                         progress(
                             f"qa failed {post.slug}; queued for rerun: "
                             f"{qa_result.reason}"
                         )
                     if stop_on_qa_failure:
+                        if manifest_enabled:
+                            incomplete_reason = (
+                                "Distributed synthesize halted after QA failure for "
+                                f"{post.slug}: {qa_result.reason}"
+                            )
                         break
                     continue
                 if progress:
                     progress(f"qa passed {post.slug}: {qa_result.reason}")
+            if upload_r2:
+                client = s3_client or get_s3_client()
+                audio_key = f"audio/{post.year or 1970}/{post.slug}.mp3"
+                audio_etag = upload_file(client, out_path, audio_key, "audio/mpeg")
+                update_fields = {"backfill_run_id": run_id} if run_id else {}
+                if audio_etag is not None:
+                    update_fields["audio_etag"] = audio_etag
+                if update_fields:
+                    catalog.update_post(post.slug, **update_fields)
+            if manifest_enabled:
+                manifest_items.append(
+                    _manifest_done_item(
+                        catalog,
+                        post.slug,
+                        year=post.year,
+                        audio_etag=audio_etag,
+                    )
+                )
             if progress:
                 rss_mb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss // 1024
                 try:
@@ -237,6 +338,36 @@ def synthesize_batch(
         except Exception as e:
             catalog.update_post(post.slug, audio_status="error", audio_error=str(e)[:500])
             err += 1
+            if manifest_enabled:
+                manifest_items.append(
+                    ShardManifestItem(
+                        slug=post.slug,
+                        status="error",
+                        year=post.year,
+                        error=str(e)[:500],
+                    )
+                )
             if progress:
                 progress(f"error {post.slug}: {e}")
+
+    if manifest_enabled and incomplete_reason:
+        raise RuntimeError(incomplete_reason)
+
+    if manifest_enabled:
+        manifest = ShardManifest(
+            run_id=run_id or "local",
+            shard_index=shard_index,
+            shard_count=shard_count,
+            provider=getattr(provider, "name", provider_name),
+            started_at=manifest_started_at,
+            finished_at=_now_iso(),
+            items=manifest_items,
+        )
+        manifest_json = manifest.to_json()
+        if manifest_out is not None:
+            manifest_out.parent.mkdir(parents=True, exist_ok=True)
+            manifest_out.write_text(manifest_json, encoding="utf-8")
+        if manifest_r2_key is not None:
+            client = s3_client or get_s3_client()
+            upload_bytes(client, manifest_json.encode("utf-8"), manifest_r2_key, "application/json")
     return ok, err

@@ -148,7 +148,7 @@ def _remote_length(post: PostRow) -> int:
         local = get_settings().root / post.audio_path
         if local.exists():
             return local.stat().st_size
-    return 0
+    return post.audio_bytes or 0
 
 
 def write_feed(catalog: Catalog, out_path: Path, *, local_audio: bool = False) -> Path:
