@@ -23,12 +23,38 @@ on:
         required: false
         default: ""
         type: string
+      resume_run_id:
+        description: "Optional logical run_id to resume; reruns only missing shard manifests"
+        required: false
+        default: ""
+        type: string
+      seed_run_id:
+        description: "Optional prior run_id whose final catalog should seed a fresh retry run"
+        required: false
+        default: ""
+        type: string
+      auto_resume:
+        description: "Automatically dispatch continuation runs for missing shards or retryable error rows"
+        required: true
+        default: "1"
+        type: string
+      resume_depth:
+        description: "Internal continuation depth counter"
+        required: true
+        default: "0"
+        type: string
+      max_auto_resumes:
+        description: "Maximum automatic continuation dispatches for the logical run"
+        required: true
+        default: "10"
+        type: string
 
 concurrency:
   group: distributed-backfill
   cancel-in-progress: false
 
 permissions:
+  actions: write
   contents: read
 
 env:
@@ -47,8 +73,13 @@ jobs:
       qa_first: ${{ steps.plan.outputs.qa_first }}
       year: ${{ steps.plan.outputs.year }}
       local_helper_shards: ${{ steps.plan.outputs.local_helper_shards }}
+      auto_resume: ${{ steps.plan.outputs.auto_resume }}
+      resume_depth: ${{ steps.plan.outputs.resume_depth }}
+      max_auto_resumes: ${{ steps.plan.outputs.max_auto_resumes }}
       gha_shard_count: ${{ steps.plan.outputs.gha_shard_count }}
       gha_matrix: ${{ steps.plan.outputs.gha_matrix }}
+      completed_shards: ${{ steps.plan.outputs.completed_shards }}
+      missing_shards: ${{ steps.plan.outputs.missing_shards }}
     steps:
       - uses: actions/checkout@v4
 
@@ -67,57 +98,70 @@ jobs:
           INPUT_QA_FIRST: ${{ inputs.qa_first }}
           INPUT_YEAR: ${{ inputs.year }}
           INPUT_LOCAL_HELPER_SHARDS: ${{ inputs.local_helper_shards }}
+          INPUT_RESUME_RUN_ID: ${{ inputs.resume_run_id }}
+          INPUT_SEED_RUN_ID: ${{ inputs.seed_run_id }}
+          INPUT_AUTO_RESUME: ${{ inputs.auto_resume }}
+          INPUT_RESUME_DEPTH: ${{ inputs.resume_depth }}
+          INPUT_MAX_AUTO_RESUMES: ${{ inputs.max_auto_resumes }}
         run: |
           python3 <<'PY'
           import json
           import os
-          from datetime import datetime, timezone
+
+          from kellblog_audio.distributed_backfill import plan_backfill_run
 
           shard_count = int(os.environ["INPUT_SHARD_COUNT"])
           qa_first = int(os.environ["INPUT_QA_FIRST"])
-          year = os.environ.get("INPUT_YEAR", "").strip()
-          helper_raw = os.environ.get("INPUT_LOCAL_HELPER_SHARDS", "").strip()
-          if shard_count < 1:
-              raise SystemExit("shard_count must be >= 1")
-          if qa_first < 0:
-              raise SystemExit("qa_first must be >= 0")
-          if year:
-              try:
-                  year = str(int(year))
-              except ValueError as exc:
-                  raise SystemExit("year must be blank or an integer") from exc
+          resume_depth = int(os.environ.get("INPUT_RESUME_DEPTH", "0"))
+          max_auto_resumes = int(os.environ.get("INPUT_MAX_AUTO_RESUMES", "10"))
+          if resume_depth < 0:
+              raise SystemExit("resume_depth must be >= 0")
+          if max_auto_resumes < 0:
+              raise SystemExit("max_auto_resumes must be >= 0")
 
-          helper_shards = []
-          if helper_raw:
-              for token in helper_raw.split(","):
-                  value = token.strip()
-                  if not value:
-                      continue
-                  shard = int(value)
-                  if not 0 <= shard < shard_count:
-                      raise SystemExit(
-                          f"local_helper_shards contains out-of-range shard {shard}; expected 0..{shard_count - 1}"
-                      )
-                  helper_shards.append(shard)
-          helper_shards = sorted(set(helper_shards))
-          gha_shards = [shard for shard in range(shard_count) if shard not in helper_shards]
-          run_id = f"{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}-{os.environ['GITHUB_RUN_ID']}"
+          plan = plan_backfill_run(
+              shard_count=shard_count,
+              qa_first=qa_first,
+              year=os.environ.get("INPUT_YEAR", ""),
+              local_helper_shards_raw=os.environ.get("INPUT_LOCAL_HELPER_SHARDS", ""),
+              github_run_id=os.environ["GITHUB_RUN_ID"],
+              resume_run_id=os.environ.get("INPUT_RESUME_RUN_ID", ""),
+          )
           outputs = {
-              "run_id": run_id,
+              "run_id": plan.run_id,
               "shard_count": str(shard_count),
               "qa_first": str(qa_first),
-              "year": year,
-              "local_helper_shards": ",".join(str(shard) for shard in helper_shards),
-              "gha_shard_count": str(len(gha_shards)),
-              "gha_matrix": json.dumps({"shard": gha_shards}),
+              "year": plan.year or "",
+              "local_helper_shards": ",".join(str(shard) for shard in plan.local_helper_shards),
+              "auto_resume": os.environ.get("INPUT_AUTO_RESUME", "1"),
+              "resume_depth": str(resume_depth),
+              "max_auto_resumes": str(max_auto_resumes),
+              "gha_shard_count": str(len(plan.gha_shards)),
+              "gha_matrix": json.dumps({"shard": plan.gha_shards}),
+              "completed_shards": ",".join(str(shard) for shard in plan.completed_shards),
+              "missing_shards": ",".join(str(shard) for shard in plan.missing_shards),
           }
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
               for key, value in outputs.items():
                   fh.write(f"{key}={value}\n")
           PY
 
-      - name: Create run baseline catalog
-        run: uv run kellblog-audio create-backfill-baseline --run-id "${{ steps.plan.outputs.run_id }}"
+      - name: Create or restore run baseline catalog
+        env:
+          INPUT_RESUME_RUN_ID: ${{ inputs.resume_run_id }}
+          INPUT_SEED_RUN_ID: ${{ inputs.seed_run_id }}
+        run: |
+          if [[ -n "$INPUT_RESUME_RUN_ID" ]]; then
+            uv run kellblog-audio create-backfill-baseline --run-id "${{ steps.plan.outputs.run_id }}" --resume-existing
+          elif [[ -n "$INPUT_SEED_RUN_ID" ]]; then
+            uv run kellblog-audio seed-backfill-baseline \
+              --run-id "${{ steps.plan.outputs.run_id }}" \
+              --from-run-id "$INPUT_SEED_RUN_ID" \
+              --from-kind final \
+              --retry-errors
+          else
+            uv run kellblog-audio create-backfill-baseline --run-id "${{ steps.plan.outputs.run_id }}"
+          fi
 
       - name: Write run plan summary
         env:
@@ -127,15 +171,26 @@ jobs:
           PLAN_LOCAL_HELPER_SHARDS: ${{ steps.plan.outputs.local_helper_shards }}
           PLAN_YEAR: ${{ steps.plan.outputs.year }}
           PLAN_QA_FIRST: ${{ steps.plan.outputs.qa_first }}
+          PLAN_SEED_RUN_ID: ${{ inputs.seed_run_id }}
+          PLAN_AUTO_RESUME: ${{ steps.plan.outputs.auto_resume }}
+          PLAN_RESUME_DEPTH: ${{ steps.plan.outputs.resume_depth }}
+          PLAN_MAX_AUTO_RESUMES: ${{ steps.plan.outputs.max_auto_resumes }}
+          PLAN_COMPLETED_SHARDS: ${{ steps.plan.outputs.completed_shards }}
+          PLAN_MISSING_SHARDS: ${{ steps.plan.outputs.missing_shards }}
         run: |
           {
             echo "## Distributed backfill plan"
             echo "- Run ID: \`${PLAN_RUN_ID}\`"
             echo "- Shard count: \`${PLAN_SHARD_COUNT}\`"
             echo "- GitHub-hosted shards: \`${PLAN_GHA_MATRIX}\`"
+            echo "- Completed shard manifests: \`${PLAN_COMPLETED_SHARDS:-none}\`"
+            echo "- Missing shard manifests: \`${PLAN_MISSING_SHARDS:-none}\`"
             echo "- Local helper shards: \`${PLAN_LOCAL_HELPER_SHARDS:-none}\`"
+            echo "- Seeded from run: \`${PLAN_SEED_RUN_ID:-none}\`"
             echo "- Year filter: \`${PLAN_YEAR:-all years}\`"
             echo "- QA first: \`${PLAN_QA_FIRST}\`"
+            echo "- Auto resume: \`${PLAN_AUTO_RESUME}\`"
+            echo "- Resume depth: \`${PLAN_RESUME_DEPTH}/${PLAN_MAX_AUTO_RESUMES}\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
   synthesize:
@@ -383,3 +438,124 @@ jobs:
             artifacts/summary.json
             artifacts/manifests/
           if-no-files-found: error
+
+  auto-restart:
+    needs: [prepare, synthesize, finalize]
+    if: ${{ always() && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+
+      - name: Install Python package
+        run: uv sync --frozen --extra chatterbox
+
+      - name: Decide whether to dispatch a continuation run
+        id: decide
+        env:
+          RUN_ID: ${{ needs.prepare.outputs.run_id }}
+          SHARD_COUNT: ${{ needs.prepare.outputs.shard_count }}
+          QA_FIRST: ${{ needs.prepare.outputs.qa_first }}
+          YEAR: ${{ needs.prepare.outputs.year }}
+          LOCAL_HELPER_SHARDS: ${{ needs.prepare.outputs.local_helper_shards }}
+          AUTO_RESUME: ${{ needs.prepare.outputs.auto_resume }}
+          RESUME_DEPTH: ${{ needs.prepare.outputs.resume_depth }}
+          MAX_AUTO_RESUMES: ${{ needs.prepare.outputs.max_auto_resumes }}
+        run: |
+          uv run python - <<'PY'
+          import json
+          import os
+
+          from kellblog_audio.distributed_backfill import (
+              plan_backfill_auto_restart,
+          )
+          from kellblog_audio.publish import get_s3_client
+
+          auto_resume = os.environ.get("AUTO_RESUME", "1").strip().lower() in {"1", "true", "yes", "on"}
+          resume_depth = int(os.environ.get("RESUME_DEPTH", "0"))
+          max_auto_resumes = int(os.environ.get("MAX_AUTO_RESUMES", "10"))
+          summary_error_count = None
+          summary_key = f"backfill/runs/{os.environ['RUN_ID']}/reports/summary.json"
+          try:
+              payload = (
+                  get_s3_client()
+                  .get_object(Bucket=os.environ["R2_BUCKET"], Key=summary_key)["Body"]
+                  .read()
+              )
+              summary = json.loads(payload.decode("utf-8"))
+              summary_error_count = int(summary.get("counts", {}).get("error", 0))
+          except Exception:
+              summary_error_count = None
+
+          decision = plan_backfill_auto_restart(
+              run_id=os.environ["RUN_ID"],
+              shard_count=int(os.environ["SHARD_COUNT"]),
+              qa_first=int(os.environ["QA_FIRST"]),
+              year=os.environ.get("YEAR", ""),
+              local_helper_shards_raw=os.environ.get("LOCAL_HELPER_SHARDS", ""),
+              auto_resume=auto_resume,
+              resume_depth=resume_depth,
+              max_auto_resumes=max_auto_resumes,
+              summary_error_count=summary_error_count,
+          )
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
+              fh.write(f"should_dispatch={'true' if decision.should_dispatch else 'false'}\n")
+              fh.write(f"mode={decision.mode}\n")
+              fh.write(f"reason={decision.reason}\n")
+              fh.write(f"gha_shards={','.join(str(shard) for shard in decision.gha_shards)}\n")
+              fh.write(f"missing_shards={','.join(str(shard) for shard in decision.missing_shards)}\n")
+              fh.write(f"resume_run_id={decision.resume_run_id or ''}\n")
+              fh.write(f"seed_run_id={decision.seed_run_id or ''}\n")
+              fh.write(f"next_resume_depth={decision.next_resume_depth}\n")
+          PY
+
+      - name: Dispatch continuation run
+        if: ${{ steps.decide.outputs.should_dispatch == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHARD_COUNT: ${{ needs.prepare.outputs.shard_count }}
+          QA_FIRST: ${{ needs.prepare.outputs.qa_first }}
+          YEAR: ${{ needs.prepare.outputs.year }}
+          LOCAL_HELPER_SHARDS: ${{ needs.prepare.outputs.local_helper_shards }}
+          AUTO_RESUME: ${{ needs.prepare.outputs.auto_resume }}
+          MAX_AUTO_RESUMES: ${{ needs.prepare.outputs.max_auto_resumes }}
+          RESUME_RUN_ID: ${{ steps.decide.outputs.resume_run_id }}
+          SEED_RUN_ID: ${{ steps.decide.outputs.seed_run_id }}
+          NEXT_RESUME_DEPTH: ${{ steps.decide.outputs.next_resume_depth }}
+        run: |
+          cmd=(
+            gh workflow run .github/workflows/backfill-distributed.yml
+            --ref "${{ github.ref_name }}"
+            -f shard_count="$SHARD_COUNT"
+            -f qa_first="$QA_FIRST"
+            -f auto_resume="$AUTO_RESUME"
+            -f resume_depth="$NEXT_RESUME_DEPTH"
+            -f max_auto_resumes="$MAX_AUTO_RESUMES"
+          )
+          if [[ -n "$RESUME_RUN_ID" ]]; then
+            cmd+=( -f resume_run_id="$RESUME_RUN_ID" )
+          fi
+          if [[ -n "$SEED_RUN_ID" ]]; then
+            cmd+=( -f seed_run_id="$SEED_RUN_ID" )
+          fi
+          if [[ -n "$YEAR" ]]; then
+            cmd+=( -f year="$YEAR" )
+          fi
+          if [[ -n "$LOCAL_HELPER_SHARDS" ]]; then
+            cmd+=( -f local_helper_shards="$LOCAL_HELPER_SHARDS" )
+          fi
+          "${cmd[@]}"
+
+      - name: Write auto-restart summary
+        run: |
+          {
+            echo "## Auto-restart check"
+            echo "- Dispatch needed: \`${{ steps.decide.outputs.should_dispatch }}\`"
+            echo "- Mode: \`${{ steps.decide.outputs.mode }}\`"
+            echo "- Reason: \`${{ steps.decide.outputs.reason }}\`"
+            echo "- Missing shard manifests: \`${{ steps.decide.outputs.missing_shards || 'none' }}\`"
+            echo "- Missing GitHub-hosted shard manifests: \`${{ steps.decide.outputs.gha_shards || 'none' }}\`"
+            echo "- Resume run: \`${{ steps.decide.outputs.resume_run_id || 'none' }}\`"
+            echo "- Seed run: \`${{ steps.decide.outputs.seed_run_id || 'none' }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

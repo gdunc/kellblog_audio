@@ -1,6 +1,7 @@
 import json
 import sqlite3
 from contextlib import contextmanager
+from datetime import datetime, timezone
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -10,11 +11,19 @@ from kellblog_audio import publish as publish_mod
 from kellblog_audio.catalog import Catalog
 from kellblog_audio.config import R2_BUCKET
 from kellblog_audio.distributed_backfill import (
+    BackfillAutoRestartPlan,
+    ShardManifestSnapshot,
     ShardProgress,
     ShardManifest,
     ShardManifestItem,
     create_backfill_baseline,
+    prepare_backfill_baseline,
+    plan_backfill_run,
+    plan_backfill_auto_restart,
     read_backfill_progress,
+    read_backfill_manifest_state,
+    seed_backfill_baseline_from_local_catalog,
+    seed_backfill_baseline_from_run_catalog,
     merge_shard_manifests,
     shard_progress_key,
 )
@@ -256,6 +265,246 @@ def test_create_backfill_baseline_runs_ingest_and_uses_run_scoped_key(
     }
 
 
+def test_prepare_backfill_baseline_resume_restores_existing_run_scoped_key(
+    tmp_path, monkeypatch
+):
+    cat = Catalog(tmp_path / "catalog.sqlite")
+    calls: list[tuple[str, object]] = []
+
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.restore_catalog",
+        lambda catalog, key=None: calls.append(("restore", key)) or True,
+    )
+    monkeypatch.setattr(
+        cat,
+        "init_schema",
+        lambda: calls.append(("init_schema", cat.path)),
+    )
+
+    key = prepare_backfill_baseline(cat, run_id="r1", resume=True)
+
+    assert key == "backfill/runs/r1/baseline/catalog.sqlite"
+    assert calls == [
+        ("restore", "backfill/runs/r1/baseline/catalog.sqlite"),
+        ("init_schema", cat.path),
+    ]
+
+
+def test_prepare_backfill_baseline_resume_rejects_missing_baseline(tmp_path, monkeypatch):
+    cat = Catalog(tmp_path / "catalog.sqlite")
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.restore_catalog",
+        lambda catalog, key=None: False,
+    )
+
+    with pytest.raises(ValueError, match="no baseline catalog found"):
+        prepare_backfill_baseline(cat, run_id="r1", resume=True)
+
+
+def test_seed_backfill_baseline_from_local_catalog_uploads_done_audio_and_backs_up(
+    tmp_path, monkeypatch
+):
+    cat = Catalog(tmp_path / "catalog.sqlite")
+    cat.init_schema()
+    _seed_post(cat, "alpha")
+    _seed_post(cat, "beta")
+
+    audio_dir = tmp_path / "output" / "audio" / "2024"
+    audio_dir.mkdir(parents=True)
+    alpha_mp3 = audio_dir / "alpha.mp3"
+    alpha_mp3.write_bytes(b"alpha-audio")
+
+    cat.update_post(
+        "alpha",
+        audio_status="done",
+        audio_path="output/audio/2024/alpha.mp3",
+        audio_bytes=alpha_mp3.stat().st_size,
+        duration_sec=120,
+    )
+
+    uploads: list[tuple[str, str, str]] = []
+    backup_calls: list[tuple[Catalog, str | None]] = []
+
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.ingest_all",
+        lambda catalog: catalog,
+    )
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.get_settings",
+        lambda: SimpleNamespace(root=tmp_path),
+    )
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.get_s3_client",
+        lambda: object(),
+    )
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.upload_file",
+        lambda client, local, key, content_type: uploads.append((str(local), key, content_type)) or "etag-alpha",
+    )
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.backup_catalog",
+        lambda catalog, *, key=None: backup_calls.append((catalog, key)) or (key or ""),
+    )
+
+    result = seed_backfill_baseline_from_local_catalog(cat, run_id="r1")
+
+    assert result.run_id == "r1"
+    assert result.uploaded == 1
+    assert result.baseline_key == "backfill/runs/r1/baseline/catalog.sqlite"
+    assert uploads == [
+        (str(alpha_mp3), "audio/2024/alpha.mp3", "audio/mpeg"),
+    ]
+    assert backup_calls == [(cat, "backfill/runs/r1/baseline/catalog.sqlite")]
+
+    alpha = cat.get("alpha")
+    beta = cat.get("beta")
+    assert alpha is not None and beta is not None
+    assert alpha.audio_etag == "etag-alpha"
+    assert alpha.backfill_run_id == "r1"
+    assert beta.backfill_run_id is None
+
+
+def test_seed_backfill_baseline_from_local_catalog_requeues_error_rows_for_retry(
+    tmp_path, monkeypatch
+):
+    cat = Catalog(tmp_path / "catalog.sqlite")
+    cat.init_schema()
+    _seed_post(cat, "alpha")
+    _seed_post(cat, "beta")
+
+    audio_dir = tmp_path / "output" / "audio" / "2024"
+    audio_dir.mkdir(parents=True)
+    alpha_mp3 = audio_dir / "alpha.mp3"
+    alpha_mp3.write_bytes(b"alpha-audio")
+
+    cat.update_post(
+        "alpha",
+        audio_status="done",
+        audio_path="output/audio/2024/alpha.mp3",
+        audio_bytes=alpha_mp3.stat().st_size,
+        duration_sec=120,
+    )
+    cat.update_post(
+        "beta",
+        audio_status="error",
+        audio_error="broken pipe",
+        audio_path="output/audio/2024/beta.mp3",
+        audio_bytes=999,
+        duration_sec=42,
+        audio_etag="etag-beta",
+        backfill_run_id="old-run",
+    )
+
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.ingest_all",
+        lambda catalog: catalog,
+    )
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.get_settings",
+        lambda: SimpleNamespace(root=tmp_path),
+    )
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.get_s3_client",
+        lambda: object(),
+    )
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.upload_file",
+        lambda *_args, **_kwargs: "etag-alpha",
+    )
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.backup_catalog",
+        lambda catalog, *, key=None: key or "",
+    )
+
+    result = seed_backfill_baseline_from_local_catalog(
+        cat,
+        run_id="r1",
+        retry_errors=True,
+    )
+
+    assert result.requeued_errors == 1
+
+    beta = cat.get("beta")
+    assert beta is not None
+    assert beta.audio_status == "stale"
+    assert beta.audio_error is None
+    assert beta.audio_path is None
+    assert beta.audio_bytes is None
+    assert beta.duration_sec is None
+    assert beta.audio_etag is None
+    assert beta.backfill_run_id is None
+
+
+def test_seed_backfill_baseline_from_run_catalog_restores_final_catalog_and_requeues_errors(
+    tmp_path, monkeypatch
+):
+    cat = Catalog(tmp_path / "catalog.sqlite")
+    calls: list[tuple[str, object]] = []
+
+    def fake_restore(catalog, key=None):
+        calls.append(("restore", key))
+        catalog.init_schema()
+        _seed_post(catalog, "done-post")
+        _seed_post(catalog, "error-post")
+        catalog.update_post(
+            "done-post",
+            audio_status="done",
+            audio_path="output/audio/2024/done-post.mp3",
+            audio_bytes=1234,
+            duration_sec=120,
+            audio_etag="etag-done",
+            backfill_run_id="old-run",
+        )
+        catalog.update_post(
+            "error-post",
+            audio_status="error",
+            audio_error="NoneType callable",
+            audio_path="output/audio/2024/error-post.mp3",
+            audio_bytes=111,
+            duration_sec=12,
+            audio_etag="etag-error",
+            backfill_run_id="old-run",
+        )
+        return True
+
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.restore_catalog",
+        fake_restore,
+    )
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.backup_catalog",
+        lambda catalog, *, key=None: calls.append(("backup", key)) or (key or ""),
+    )
+
+    result = seed_backfill_baseline_from_run_catalog(
+        cat,
+        run_id="new-run",
+        source_run_id="old-run",
+    )
+
+    assert result.run_id == "new-run"
+    assert result.uploaded == 0
+    assert result.requeued_errors == 1
+    assert result.baseline_key == "backfill/runs/new-run/baseline/catalog.sqlite"
+    assert calls == [
+        ("restore", "backfill/runs/old-run/catalog/final.sqlite"),
+        ("backup", "backfill/runs/new-run/baseline/catalog.sqlite"),
+    ]
+
+    done_post = cat.get("done-post")
+    error_post = cat.get("error-post")
+    assert done_post is not None and error_post is not None
+    assert done_post.audio_status == "done"
+    assert done_post.backfill_run_id == "old-run"
+    assert error_post.audio_status == "stale"
+    assert error_post.audio_error is None
+    assert error_post.audio_path is None
+    assert error_post.audio_bytes is None
+    assert error_post.duration_sec is None
+    assert error_post.audio_etag is None
+    assert error_post.backfill_run_id is None
+
+
 def test_shard_progress_key_uses_run_scoped_progress_prefix():
     assert shard_progress_key("run-1", 2, 6) == "backfill/runs/run-1/progress/shard-2-of-6.json"
 
@@ -350,6 +599,206 @@ def test_read_backfill_progress_rejects_missing_run_progress(monkeypatch):
 
     with pytest.raises(ValueError, match="no shard progress found"):
         read_backfill_progress("run-1")
+
+
+def test_read_backfill_manifest_state_reports_found_missing_and_unexpected(monkeypatch):
+    keys = [
+        "backfill/runs/run-1/manifests/notes.txt",
+        "backfill/runs/run-1/manifests/shard-0-of-3.json",
+        "backfill/runs/run-1/manifests/shard-1-of-4.json",
+        "backfill/runs/run-1/manifests/shard-2-of-3.json",
+    ]
+
+    class FakePaginator:
+        def paginate(self, **_kwargs):
+            return [{"Contents": [{"Key": key} for key in keys]}]
+
+    class FakeS3Client:
+        def get_paginator(self, name):
+            assert name == "list_objects_v2"
+            return FakePaginator()
+
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.get_s3_client",
+        lambda: FakeS3Client(),
+    )
+
+    snapshot = read_backfill_manifest_state("run-1", 3)
+
+    assert snapshot == ShardManifestSnapshot(
+        run_id="run-1",
+        shard_count=3,
+        found_shards=[0, 2],
+        missing_shards=[1],
+        unexpected_keys=[
+            "backfill/runs/run-1/manifests/notes.txt",
+            "backfill/runs/run-1/manifests/shard-1-of-4.json",
+        ],
+    )
+
+
+def test_plan_backfill_run_for_new_run_uses_all_missing_non_helper_shards():
+    plan = plan_backfill_run(
+        shard_count=6,
+        qa_first=0,
+        year="",
+        local_helper_shards_raw="1, 4",
+        github_run_id="12345",
+        now=datetime(2026, 6, 30, 8, 0, 0, tzinfo=timezone.utc),
+    )
+
+    assert plan.run_id == "20260630T080000Z-12345"
+    assert plan.resume_requested is False
+    assert plan.local_helper_shards == [1, 4]
+    assert plan.completed_shards == []
+    assert plan.missing_shards == [0, 1, 2, 3, 4, 5]
+    assert plan.gha_shards == [0, 2, 3, 5]
+
+
+def test_plan_backfill_run_for_resume_only_schedules_missing_non_helper_shards(
+    monkeypatch,
+):
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.read_backfill_manifest_state",
+        lambda run_id, shard_count: ShardManifestSnapshot(
+            run_id=run_id,
+            shard_count=shard_count,
+            found_shards=[0, 2, 5],
+            missing_shards=[1, 3, 4],
+            unexpected_keys=[],
+        ),
+    )
+
+    plan = plan_backfill_run(
+        shard_count=6,
+        qa_first=2,
+        year="2024",
+        local_helper_shards_raw="4",
+        resume_run_id="resume-1",
+    )
+
+    assert plan.run_id == "resume-1"
+    assert plan.resume_requested is True
+    assert plan.completed_shards == [0, 2, 5]
+    assert plan.missing_shards == [1, 3, 4]
+    assert plan.gha_shards == [1, 3]
+
+
+def test_plan_backfill_run_rejects_unexpected_manifest_keys(monkeypatch):
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.read_backfill_manifest_state",
+        lambda run_id, shard_count: ShardManifestSnapshot(
+            run_id=run_id,
+            shard_count=shard_count,
+            found_shards=[0],
+            missing_shards=[1],
+            unexpected_keys=["backfill/runs/resume-1/manifests/shard-0-of-99.json"],
+        ),
+    )
+
+    with pytest.raises(ValueError, match="unexpected manifest keys"):
+        plan_backfill_run(
+            shard_count=2,
+            qa_first=0,
+            local_helper_shards_raw="",
+            resume_run_id="resume-1",
+        )
+
+
+def test_plan_backfill_auto_restart_resumes_missing_non_helper_shards(monkeypatch):
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.plan_backfill_run",
+        lambda **_kwargs: SimpleNamespace(
+            gha_shards=[1, 3],
+            missing_shards=[1, 2, 3],
+        ),
+    )
+
+    plan = plan_backfill_auto_restart(
+        run_id="run-1",
+        shard_count=6,
+        qa_first=0,
+        local_helper_shards_raw="2",
+        auto_resume=True,
+        resume_depth=0,
+        max_auto_resumes=5,
+        summary_error_count=4,
+    )
+
+    assert plan == BackfillAutoRestartPlan(
+        should_dispatch=True,
+        mode="resume",
+        reason="missing non-helper shard manifests: 1,3",
+        next_resume_depth=1,
+        gha_shards=[1, 3],
+        missing_shards=[1, 2, 3],
+        resume_run_id="run-1",
+        seed_run_id=None,
+    )
+
+
+def test_plan_backfill_auto_restart_dispatches_retry_run_for_error_rows(monkeypatch):
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.plan_backfill_run",
+        lambda **_kwargs: SimpleNamespace(
+            gha_shards=[],
+            missing_shards=[],
+        ),
+    )
+
+    plan = plan_backfill_auto_restart(
+        run_id="run-1",
+        shard_count=6,
+        qa_first=0,
+        local_helper_shards_raw="",
+        auto_resume=True,
+        resume_depth=2,
+        max_auto_resumes=5,
+        summary_error_count=6,
+    )
+
+    assert plan == BackfillAutoRestartPlan(
+        should_dispatch=True,
+        mode="retry-errors",
+        reason="manifest set complete but 6 error rows remain",
+        next_resume_depth=3,
+        gha_shards=[],
+        missing_shards=[],
+        resume_run_id=None,
+        seed_run_id="run-1",
+    )
+
+
+def test_plan_backfill_auto_restart_stops_when_no_missing_shards_or_errors(monkeypatch):
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.plan_backfill_run",
+        lambda **_kwargs: SimpleNamespace(
+            gha_shards=[],
+            missing_shards=[],
+        ),
+    )
+
+    plan = plan_backfill_auto_restart(
+        run_id="run-1",
+        shard_count=6,
+        qa_first=0,
+        local_helper_shards_raw="",
+        auto_resume=True,
+        resume_depth=1,
+        max_auto_resumes=5,
+        summary_error_count=0,
+    )
+
+    assert plan == BackfillAutoRestartPlan(
+        should_dispatch=False,
+        mode="none",
+        reason="no missing non-helper shard manifests and no error rows remain",
+        next_resume_depth=2,
+        gha_shards=[],
+        missing_shards=[],
+        resume_run_id=None,
+        seed_run_id=None,
+    )
 
 
 def test_merge_shard_manifests_applies_results_and_summarizes_counts(tmp_path):
