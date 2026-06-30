@@ -104,7 +104,7 @@ jobs:
           INPUT_RESUME_DEPTH: ${{ inputs.resume_depth }}
           INPUT_MAX_AUTO_RESUMES: ${{ inputs.max_auto_resumes }}
         run: |
-          python3 <<'PY'
+          uv run python - <<'PY'
           import json
           import os
 
