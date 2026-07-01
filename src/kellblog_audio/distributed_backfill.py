@@ -83,6 +83,7 @@ class ShardManifest:
     provider: str | None = None
     started_at: str | None = None
     finished_at: str | None = None
+    qa_checked: int | None = None
     items: list[ShardManifestItem] = field(default_factory=list)
 
     @property
@@ -105,6 +106,7 @@ class ShardManifest:
             "provider": self.provider,
             "started_at": self.started_at,
             "finished_at": self.finished_at,
+            "qa_checked": self.qa_checked,
             "items": [item.to_dict() for item in self.items],
             "counts": self.counts,
         }
@@ -122,6 +124,7 @@ class ShardManifest:
             provider=data.get("provider"),
             started_at=data.get("started_at"),
             finished_at=data.get("finished_at"),
+            qa_checked=data.get("qa_checked"),
             items=[ShardManifestItem.from_dict(item) for item in data.get("items", [])],
         )
 
@@ -269,6 +272,10 @@ def _manifest_prefix(run_id: str) -> str:
     return f"backfill/runs/{run_id}/manifests/"
 
 
+def shard_checkpoint_key(run_id: str, shard_index: int, shard_count: int) -> str:
+    return f"backfill/runs/{run_id}/checkpoints/shard-{shard_index}-of-{shard_count}.json"
+
+
 def shard_progress_key(run_id: str, shard_index: int, shard_count: int) -> str:
     return f"backfill/runs/{run_id}/progress/shard-{shard_index}-of-{shard_count}.json"
 
@@ -373,6 +380,36 @@ def seed_backfill_baseline_from_run_catalog(
         uploaded=0,
         requeued_errors=requeued_errors,
     )
+
+
+def read_shard_checkpoint(
+    run_id: str,
+    shard_index: int,
+    shard_count: int,
+) -> ShardManifest | None:
+    key = shard_checkpoint_key(run_id, shard_index, shard_count)
+    client = get_s3_client()
+    try:
+        body = client.get_object(Bucket=R2_BUCKET, Key=key)["Body"].read()
+    except Exception as exc:
+        if "NoSuchKey" in str(exc) or "Not Found" in str(exc):
+            return None
+        raise
+
+    checkpoint = ShardManifest.from_json(body.decode("utf-8"))
+    if checkpoint.run_id != run_id:
+        raise ValueError(
+            f"checkpoint run_id mismatch for {key}: {checkpoint.run_id} != {run_id}"
+        )
+    if checkpoint.shard_index != shard_index:
+        raise ValueError(
+            f"checkpoint shard_index mismatch for {key}: {checkpoint.shard_index} != {shard_index}"
+        )
+    if checkpoint.shard_count != shard_count:
+        raise ValueError(
+            f"checkpoint shard_count mismatch for {key}: {checkpoint.shard_count} != {shard_count}"
+        )
+    return checkpoint
 
 
 def read_backfill_progress(run_id: str) -> BackfillProgressSnapshot:

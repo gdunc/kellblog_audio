@@ -197,6 +197,7 @@ jobs:
     needs: prepare
     if: ${{ needs.prepare.outputs.gha_shard_count != '0' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 840
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.prepare.outputs.gha_matrix) }}

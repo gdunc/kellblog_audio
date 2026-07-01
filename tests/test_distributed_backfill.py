@@ -20,11 +20,13 @@ from kellblog_audio.distributed_backfill import (
     prepare_backfill_baseline,
     plan_backfill_run,
     plan_backfill_auto_restart,
+    read_shard_checkpoint,
     read_backfill_progress,
     read_backfill_manifest_state,
     seed_backfill_baseline_from_local_catalog,
     seed_backfill_baseline_from_run_catalog,
     merge_shard_manifests,
+    shard_checkpoint_key,
     shard_progress_key,
 )
 from kellblog_audio.publish import backup_catalog, restore_catalog
@@ -507,6 +509,65 @@ def test_seed_backfill_baseline_from_run_catalog_restores_final_catalog_and_requ
 
 def test_shard_progress_key_uses_run_scoped_progress_prefix():
     assert shard_progress_key("run-1", 2, 6) == "backfill/runs/run-1/progress/shard-2-of-6.json"
+
+
+def test_shard_checkpoint_key_uses_run_scoped_checkpoint_prefix():
+    assert (
+        shard_checkpoint_key("run-1", 2, 6)
+        == "backfill/runs/run-1/checkpoints/shard-2-of-6.json"
+    )
+
+
+def test_read_shard_checkpoint_returns_manifest_when_present(monkeypatch):
+    checkpoint = ShardManifest(
+        run_id="run-1",
+        shard_index=1,
+        shard_count=4,
+        provider="chatterbox",
+        items=[
+            ShardManifestItem(
+                slug="alpha",
+                year=2024,
+                status="done",
+                audio_path="output/audio/2024/alpha.mp3",
+                duration_sec=120,
+                audio_bytes=1234,
+                audio_etag="etag-alpha",
+            )
+        ],
+    )
+
+    class FakeBody:
+        def read(self) -> bytes:
+            return checkpoint.to_json().encode("utf-8")
+
+    class FakeS3Client:
+        def get_object(self, *, Bucket, Key):
+            assert Bucket == R2_BUCKET
+            assert Key == shard_checkpoint_key("run-1", 1, 4)
+            return {"Body": FakeBody()}
+
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.get_s3_client",
+        lambda: FakeS3Client(),
+    )
+
+    loaded = read_shard_checkpoint("run-1", 1, 4)
+
+    assert loaded == checkpoint
+
+
+def test_read_shard_checkpoint_returns_none_when_missing(monkeypatch):
+    class FakeS3Client:
+        def get_object(self, *, Bucket, Key):
+            raise RuntimeError("NoSuchKey")
+
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.get_s3_client",
+        lambda: FakeS3Client(),
+    )
+
+    assert read_shard_checkpoint("run-1", 1, 4) is None
 
 
 def test_read_backfill_progress_aggregates_per_shard_progress(monkeypatch):

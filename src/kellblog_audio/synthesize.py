@@ -38,6 +38,8 @@ from kellblog_audio.distributed_backfill import (
     ShardManifest,
     ShardManifestItem,
     ShardProgress,
+    read_shard_checkpoint,
+    shard_checkpoint_key,
     shard_progress_key,
 )
 from kellblog_audio.intro_outro import SPOKEN_OUTRO, spoken_intro
@@ -273,22 +275,65 @@ def synthesize_batch(
     # Build the model once and reuse it for the whole batch.
     provider = get_provider(provider_name)
     s3_client = get_s3_client() if (upload_r2 or manifest_r2_key) else None
-    progress_enabled = s3_client is not None and run_id is not None and shard_index is not None and shard_count is not None
+    progress_enabled = (
+        s3_client is not None
+        and run_id is not None
+        and shard_index is not None
+        and shard_count is not None
+    )
     progress_key = (
         shard_progress_key(run_id, shard_index, shard_count)
         if progress_enabled and run_id is not None and shard_index is not None and shard_count is not None
+        else None
+    )
+    checkpoint_key = (
+        shard_checkpoint_key(run_id, shard_index, shard_count)
+        if manifest_enabled
+        and s3_client is not None
+        and run_id is not None
+        and shard_index is not None
+        and shard_count is not None
         else None
     )
     manifest_items: list[ShardManifestItem] = []
     manifest_started_at = _now_iso() if manifest_enabled else None
 
     ok, err = 0, 0
+    invocation_ok, invocation_err = 0, 0
     qa_checked = 0
     skipped = 0
     processed_count = 0
     last_slug: str | None = None
     last_status: str | None = None
     incomplete_reason: str | None = None
+
+    if manifest_enabled and checkpoint_key is not None:
+        checkpoint = read_shard_checkpoint(
+            run_id or "local",
+            shard_index or 0,
+            shard_count or 0,
+        )
+        if checkpoint is not None:
+            manifest_items = list(checkpoint.items)
+            manifest_started_at = checkpoint.started_at or manifest_started_at
+            if checkpoint.qa_checked is not None:
+                qa_checked = checkpoint.qa_checked
+            else:
+                qa_checked = min(qa_first, len(manifest_items))
+            checkpoint_counts = checkpoint.counts
+            ok = checkpoint_counts["done"]
+            err = checkpoint_counts["error"]
+            skipped = checkpoint_counts["skipped"]
+            processed_count = ok + err + skipped
+            if manifest_items:
+                last_slug = manifest_items[-1].slug
+                last_status = manifest_items[-1].status
+            completed_slugs = {item.slug for item in manifest_items}
+            posts = [post for post in posts if post.slug not in completed_slugs]
+            if processed_count > assigned_count:
+                raise ValueError(
+                    "checkpoint contains more processed items than the shard assignment"
+                )
 
     def emit_progress(*, complete: bool = False, error: str | None = None) -> None:
         if not progress_enabled or progress_key is None:
@@ -310,6 +355,26 @@ def synthesize_batch(
             error=error,
         )
         upload_bytes(s3_client, payload.encode("utf-8"), progress_key, "application/json")
+
+    def emit_checkpoint(*, complete: bool = False) -> None:
+        if not manifest_enabled or checkpoint_key is None:
+            return
+        checkpoint = ShardManifest(
+            run_id=run_id or "local",
+            shard_index=shard_index,
+            shard_count=shard_count,
+            provider=getattr(provider, "name", provider_name),
+            started_at=manifest_started_at,
+            finished_at=_now_iso() if complete else None,
+            qa_checked=qa_checked,
+            items=manifest_items,
+        )
+        upload_bytes(
+            s3_client,
+            checkpoint.to_json().encode("utf-8"),
+            checkpoint_key,
+            "application/json",
+        )
 
     if progress_enabled:
         emit_progress()
@@ -350,8 +415,8 @@ def synthesize_batch(
                             error=post.audio_error,
                         )
                     )
-                if progress_enabled and processed_count % 5 == 0:
-                    emit_progress()
+                emit_checkpoint()
+                emit_progress()
                 continue
 
             audio_etag: str | None = None
@@ -375,11 +440,12 @@ def synthesize_batch(
                             f"qa failed {post.slug}; queued for rerun: "
                             f"{qa_result.reason}"
                         )
+                    invocation_err += 1
                     processed_count += 1
                     last_slug = post.slug
                     last_status = "error"
-                    if progress_enabled and processed_count % 5 == 0:
-                        emit_progress()
+                    emit_checkpoint()
+                    emit_progress()
                     if stop_on_qa_failure:
                         if manifest_enabled:
                             incomplete_reason = (
@@ -425,14 +491,16 @@ def synthesize_batch(
                     f"[rss={rss_mb}MB mps={mps_mb}MB]"
                 )
             ok += 1
+            invocation_ok += 1
             processed_count += 1
             last_slug = post.slug
             last_status = "done"
-            if progress_enabled and processed_count % 5 == 0:
-                emit_progress()
+            emit_checkpoint()
+            emit_progress()
         except Exception as e:
             catalog.update_post(post.slug, audio_status="error", audio_error=str(e)[:500])
             err += 1
+            invocation_err += 1
             processed_count += 1
             last_slug = post.slug
             last_status = "error"
@@ -447,13 +515,15 @@ def synthesize_batch(
                 )
             if progress:
                 progress(f"error {post.slug}: {e}")
-            if progress_enabled and processed_count % 5 == 0:
-                emit_progress()
+            emit_checkpoint()
+            emit_progress()
 
     if manifest_enabled and incomplete_reason:
+        emit_checkpoint()
         emit_progress(complete=False, error=incomplete_reason)
         raise RuntimeError(incomplete_reason)
 
+    emit_checkpoint(complete=True)
     if progress_enabled:
         emit_progress(complete=True)
 
@@ -465,6 +535,7 @@ def synthesize_batch(
             provider=getattr(provider, "name", provider_name),
             started_at=manifest_started_at,
             finished_at=_now_iso(),
+            qa_checked=qa_checked,
             items=manifest_items,
         )
         manifest_json = manifest.to_json()
@@ -474,4 +545,4 @@ def synthesize_batch(
         if manifest_r2_key is not None:
             client = s3_client or get_s3_client()
             upload_bytes(client, manifest_json.encode("utf-8"), manifest_r2_key, "application/json")
-    return ok, err
+    return invocation_ok, invocation_err
