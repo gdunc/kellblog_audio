@@ -1,0 +1,33 @@
+{
+  "counts": {
+    "done": 2,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-06-30T20:43:33.912464+00:00",
+  "items": [
+    {
+      "audio_bytes": 3900588,
+      "audio_etag": "7bccb86b40a98a59317352ed04fe0cfb",
+      "audio_path": "output/audio/2021/the-holy-grail-of-enterprise-sales-defining-the-repeatable-sales-process.mp3",
+      "duration_sec": 243,
+      "slug": "the-holy-grail-of-enterprise-sales-defining-the-repeatable-sales-process",
+      "status": "done",
+      "year": 2021
+    },
+    {
+      "audio_bytes": 6883942,
+      "audio_etag": "bf52cc082c957e2dd1ef317dcf5b37bb",
+      "audio_path": "output/audio/2025/how-to-navigate-the-pipeline-crisis.mp3",
+      "duration_sec": 430,
+      "slug": "how-to-navigate-the-pipeline-crisis",
+      "status": "done",
+      "year": 2025
+    }
+  ],
+  "provider": "chatterbox",
+  "run_id": "20260630T075142Z-1782805902",
+  "shard_count": 72,
+  "shard_index": 56,
+  "started_at": "2026-06-30T19:12:24.334850+00:00"
+}

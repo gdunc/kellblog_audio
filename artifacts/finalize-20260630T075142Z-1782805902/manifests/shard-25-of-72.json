@@ -1,0 +1,42 @@
+{
+  "counts": {
+    "done": 3,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-06-30T22:20:49.065711+00:00",
+  "items": [
+    {
+      "audio_bytes": 889599,
+      "audio_etag": "429f1084623452a53280e996221d9f6e",
+      "audio_path": "output/audio/2020/upcoming-pmm-hive-interview-marketing-strategy-in-hot-vs-cold-markets.mp3",
+      "duration_sec": 55,
+      "slug": "upcoming-pmm-hive-interview-marketing-strategy-in-hot-vs-cold-markets",
+      "status": "done",
+      "year": 2020
+    },
+    {
+      "audio_bytes": 7934709,
+      "audio_etag": "51eb91c64349f063fe8539aab47d3170",
+      "audio_path": "output/audio/2022/practical-thoughts-on-branding-for-software-startups.mp3",
+      "duration_sec": 495,
+      "slug": "practical-thoughts-on-branding-for-software-startups",
+      "status": "done",
+      "year": 2022
+    },
+    {
+      "audio_bytes": 7851948,
+      "audio_etag": "112b326ac6e096713fed4d46edc5ea9b",
+      "audio_path": "output/audio/2026/on-the-socially-acceptable-use-of-ai-in-business.mp3",
+      "duration_sec": 490,
+      "slug": "on-the-socially-acceptable-use-of-ai-in-business",
+      "status": "done",
+      "year": 2026
+    }
+  ],
+  "provider": "chatterbox",
+  "run_id": "20260630T075142Z-1782805902",
+  "shard_count": 72,
+  "shard_index": 25,
+  "started_at": "2026-06-30T19:51:23.302351+00:00"
+}

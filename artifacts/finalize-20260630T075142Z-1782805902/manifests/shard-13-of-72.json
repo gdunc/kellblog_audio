@@ -1,0 +1,33 @@
+{
+  "counts": {
+    "done": 2,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-07-01T00:46:16.571517+00:00",
+  "items": [
+    {
+      "audio_bytes": 3739640,
+      "audio_etag": "f5d0fef253169300d742350bd771bc06",
+      "audio_path": "output/audio/2020/branded-features-resist-the-temptation.mp3",
+      "duration_sec": 233,
+      "slug": "branded-features-resist-the-temptation",
+      "status": "done",
+      "year": 2020
+    },
+    {
+      "audio_bytes": 5976972,
+      "audio_etag": "c71658f4a49f1f467f96071674a54af4",
+      "audio_path": "output/audio/2025/how-to-calculate-cost-per-opportunity.mp3",
+      "duration_sec": 373,
+      "slug": "how-to-calculate-cost-per-opportunity",
+      "status": "done",
+      "year": 2025
+    }
+  ],
+  "provider": "chatterbox",
+  "run_id": "20260630T075142Z-1782805902",
+  "shard_count": 72,
+  "shard_index": 13,
+  "started_at": "2026-06-30T23:27:55.659585+00:00"
+}

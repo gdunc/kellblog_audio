@@ -1,0 +1,60 @@
+{
+  "counts": {
+    "done": 5,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-07-01T05:07:41.801402+00:00",
+  "items": [
+    {
+      "audio_bytes": 5174527,
+      "audio_etag": "30ef02491cebc45c76b2dd11555ef3f2",
+      "audio_path": "output/audio/2020/ten-pearls-of-enterprise-software-startup-wisdom-from-my-friend-mark-tice.mp3",
+      "duration_sec": 323,
+      "slug": "ten-pearls-of-enterprise-software-startup-wisdom-from-my-friend-mark-tice",
+      "status": "done",
+      "year": 2020
+    },
+    {
+      "audio_bytes": 2682666,
+      "audio_etag": "f6f32d7cd1a6cf1168ea461cd9251eea",
+      "audio_path": "output/audio/2021/diary-of-a-novice-ned-a-look-inside-the-world-of-independent-directors-at-startups.mp3",
+      "duration_sec": 167,
+      "slug": "diary-of-a-novice-ned-a-look-inside-the-world-of-independent-directors-at-startups",
+      "status": "done",
+      "year": 2021
+    },
+    {
+      "audio_bytes": 2999488,
+      "audio_etag": "f35a9d8bc6c7361d94b2ebbb053d3dac",
+      "audio_path": "output/audio/2023/the-keys-to-nailing-and-scaling-go-to-market-slides-from-my-10x-ceo-accelerate-presentation.mp3",
+      "duration_sec": 187,
+      "slug": "the-keys-to-nailing-and-scaling-go-to-market-slides-from-my-10x-ceo-accelerate-presentation",
+      "status": "done",
+      "year": 2023
+    },
+    {
+      "audio_bytes": 4873614,
+      "audio_etag": "8304103f45be612649e6367bb00f31e4",
+      "audio_path": "output/audio/2023/cut-costs-the-smart-way.mp3",
+      "duration_sec": 304,
+      "slug": "cut-costs-the-smart-way",
+      "status": "done",
+      "year": 2023
+    },
+    {
+      "audio_bytes": 3775164,
+      "audio_etag": "d6cc4ae8c2fca1d5703bbe3f83ed5088",
+      "audio_path": "output/audio/2026/how-to-be-the-cmo-everyone-wants-to-work-with.mp3",
+      "duration_sec": 235,
+      "slug": "how-to-be-the-cmo-everyone-wants-to-work-with",
+      "status": "done",
+      "year": 2026
+    }
+  ],
+  "provider": "chatterbox",
+  "run_id": "20260630T075142Z-1782805902",
+  "shard_count": 72,
+  "shard_index": 37,
+  "started_at": "2026-07-01T02:01:31.610310+00:00"
+}

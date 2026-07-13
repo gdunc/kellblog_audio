@@ -1,0 +1,33 @@
+{
+  "counts": {
+    "done": 2,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-06-30T23:26:38.253783+00:00",
+  "items": [
+    {
+      "audio_bytes": 7455287,
+      "audio_etag": "b1a61f19619501040de23f4461b1f91e",
+      "audio_path": "output/audio/2021/a-quick-critique-of-clubhouse.mp3",
+      "duration_sec": 465,
+      "slug": "a-quick-critique-of-clubhouse",
+      "status": "done",
+      "year": 2021
+    },
+    {
+      "audio_bytes": 9028495,
+      "audio_etag": "ed3337c3fcccd07297a8d926de7204e4-2",
+      "audio_path": "output/audio/2022/how-to-lead-a-strategic-board-discussion.mp3",
+      "duration_sec": 564,
+      "slug": "how-to-lead-a-strategic-board-discussion",
+      "status": "done",
+      "year": 2022
+    }
+  ],
+  "provider": "chatterbox",
+  "run_id": "20260630T075142Z-1782805902",
+  "shard_count": 72,
+  "shard_index": 58,
+  "started_at": "2026-06-30T20:44:51.875820+00:00"
+}

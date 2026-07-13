@@ -1,0 +1,24 @@
+{
+  "counts": {
+    "done": 1,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-06-30T20:13:43.420485+00:00",
+  "items": [
+    {
+      "audio_bytes": 7173627,
+      "audio_etag": "4883fb56db2ce02c9facd6822c2bfc22",
+      "audio_path": "output/audio/2021/using-to-go-coverage-to-better-understand-pipeline-and-improve-forecasting.mp3",
+      "duration_sec": 448,
+      "slug": "using-to-go-coverage-to-better-understand-pipeline-and-improve-forecasting",
+      "status": "done",
+      "year": 2021
+    }
+  ],
+  "provider": "chatterbox",
+  "run_id": "20260630T075142Z-1782805902",
+  "shard_count": 72,
+  "shard_index": 49,
+  "started_at": "2026-06-30T19:13:05.519882+00:00"
+}

@@ -1,0 +1,60 @@
+{
+  "counts": {
+    "done": 5,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-06-30T22:33:05.245506+00:00",
+  "items": [
+    {
+      "audio_bytes": 1507785,
+      "audio_etag": "30aa4f8c5610dc1db54db08536d06571",
+      "audio_path": "output/audio/2020/churn-is-dead-long-live-net-dollar-retention-slides-from-my-saastr-2020-presentation.mp3",
+      "duration_sec": 94,
+      "slug": "churn-is-dead-long-live-net-dollar-retention-slides-from-my-saastr-2020-presentation",
+      "status": "done",
+      "year": 2020
+    },
+    {
+      "audio_bytes": 3519386,
+      "audio_etag": "79f400f1ce7b2e07f11818407e438bad",
+      "audio_path": "output/audio/2020/the-key-to-branding-success-staying-in-character.mp3",
+      "duration_sec": 219,
+      "slug": "the-key-to-branding-success-staying-in-character",
+      "status": "done",
+      "year": 2020
+    },
+    {
+      "audio_bytes": 1964194,
+      "audio_etag": "124c55b5009a18b4c61e50a37c2c82cf",
+      "audio_path": "output/audio/2022/crash-course-in-customer-success-saas-metrics-appearance-on-the-churnzero-podcast.mp3",
+      "duration_sec": 122,
+      "slug": "crash-course-in-customer-success-saas-metrics-appearance-on-the-churnzero-podcast",
+      "status": "done",
+      "year": 2022
+    },
+    {
+      "audio_bytes": 6625684,
+      "audio_etag": "77de3930a1fefb8f6486a875924a8e5e",
+      "audio_path": "output/audio/2023/some-marketers-use-data-to-end-conversations-others-use-data-to-start-them.mp3",
+      "duration_sec": 414,
+      "slug": "some-marketers-use-data-to-end-conversations-others-use-data-to-start-them",
+      "status": "done",
+      "year": 2023
+    },
+    {
+      "audio_bytes": 10829495,
+      "audio_etag": "e5c8a9a7c121a0fdfc48ac9514ec349c-2",
+      "audio_path": "output/audio/2024/startup-growth-trajectories-and-the-saas-mendoza-line.mp3",
+      "duration_sec": 676,
+      "slug": "startup-growth-trajectories-and-the-saas-mendoza-line",
+      "status": "done",
+      "year": 2024
+    }
+  ],
+  "provider": "chatterbox",
+  "run_id": "20260630T075142Z-1782805902",
+  "shard_count": 72,
+  "shard_index": 36,
+  "started_at": "2026-06-30T19:12:35.237412+00:00"
+}

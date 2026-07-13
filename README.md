@@ -49,9 +49,10 @@ Default production voice: **Kokoro** `am_michael`.
 
 Use `.github/workflows/backfill-distributed.yml` for the archive run.
 
-- `workflow_dispatch` defaults to `shard_count=6`, `qa_first=0`, all years, no local helper shards.
+- `workflow_dispatch` defaults to `shard_count=72`, `qa_first=0`, all years, no local helper shards, and `auto_resume=1`.
 - The default path uses free public GitHub-hosted Ubuntu runners with **Chatterbox** on CPU.
 - `prepare` creates a run-scoped baseline catalog, shard jobs upload audio + manifests to R2, and `finalize` merges manifests and runs `publish --skip-audio` once.
+- If you already have local `done` episodes, first run `uv run kellblog-audio seed-backfill-baseline --run-id <run_id>`, then dispatch the workflow with `resume_run_id=<run_id>` so GitHub only continues the remaining work.
 - Optional `local_helper_shards` reserves one or more shard indexes for a Mac helper (for example `0`). After `prepare` finishes, copy its `run_id`, use a clean checkout/worktree of the same branch/commit on the Mac, restore the baseline catalog locally, and run exactly one reserved shard with the same `N`/optional `--year`, letting `synthesize --upload-r2` upload that shard's files.
 - The Mac helper machine must already have working local `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, and `R2_BUCKET` configured before running `restore-catalog` or `synthesize --upload-r2`.
 - During helper use, do **not** commit/push unrelated changes, and do **not** bulk-upload or publish unrelated pre-existing local audio. See [docs/BACKFILL.md](docs/BACKFILL.md).

@@ -1,0 +1,85 @@
+{
+  "counts": {
+    "done": 7,
+    "error": 1,
+    "skipped": 0
+  },
+  "finished_at": "2026-07-01T22:14:06.487765+00:00",
+  "items": [
+    {
+      "audio_bytes": 8010376,
+      "audio_etag": "d05891d236284a79aa34581c626d9273",
+      "audio_path": "output/audio/2020/the-first-three-slides-of-a-saas-board-deck-with-company-key-metrics.mp3",
+      "duration_sec": 500,
+      "slug": "the-first-three-slides-of-a-saas-board-deck-with-company-key-metrics",
+      "status": "done",
+      "year": 2020
+    },
+    {
+      "audio_bytes": 3580846,
+      "audio_etag": "e63f97c1fcba9f60273de4c89fd1c5eb",
+      "audio_path": "output/audio/2020/forward-to-the-next-cmo-a-guide-to-marketing-operational-excellence.mp3",
+      "duration_sec": 223,
+      "slug": "forward-to-the-next-cmo-a-guide-to-marketing-operational-excellence",
+      "status": "done",
+      "year": 2020
+    },
+    {
+      "audio_bytes": 1186341,
+      "audio_etag": "d2d4d1f7e2e8bb0a1c126bc149caee15",
+      "audio_path": "output/audio/2021/congratulations-to-nuxeo-on-its-acquisition-by-hyland.mp3",
+      "duration_sec": 74,
+      "slug": "congratulations-to-nuxeo-on-its-acquisition-by-hyland",
+      "status": "done",
+      "year": 2021
+    },
+    {
+      "audio_bytes": 5221721,
+      "audio_etag": "502088a01f21cf4191f4d75e34bf58b2",
+      "audio_path": "output/audio/2022/seed-stage-positioning-lock-and-load.mp3",
+      "duration_sec": 326,
+      "slug": "seed-stage-positioning-lock-and-load",
+      "status": "done",
+      "year": 2022
+    },
+    {
+      "error": "Implausibly short audio for how-should-ceos-answer-what-keeps-you-up-at-night: 314s for 1221 body words (233.3 body wpm, limit 230)",
+      "slug": "how-should-ceos-answer-what-keeps-you-up-at-night",
+      "status": "error",
+      "year": 2022
+    },
+    {
+      "audio_bytes": 7697302,
+      "audio_etag": "11dc1a35210090a25cff825471d39d00",
+      "audio_path": "output/audio/2023/the-ceo-job-description-in-reductionist-form.mp3",
+      "duration_sec": 481,
+      "slug": "the-ceo-job-description-in-reductionist-form",
+      "status": "done",
+      "year": 2023
+    },
+    {
+      "audio_bytes": 8674499,
+      "audio_etag": "18f391988ba24d0e9f92bdec22448991-2",
+      "audio_path": "output/audio/2024/target-pipeline-coverage-is-not-the-inverse-of-win-rate.mp3",
+      "duration_sec": 542,
+      "slug": "target-pipeline-coverage-is-not-the-inverse-of-win-rate",
+      "status": "done",
+      "year": 2024
+    },
+    {
+      "audio_bytes": 7074980,
+      "audio_etag": "48c2a00fa1dab4b7c65a7521e97a062b",
+      "audio_path": "output/audio/2024/design-your-organization-for-the-conflicts-you-want-to-hear-about.mp3",
+      "duration_sec": 442,
+      "slug": "design-your-organization-for-the-conflicts-you-want-to-hear-about",
+      "status": "done",
+      "year": 2024
+    }
+  ],
+  "provider": "chatterbox",
+  "qa_checked": 0,
+  "run_id": "20260630T075142Z-1782805902",
+  "shard_count": 72,
+  "shard_index": 22,
+  "started_at": "2026-07-01T15:02:19.721242+00:00"
+}

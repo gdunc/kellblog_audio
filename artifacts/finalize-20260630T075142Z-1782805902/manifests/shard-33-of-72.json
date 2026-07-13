@@ -1,0 +1,60 @@
+{
+  "counts": {
+    "done": 5,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-06-30T23:48:02.618452+00:00",
+  "items": [
+    {
+      "audio_bytes": 3747159,
+      "audio_etag": "e2b7a4948e80c520ab40b76e195130c7",
+      "audio_path": "output/audio/2020/the-pipeline-chicken-egg-problem.mp3",
+      "duration_sec": 234,
+      "slug": "the-pipeline-chicken-egg-problem",
+      "status": "done",
+      "year": 2020
+    },
+    {
+      "audio_bytes": 7922603,
+      "audio_etag": "b57fbf2b5e5d3ca0620c6851654da27a",
+      "audio_path": "output/audio/2021/a-ten-point-sales-management-framework-for-enterprise-saas-startups.mp3",
+      "duration_sec": 495,
+      "slug": "a-ten-point-sales-management-framework-for-enterprise-saas-startups",
+      "status": "done",
+      "year": 2021
+    },
+    {
+      "audio_bytes": 1488570,
+      "audio_etag": "cde8a7b3f8dbb2851d57bd635065eb2b",
+      "audio_path": "output/audio/2022/talking-burn-appearance-on-the-metric-stack-podcast-on-cash-conversion-score-and-related-metrics.mp3",
+      "duration_sec": 92,
+      "slug": "talking-burn-appearance-on-the-metric-stack-podcast-on-cash-conversion-score-and-related-metrics",
+      "status": "done",
+      "year": 2022
+    },
+    {
+      "audio_bytes": 5865379,
+      "audio_etag": "bcf6d33156884b2a5d2dcdc0c70899f2",
+      "audio_path": "output/audio/2023/do-superachievers-read-business-books.mp3",
+      "duration_sec": 366,
+      "slug": "do-superachievers-read-business-books",
+      "status": "done",
+      "year": 2023
+    },
+    {
+      "audio_bytes": 1901904,
+      "audio_etag": "25d2039eefa0c2fd78698d0e942a1bad",
+      "audio_path": "output/audio/2024/video-of-my-appearance-with-jason-lemkin-on-saastr-workshop-wednesdays.mp3",
+      "duration_sec": 118,
+      "slug": "video-of-my-appearance-with-jason-lemkin-on-saastr-workshop-wednesdays",
+      "status": "done",
+      "year": 2024
+    }
+  ],
+  "provider": "chatterbox",
+  "run_id": "20260630T075142Z-1782805902",
+  "shard_count": 72,
+  "shard_index": 33,
+  "started_at": "2026-06-30T20:47:49.201422+00:00"
+}

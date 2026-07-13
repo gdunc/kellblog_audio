@@ -1,0 +1,60 @@
+{
+  "counts": {
+    "done": 5,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-07-01T02:57:09.907764+00:00",
+  "items": [
+    {
+      "audio_bytes": 9426396,
+      "audio_etag": "e6c98e391832e5a989d08e1944f7998e-2",
+      "audio_path": "output/audio/2021/what-to-do-when-you-need-pipeline-in-a-hurry.mp3",
+      "duration_sec": 589,
+      "slug": "what-to-do-when-you-need-pipeline-in-a-hurry",
+      "status": "done",
+      "year": 2021
+    },
+    {
+      "audio_bytes": 7956851,
+      "audio_etag": "a221db82af5f05c8f447fc930815c51d",
+      "audio_path": "output/audio/2021/demo-is-not-a-sales-process-stage-sorry.mp3",
+      "duration_sec": 497,
+      "slug": "demo-is-not-a-sales-process-stage-sorry",
+      "status": "done",
+      "year": 2021
+    },
+    {
+      "audio_bytes": 1409957,
+      "audio_etag": "4cc6fc03fa3483184cec85be6a0bc83d",
+      "audio_path": "output/audio/2022/slides-from-my-saastock-dublin-presentation-on-gtm-efficiency.mp3",
+      "duration_sec": 88,
+      "slug": "slides-from-my-saastock-dublin-presentation-on-gtm-efficiency",
+      "status": "done",
+      "year": 2022
+    },
+    {
+      "audio_bytes": 6096111,
+      "audio_etag": "9c0f303c751b59028101eec4e91272d6",
+      "audio_path": "output/audio/2023/lessons-from-playing-with-a-simple-quota-attainment-model.mp3",
+      "duration_sec": 380,
+      "slug": "lessons-from-playing-with-a-simple-quota-attainment-model",
+      "status": "done",
+      "year": 2023
+    },
+    {
+      "audio_bytes": 2094141,
+      "audio_etag": "05de4a649045dbf22d7cab2837892739",
+      "audio_path": "output/audio/2025/aligning-product-and-go-to-market-with-metrics.mp3",
+      "duration_sec": 130,
+      "slug": "aligning-product-and-go-to-market-with-metrics",
+      "status": "done",
+      "year": 2025
+    }
+  ],
+  "provider": "chatterbox",
+  "run_id": "20260630T075142Z-1782805902",
+  "shard_count": 72,
+  "shard_index": 44,
+  "started_at": "2026-06-30T23:16:25.806553+00:00"
+}

@@ -1,0 +1,57 @@
+{
+  "counts": {
+    "done": 0,
+    "error": 7,
+    "skipped": 0
+  },
+  "finished_at": "2026-07-01T08:12:30.976157+00:00",
+  "items": [
+    {
+      "error": "An error happened while trying to locate the file on the Hub and we cannot find the requested files in the local cache. Please check your connection and try again or make sure your Internet connection is on.",
+      "slug": "next-generation-planning-and-finance-a-broader-and-slightly-deeper-look",
+      "status": "error",
+      "year": 2021
+    },
+    {
+      "error": "An error happened while trying to locate the file on the Hub and we cannot find the requested files in the local cache. Please check your connection and try again or make sure your Internet connection is on.",
+      "slug": "are-we-growing-fast-enough",
+      "status": "error",
+      "year": 2021
+    },
+    {
+      "error": "An error happened while trying to locate the file on the Hub and we cannot find the requested files in the local cache. Please check your connection and try again or make sure your Internet connection is on.",
+      "slug": "how-to-simplify-your-marketing-funnel-seeing-the-unit-cost-forest-for-the-conversion-rates-trees",
+      "status": "error",
+      "year": 2023
+    },
+    {
+      "error": "An error happened while trying to locate the file on the Hub and we cannot find the requested files in the local cache. Please check your connection and try again or make sure your Internet connection is on.",
+      "slug": "balderton-post-on-european-vs-american-board-meeting-minutes",
+      "status": "error",
+      "year": 2023
+    },
+    {
+      "error": "An error happened while trying to locate the file on the Hub and we cannot find the requested files in the local cache. Please check your connection and try again or make sure your Internet connection is on.",
+      "slug": "why-great-marketers-look-at-pipeline-coverage-not-just-pipeline-generation",
+      "status": "error",
+      "year": 2024
+    },
+    {
+      "error": "An error happened while trying to locate the file on the Hub and we cannot find the requested files in the local cache. Please check your connection and try again or make sure your Internet connection is on.",
+      "slug": "kellblog-predictions-for-2026",
+      "status": "error",
+      "year": 2026
+    },
+    {
+      "error": "An error happened while trying to locate the file on the Hub and we cannot find the requested files in the local cache. Please check your connection and try again or make sure your Internet connection is on.",
+      "slug": "the-silicon-valley-canon-circa-1998-a-stroll-down-software-memory-lane",
+      "status": "error",
+      "year": 2026
+    }
+  ],
+  "provider": "chatterbox",
+  "run_id": "20260630T075142Z-1782805902",
+  "shard_count": 72,
+  "shard_index": 23,
+  "started_at": "2026-07-01T08:09:47.726329+00:00"
+}

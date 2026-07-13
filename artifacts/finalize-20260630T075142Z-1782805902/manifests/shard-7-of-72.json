@@ -1,0 +1,42 @@
+{
+  "counts": {
+    "done": 3,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-07-01T02:56:08.053375+00:00",
+  "items": [
+    {
+      "audio_bytes": 4302659,
+      "audio_etag": "310f84230a9cee84edc8af725aeb1cce",
+      "audio_path": "output/audio/2021/how-to-know-if-you-have-the-right-executives-on-your-leadership-team.mp3",
+      "duration_sec": 268,
+      "slug": "how-to-know-if-you-have-the-right-executives-on-your-leadership-team",
+      "status": "done",
+      "year": 2021
+    },
+    {
+      "audio_bytes": 10348010,
+      "audio_etag": "91552a8092121fed47875dcb9fa6a21b-2",
+      "audio_path": "output/audio/2022/accept-no-imitations-or-subtitutes-lazy-nrr-is-not-nrr.mp3",
+      "duration_sec": 646,
+      "slug": "accept-no-imitations-or-subtitutes-lazy-nrr-is-not-nrr",
+      "status": "done",
+      "year": 2022
+    },
+    {
+      "audio_bytes": 14769195,
+      "audio_etag": "2c9ddb4e1c22f2ad9309fa6a809066a9-2",
+      "audio_path": "output/audio/2022/mapping-from-annual-to-monthly-and-usage-based-saas-metrics.mp3",
+      "duration_sec": 923,
+      "slug": "mapping-from-annual-to-monthly-and-usage-based-saas-metrics",
+      "status": "done",
+      "year": 2022
+    }
+  ],
+  "provider": "chatterbox",
+  "run_id": "20260630T075142Z-1782805902",
+  "shard_count": 72,
+  "shard_index": 7,
+  "started_at": "2026-06-30T22:53:11.103010+00:00"
+}
