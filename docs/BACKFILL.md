@@ -6,13 +6,38 @@
 
 Use `.github/workflows/backfill-distributed.yml` as the default archive path.
 
-- Dispatch with the default inputs unless you have a specific reason to change them: `shard_count=6`, `qa_first=0`, blank `year`, blank `local_helper_shards`.
+- Dispatch with the default inputs unless you have a specific reason to change them: `shard_count=72`, `qa_first=0`, blank `year`, blank `local_helper_shards`, blank `resume_run_id`, `auto_resume=1`.
 - The default path uses free public GitHub-hosted Ubuntu runners and keeps **Chatterbox** as the synthesis model.
 - `prepare` creates `backfill/runs/<run_id>/baseline/catalog.sqlite`.
 - Each shard runner restores that baseline, runs `synthesize --pending --run-id <run_id> --shard i/N --upload-r2`, and uploads a shard manifest to `backfill/runs/<run_id>/manifests/`.
 - `finalize` restores the same baseline, validates that every shard manifest exists exactly once, merges them, runs `uv run kellblog-audio publish --skip-audio`, uploads `backfill/runs/<run_id>/catalog/final.sqlite`, and writes `backfill/runs/<run_id>/reports/summary.json`.
+- If a run ends with missing non-helper shard manifests, `auto-restart` dispatches a continuation attempt with the same logical `run_id` and only the missing GitHub-hosted shard indexes.
 
 This path does **not** require pre-existing local audio. The shard jobs upload only the MP3s they synthesize for that run.
+
+### Seed a run from existing local completed audio
+
+If your local catalog already has completed episodes, promote them first so GitHub runners do not re-synthesize them:
+
+```bash
+uv run kellblog-audio seed-backfill-baseline --run-id <run_id>
+```
+
+That command:
+
+- refreshes the local catalog via ingest
+- uploads every local `audio_status=done` MP3 to canonical R2 audio keys
+- stamps `audio_etag` and `backfill_run_id=<run_id>` into the local catalog
+- uploads `backfill/runs/<run_id>/baseline/catalog.sqlite`
+
+Then dispatch the workflow with `resume_run_id=<run_id>` so `prepare` restores that seeded baseline instead of overwriting it.
+
+### Resume-aware continuation
+
+- `resume_run_id=<run_id>` tells the workflow to keep the same logical run and schedule only shard indexes whose manifests are still missing in `backfill/runs/<run_id>/manifests/`.
+- Completed shard manifests are reused across attempts; timed-out shards rerun from the start of that shard.
+- `auto_resume=1` enables automatic continuation from within the workflow itself.
+- `resume_depth` and `max_auto_resumes` are internal safety controls to prevent infinite restart loops.
 
 ## Optional local Mac helper shard
 
@@ -98,6 +123,7 @@ CUDA machines, e.g. `synthesize --pending --shard 0/2` and `--shard 1/2` on two 
 
 ```bash
 uv run kellblog-audio status
+uv run kellblog-audio progress-backfill --run-id <run_id>
 ```
 
 ## Skip list
