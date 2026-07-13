@@ -75,3 +75,28 @@ def test_write_review_page_removes_feedback_and_lists_concerns():
         assert "coverage 91.0%" in html
         assert "What to review" in html
         assert "/audio/2024/test-post.mp3" in html
+
+
+def test_write_review_page_includes_collaborator_share_controls():
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_path = Path(tmp)
+        cat = _catalog_with_post(
+            tmp_path / "test.sqlite",
+            "share-me",
+            title="Share Me",
+        )
+        out = tmp_path / "index.html"
+
+        write_review_page(cat, out_path=out, qa_dir=tmp_path / "qa", updated_at="2026-06-08 10:00")
+
+        html = out.read_text(encoding="utf-8")
+        assert 'data-copy-review-url="https://kellblog.thisisgrant.com/index.html"' in html
+        assert "subject=Kellblog%20audio%20review%20batch" in html
+        assert "body=Please%20review%20the%20generated%20Kellblog%20audio%20here" in html
+        assert (
+            'data-copy-review-url="https://kellblog.thisisgrant.com/index.html#episode-share-me"'
+            in html
+        )
+        assert 'data-share-label="Share Me"' in html
+        assert "navigator.clipboard.writeText" in html
+        assert "Copy review link" in html
