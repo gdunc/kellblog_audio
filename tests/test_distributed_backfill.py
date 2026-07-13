@@ -830,6 +830,38 @@ def test_plan_backfill_auto_restart_dispatches_retry_run_for_error_rows(monkeypa
     )
 
 
+def test_plan_backfill_auto_restart_retries_finalize_when_summary_missing(monkeypatch):
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.plan_backfill_run",
+        lambda **_kwargs: SimpleNamespace(
+            gha_shards=[],
+            missing_shards=[],
+        ),
+    )
+
+    plan = plan_backfill_auto_restart(
+        run_id="run-1",
+        shard_count=6,
+        qa_first=0,
+        local_helper_shards_raw="",
+        auto_resume=True,
+        resume_depth=2,
+        max_auto_resumes=5,
+        summary_error_count=None,
+    )
+
+    assert plan == BackfillAutoRestartPlan(
+        should_dispatch=True,
+        mode="resume",
+        reason="final summary missing; retry finalize for completed shard set",
+        next_resume_depth=3,
+        gha_shards=[],
+        missing_shards=[],
+        resume_run_id="run-1",
+        seed_run_id=None,
+    )
+
+
 def test_plan_backfill_auto_restart_stops_when_no_missing_shards_or_errors(monkeypatch):
     monkeypatch.setattr(
         "kellblog_audio.distributed_backfill.plan_backfill_run",

@@ -641,6 +641,17 @@ def plan_backfill_auto_restart(
             resume_run_id=run_id,
         )
 
+    if summary_error_count is None:
+        return BackfillAutoRestartPlan(
+            should_dispatch=True,
+            mode="resume",
+            reason="final summary missing; retry finalize for completed shard set",
+            next_resume_depth=next_resume_depth,
+            gha_shards=[],
+            missing_shards=plan.missing_shards,
+            resume_run_id=run_id,
+        )
+
     if summary_error_count and summary_error_count > 0:
         return BackfillAutoRestartPlan(
             should_dispatch=True,
