@@ -8,9 +8,10 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 from kellblog_audio.catalog import Catalog, PostRow
-from kellblog_audio.config import OUTPUT_DIR, QA_TRANSCRIPTS_DIR
+from kellblog_audio.config import OUTPUT_DIR, PUBLIC_BASE_URL, QA_TRANSCRIPTS_DIR
 
 MIN_REVIEW_COVERAGE = 0.93
 MIN_REVIEW_TAIL = 0.82
@@ -106,8 +107,10 @@ def _render_page(
     updated_at: str,
 ) -> str:
     episode_word = "MP3" if len(items) == 1 else "MP3s"
-    cards = "\n".join(_render_article(item) for item in items)
+    review_url = _public_review_url()
+    cards = "\n".join(_render_article(item, review_url=review_url) for item in items)
     concerns = _render_concerns(concerning)
+    mailto_href = _mailto_review_href(review_url)
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -137,7 +140,11 @@ def _render_page(
         <h2 id="review-heading">What to review</h2>
         <p>Start with the manual-audit list, then sample a few normal episodes. Send notes in the same thread where this page was shared, with the episode title and timestamp when possible.</p>
       </div>
-      <a class="feed-link" href="/feed.xml">RSS feed</a>
+      <div class="share-actions" aria-label="Share review page">
+        <button type="button" class="share-button" data-copy-review-url="{html.escape(review_url)}">Copy page link</button>
+        <a class="share-link" href="{html.escape(mailto_href)}">Email review link</a>
+        <a class="share-link" href="/feed.xml">RSS feed</a>
+      </div>
     </section>
     {concerns}
     <div class="toolbar">
@@ -152,6 +159,7 @@ def _render_page(
       Whisper QA transcribes each episode and checks the audio passes basic quality gates. Pace is words per minute from the Whisper transcript.
     </div>
   </footer>
+  <script>{_share_script()}</script>
 </body>
 </html>
 """
@@ -179,7 +187,7 @@ def _render_concerns(items: list[ReviewItem]) -> str:
     </section>"""
 
 
-def _render_article(item: ReviewItem) -> str:
+def _render_article(item: ReviewItem, *, review_url: str) -> str:
     post = item.post
     qa = item.qa or {}
     title = html.escape(post.title or post.slug)
@@ -196,6 +204,7 @@ def _render_article(item: ReviewItem) -> str:
             + "</strong></div>"
         )
     audio_url = _public_audio_path(post.audio_path)
+    anchor = _anchor(post.slug)
     return f"""      <article id="{_anchor(post.slug)}">
         <div class="episode-head">
           <div>
@@ -206,6 +215,7 @@ def _render_article(item: ReviewItem) -> str:
             {concern_badge}
             <a href="{html.escape(post.url)}">Original</a>
             <a href="{html.escape(audio_url)}">MP3</a>
+            <button type="button" data-copy-review-url="{html.escape(review_url)}#{anchor}" data-share-label="{title}">Copy review link</button>
           </div>
         </div>
         <audio controls preload="metadata" src="{html.escape(audio_url)}"></audio>
@@ -320,15 +330,27 @@ def _css() -> str:
       margin: 6px 0 0;
       color: var(--muted);
     }
-    .feed-link {
+    .share-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+    .share-link, .share-button, .links button {
       border: 1px solid var(--line);
       border-radius: 6px;
       padding: 6px 10px;
+      background: var(--surface);
+      color: var(--accent);
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
       white-space: nowrap;
     }
-    .feed-link:hover {
+    .share-link:hover, .share-button:hover, .links button:hover {
       background: var(--accent-soft);
       border-color: #9fcdd2;
+      text-decoration: none;
     }
     .audit ol {
       margin: 12px 0 0;
@@ -377,7 +399,7 @@ def _css() -> str:
       gap: 8px;
       justify-content: flex-end;
     }
-    .links a {
+    .links a, .links button {
       border: 1px solid var(--line);
       border-radius: 6px;
       padding: 5px 9px;
@@ -434,7 +456,7 @@ def _css() -> str:
     }
     @media (max-width: 760px) {
       .review-brief, .episode-head { grid-template-columns: 1fr; }
-      .links { justify-content: flex-start; }
+      .links, .share-actions { justify-content: flex-start; }
     }
     @media (max-width: 460px) {
       .wrap { width: min(100% - 20px, 1120px); }
@@ -508,6 +530,53 @@ def _repeat(value: Any) -> str:
 
 def _anchor(slug: str) -> str:
     return "episode-" + "".join(ch if ch.isalnum() or ch == "-" else "-" for ch in slug)
+
+
+def _public_review_url() -> str:
+    return f"{PUBLIC_BASE_URL.rstrip('/')}/index.html"
+
+
+def _mailto_review_href(review_url: str) -> str:
+    subject = quote("Kellblog audio review batch")
+    body = quote(f"Please review the generated Kellblog audio here:\n\n{review_url}")
+    return f"mailto:?subject={subject}&body={body}"
+
+
+def _share_script() -> str:
+    return """
+    (function () {
+      function reviewUrl(target) {
+        return new URL(target, window.location.href).href;
+      }
+      function fallbackCopy(text) {
+        var input = document.createElement("textarea");
+        input.value = text;
+        input.setAttribute("readonly", "");
+        input.style.position = "fixed";
+        input.style.left = "-9999px";
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand("copy");
+        document.body.removeChild(input);
+      }
+      function flash(button) {
+        var original = button.textContent;
+        button.textContent = "Copied";
+        window.setTimeout(function () { button.textContent = original; }, 1400);
+      }
+      document.querySelectorAll("[data-copy-review-url]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          var url = reviewUrl(button.getAttribute("data-copy-review-url"));
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(function () { flash(button); });
+          } else {
+            fallbackCopy(url);
+            flash(button);
+          }
+        });
+      });
+    }());
+    """
 
 
 def _float_or_none(value: Any) -> float | None:
