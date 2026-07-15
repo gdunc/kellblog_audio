@@ -91,6 +91,120 @@ def test_create_backfill_baseline_command_uses_helper(monkeypatch):
     assert "backfill/runs/run-1/baseline/catalog.sqlite" in result.output
 
 
+def test_create_backfill_baseline_command_resume_uses_prepare_helper(monkeypatch):
+    calls: list[object] = []
+    fake_catalog = object()
+
+    monkeypatch.setattr(
+        cli,
+        "_catalog",
+        lambda: (_ for _ in ()).throw(AssertionError("_catalog should not be used for resume")),
+    )
+    monkeypatch.setattr(
+        cli,
+        "_catalog_uninitialized",
+        lambda: calls.append("_catalog_uninitialized") or fake_catalog,
+    )
+    monkeypatch.setattr(
+        cli,
+        "prepare_backfill_baseline",
+        lambda catalog, run_id, resume=False: calls.append((catalog, run_id, resume))
+        or "backfill/runs/run-1/baseline/catalog.sqlite",
+    )
+
+    result = runner.invoke(
+        cli.app,
+        ["create-backfill-baseline", "--run-id", "run-1", "--resume-existing"],
+    )
+
+    assert result.exit_code == 0
+    assert calls == [
+        "_catalog_uninitialized",
+        (fake_catalog, "run-1", True),
+    ]
+    assert "backfill/runs/run-1/baseline/catalog.sqlite" in result.output
+
+
+def test_seed_backfill_baseline_command_uses_helper(monkeypatch):
+    fake_catalog = object()
+    calls: list[tuple[object, str, bool]] = []
+
+    monkeypatch.setattr(cli, "_catalog", lambda: fake_catalog)
+    monkeypatch.setattr(
+        cli,
+        "seed_backfill_baseline_from_local_catalog",
+        lambda catalog, run_id, retry_errors=False: calls.append((catalog, run_id, retry_errors))
+        or SimpleNamespace(
+            run_id=run_id,
+            uploaded=3,
+            requeued_errors=1 if retry_errors else 0,
+            baseline_key=f"backfill/runs/{run_id}/baseline/catalog.sqlite",
+        ),
+    )
+
+    result = runner.invoke(
+        cli.app,
+        ["seed-backfill-baseline", "--run-id", "run-1", "--retry-errors"],
+    )
+
+    assert result.exit_code == 0
+    assert calls == [(fake_catalog, "run-1", True)]
+    assert "Uploaded 3 local done episodes" in result.output
+    assert "requeued 1 error episodes" in result.output
+    assert "backfill/runs/run-1/baseline/catalog.sqlite" in result.output
+
+
+def test_seed_backfill_baseline_command_can_seed_from_prior_run(monkeypatch):
+    calls: list[object] = []
+    fake_catalog = object()
+
+    monkeypatch.setattr(
+        cli,
+        "_catalog",
+        lambda: (_ for _ in ()).throw(AssertionError("_catalog should not be used for --from-run-id")),
+    )
+    monkeypatch.setattr(
+        cli,
+        "_catalog_uninitialized",
+        lambda: calls.append("_catalog_uninitialized") or fake_catalog,
+    )
+    monkeypatch.setattr(
+        cli,
+        "seed_backfill_baseline_from_run_catalog",
+        lambda catalog, run_id, source_run_id, source_kind="final", retry_errors=True: calls.append(
+            (catalog, run_id, source_run_id, source_kind, retry_errors)
+        )
+        or SimpleNamespace(
+            run_id=run_id,
+            uploaded=0,
+            requeued_errors=2,
+            baseline_key=f"backfill/runs/{run_id}/baseline/catalog.sqlite",
+        ),
+    )
+
+    result = runner.invoke(
+        cli.app,
+        [
+            "seed-backfill-baseline",
+            "--run-id",
+            "new-run",
+            "--from-run-id",
+            "old-run",
+            "--from-kind",
+            "final",
+            "--retry-errors",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert calls == [
+        "_catalog_uninitialized",
+        (fake_catalog, "new-run", "old-run", "final", True),
+    ]
+    assert "requeued 2 error episodes" in result.output
+    assert "backfill/runs/new-run/baseline/catalog.sqlite" in result.output
+
+
 def test_merge_shard_manifests_command_uses_manifest_dir(tmp_path, monkeypatch):
     fake_catalog = object()
     manifest_dir = tmp_path / "manifests"
