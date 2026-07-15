@@ -1,0 +1,42 @@
+{
+  "counts": {
+    "done": 3,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-06-30T23:58:08.952497+00:00",
+  "items": [
+    {
+      "audio_bytes": 2456945,
+      "audio_etag": "703af3b379daf56dc0aaf33073cb3018",
+      "audio_path": "output/audio/2023/metrics-that-matter-in-2023-my-kiwisaas-presentation-slides.mp3",
+      "duration_sec": 153,
+      "slug": "metrics-that-matter-in-2023-my-kiwisaas-presentation-slides",
+      "status": "done",
+      "year": 2023
+    },
+    {
+      "audio_bytes": 5663109,
+      "audio_etag": "f9075149f86b1fbfabc2021c914a8d24",
+      "audio_path": "output/audio/2025/your-buyer-has-an-i-want-song-does-your-messaging.mp3",
+      "duration_sec": 353,
+      "slug": "your-buyer-has-an-i-want-song-does-your-messaging",
+      "status": "done",
+      "year": 2025
+    },
+    {
+      "audio_bytes": 9545548,
+      "audio_etag": "4ebe1a2344e4e11bf868a548294a9a87-2",
+      "audio_path": "output/audio/2026/why-the-rule-of-40-is-becoming-the-rule-of-60-and-what-you-can-do-about-it.mp3",
+      "duration_sec": 596,
+      "slug": "why-the-rule-of-40-is-becoming-the-rule-of-60-and-what-you-can-do-about-it",
+      "status": "done",
+      "year": 2026
+    }
+  ],
+  "provider": "chatterbox",
+  "run_id": "20260630T075142Z-1782805902",
+  "shard_count": 72,
+  "shard_index": 59,
+  "started_at": "2026-06-30T21:31:39.429178+00:00"
+}

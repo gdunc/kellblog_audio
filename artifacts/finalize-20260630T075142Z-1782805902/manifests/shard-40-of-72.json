@@ -1,0 +1,42 @@
+{
+  "counts": {
+    "done": 3,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-06-30T23:45:50.050067+00:00",
+  "items": [
+    {
+      "audio_bytes": 992019,
+      "audio_etag": "0820793cdbb2364b0e560357e34692a7",
+      "audio_path": "output/audio/2023/come-to-my-saastock-presentation-how-to-connect-your-c-suite-to-the-ground-truth.mp3",
+      "duration_sec": 61,
+      "slug": "come-to-my-saastock-presentation-how-to-connect-your-c-suite-to-the-ground-truth",
+      "status": "done",
+      "year": 2023
+    },
+    {
+      "audio_bytes": 1231909,
+      "audio_etag": "8122e97a6c0bc9ce5713c225dee2d0cb",
+      "audio_path": "output/audio/2023/slides-from-my-radia-accelerator-presentation-saas-metrics-101.mp3",
+      "duration_sec": 76,
+      "slug": "slides-from-my-radia-accelerator-presentation-saas-metrics-101",
+      "status": "done",
+      "year": 2023
+    },
+    {
+      "audio_bytes": 6705067,
+      "audio_etag": "78a631711b951c212d071662f672d1db",
+      "audio_path": "output/audio/2024/messaging-lessons-from-the-2024-election.mp3",
+      "duration_sec": 419,
+      "slug": "messaging-lessons-from-the-2024-election",
+      "status": "done",
+      "year": 2024
+    }
+  ],
+  "provider": "chatterbox",
+  "run_id": "20260630T075142Z-1782805902",
+  "shard_count": 72,
+  "shard_index": 40,
+  "started_at": "2026-06-30T22:32:20.026487+00:00"
+}

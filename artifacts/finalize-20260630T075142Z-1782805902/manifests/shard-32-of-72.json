@@ -1,0 +1,79 @@
+{
+  "counts": {
+    "done": 7,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-07-01T22:08:09.959649+00:00",
+  "items": [
+    {
+      "audio_bytes": 18522841,
+      "audio_etag": "83681a2146d6f96a96d74e849d7c6781-3",
+      "audio_path": "output/audio/2021/kellblog-2021-predictions.mp3",
+      "duration_sec": 1157,
+      "slug": "kellblog-2021-predictions",
+      "status": "done",
+      "year": 2021
+    },
+    {
+      "audio_bytes": 7626725,
+      "audio_etag": "de0ba15cedd732afd7f35a632a34afd9",
+      "audio_path": "output/audio/2021/the-three-levels-of-director-protection-charter-provisions-do-insurance-and-indemnification-agreements.mp3",
+      "duration_sec": 476,
+      "slug": "the-three-levels-of-director-protection-charter-provisions-do-insurance-and-indemnification-agreements",
+      "status": "done",
+      "year": 2021
+    },
+    {
+      "audio_bytes": 1866787,
+      "audio_etag": "f8256b5bbfe261baec0272f62d059ccd",
+      "audio_path": "output/audio/2021/preview-of-my-saastr-2021-session-a-ceos-guide-to-marketing.mp3",
+      "duration_sec": 116,
+      "slug": "preview-of-my-saastr-2021-session-a-ceos-guide-to-marketing",
+      "status": "done",
+      "year": 2021
+    },
+    {
+      "audio_bytes": 5947329,
+      "audio_etag": "0fad87c98b6f70005e35970c2e00c81d",
+      "audio_path": "output/audio/2022/why-you-should-always-create-sales-opportunities-at-zero-dollar-value.mp3",
+      "duration_sec": 371,
+      "slug": "why-you-should-always-create-sales-opportunities-at-zero-dollar-value",
+      "status": "done",
+      "year": 2022
+    },
+    {
+      "audio_bytes": 1148724,
+      "audio_etag": "f3bdd7257a0337afcb602a35b998e27c",
+      "audio_path": "output/audio/2024/my-most-recent-appearance-on-20vc-with-harry-stebbings.mp3",
+      "duration_sec": 71,
+      "slug": "my-most-recent-appearance-on-20vc-with-harry-stebbings",
+      "status": "done",
+      "year": 2024
+    },
+    {
+      "audio_bytes": 6166330,
+      "audio_etag": "1ddd82f414f660b70d2e5cb3b4f86fd0",
+      "audio_path": "output/audio/2024/we-are-not-the-same-the-obligatory-post-on-founder-mode.mp3",
+      "duration_sec": 385,
+      "slug": "we-are-not-the-same-the-obligatory-post-on-founder-mode",
+      "status": "done",
+      "year": 2024
+    },
+    {
+      "audio_bytes": 6440954,
+      "audio_etag": "bf84d37f6dee2e4188a64f10db094562",
+      "audio_path": "output/audio/2024/hump-what-hump-why-you-should-listen-when-someone-says-youre-doing-it-wrong.mp3",
+      "duration_sec": 402,
+      "slug": "hump-what-hump-why-you-should-listen-when-someone-says-youre-doing-it-wrong",
+      "status": "done",
+      "year": 2024
+    }
+  ],
+  "provider": "chatterbox",
+  "qa_checked": 0,
+  "run_id": "20260630T075142Z-1782805902",
+  "shard_count": 72,
+  "shard_index": 32,
+  "started_at": "2026-07-01T15:02:02.095640+00:00"
+}

@@ -1,0 +1,60 @@
+{
+  "counts": {
+    "done": 5,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-07-01T03:21:30.221592+00:00",
+  "items": [
+    {
+      "audio_bytes": 6650353,
+      "audio_etag": "d1d291e5b3f0c43b75cf92fdf4a469be",
+      "audio_path": "output/audio/2021/structuring-organization-and-duties-of-product-marketing-and-competitive-analysis.mp3",
+      "duration_sec": 415,
+      "slug": "structuring-organization-and-duties-of-product-marketing-and-competitive-analysis",
+      "status": "done",
+      "year": 2021
+    },
+    {
+      "audio_bytes": 921352,
+      "audio_etag": "022c01aaf5719103970c82f03728dcc8",
+      "audio_path": "output/audio/2023/appearance-on-the-ai-and-the-future-of-work-podcast.mp3",
+      "duration_sec": 57,
+      "slug": "appearance-on-the-ai-and-the-future-of-work-podcast",
+      "status": "done",
+      "year": 2023
+    },
+    {
+      "audio_bytes": 1210184,
+      "audio_etag": "12633a34d08e1fe801000399a9dd49d7",
+      "audio_path": "output/audio/2023/slides-from-saastock-what-founders-need-to-know-about-product-marketing.mp3",
+      "duration_sec": 75,
+      "slug": "slides-from-saastock-what-founders-need-to-know-about-product-marketing",
+      "status": "done",
+      "year": 2023
+    },
+    {
+      "audio_bytes": 5111828,
+      "audio_etag": "f0a7e16be32c1e5e662cbf3df3b87b67",
+      "audio_path": "output/audio/2024/the-one-question-to-ask-before-you-blow-up-your-customer-success-team.mp3",
+      "duration_sec": 319,
+      "slug": "the-one-question-to-ask-before-you-blow-up-your-customer-success-team",
+      "status": "done",
+      "year": 2024
+    },
+    {
+      "audio_bytes": 8561234,
+      "audio_etag": "0a1f49b65fcb0a664f231d816d97b9c2-2",
+      "audio_path": "output/audio/2024/a-simple-rule-for-when-to-consider-selling-your-startup.mp3",
+      "duration_sec": 535,
+      "slug": "a-simple-rule-for-when-to-consider-selling-your-startup",
+      "status": "done",
+      "year": 2024
+    }
+  ],
+  "provider": "chatterbox",
+  "run_id": "20260630T075142Z-1782805902",
+  "shard_count": 72,
+  "shard_index": 50,
+  "started_at": "2026-06-30T23:59:30.354129+00:00"
+}

@@ -1,0 +1,24 @@
+{
+  "counts": {
+    "done": 1,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-06-30T20:08:23.796320+00:00",
+  "items": [
+    {
+      "audio_bytes": 9281406,
+      "audio_etag": "867a06af340d29e716f1903659803c12-2",
+      "audio_path": "output/audio/2021/use-triangulation-forecasts-for-better-conversations-about-the-forecast.mp3",
+      "duration_sec": 580,
+      "slug": "use-triangulation-forecasts-for-better-conversations-about-the-forecast",
+      "status": "done",
+      "year": 2021
+    }
+  ],
+  "provider": "chatterbox",
+  "run_id": "20260630T075142Z-1782805902",
+  "shard_count": 72,
+  "shard_index": 12,
+  "started_at": "2026-06-30T19:12:25.248816+00:00"
+}

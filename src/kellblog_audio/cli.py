@@ -25,7 +25,10 @@ from kellblog_audio.config import (
 from kellblog_audio.distributed_backfill import (
     read_backfill_progress,
     create_backfill_baseline,
+    prepare_backfill_baseline,
     merge_shard_manifests,
+    seed_backfill_baseline_from_local_catalog,
+    seed_backfill_baseline_from_run_catalog,
 )
 from kellblog_audio.maintenance import reset_generated_audio
 from kellblog_audio.ingest import ingest_all
@@ -423,10 +426,60 @@ def backup_catalog_cmd(
 @app.command("create-backfill-baseline")
 def create_backfill_baseline_cmd(
     run_id: str = typer.Option(..., "--run-id", help="Distributed backfill run id"),
+    resume_existing: bool = typer.Option(
+        False,
+        "--resume-existing",
+        help="Require an existing run-scoped baseline instead of recreating it",
+    ),
 ) -> None:
     """Run ingest and upload a run-scoped baseline catalog."""
-    key = create_backfill_baseline(_catalog(), run_id)
+    if resume_existing:
+        key = prepare_backfill_baseline(_catalog_uninitialized(), run_id, resume=True)
+    else:
+        key = create_backfill_baseline(_catalog(), run_id)
     console.print(f"Backed up to s3://{key}")
+
+
+@app.command("seed-backfill-baseline")
+def seed_backfill_baseline_cmd(
+    run_id: str = typer.Option(..., "--run-id", help="Distributed backfill run id"),
+    from_run_id: Optional[str] = typer.Option(
+        None,
+        "--from-run-id",
+        help="Seed a fresh run from a prior run-scoped catalog in R2",
+    ),
+    from_kind: str = typer.Option(
+        "final",
+        "--from-kind",
+        help="baseline | final",
+    ),
+    retry_errors: bool = typer.Option(
+        False,
+        "--retry-errors/--keep-errors",
+        help="Mark error rows stale so synthesize --pending retries them",
+    ),
+) -> None:
+    """Seed a run baseline from local done audio or a prior run-scoped catalog."""
+    if from_run_id:
+        result = seed_backfill_baseline_from_run_catalog(
+            _catalog_uninitialized(),
+            run_id,
+            from_run_id,
+            source_kind=from_kind,
+            retry_errors=retry_errors,
+        )
+    else:
+        result = seed_backfill_baseline_from_local_catalog(
+            _catalog(),
+            run_id,
+            retry_errors=retry_errors,
+        )
+    message = (
+        f"Uploaded {result.uploaded} local done episodes and backed up s3://{result.baseline_key}"
+    )
+    if result.requeued_errors:
+        message += f" (requeued {result.requeued_errors} error episodes)"
+    console.print(message)
 
 
 @app.command("merge-shard-manifests")
