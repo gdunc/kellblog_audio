@@ -17,6 +17,7 @@ from kellblog_audio.distributed_backfill import (
     ShardManifest,
     ShardManifestItem,
     create_backfill_baseline,
+    download_backfill_manifests,
     prepare_backfill_baseline,
     plan_backfill_run,
     plan_backfill_auto_restart,
@@ -696,6 +697,75 @@ def test_read_backfill_manifest_state_reports_found_missing_and_unexpected(monke
             "backfill/runs/run-1/manifests/shard-1-of-4.json",
         ],
     )
+
+
+def test_download_backfill_manifests_downloads_all_expected_shards(tmp_path, monkeypatch):
+    download_calls: list[tuple[str, str, str]] = []
+
+    class FakePaginator:
+        def paginate(self, **_kwargs):
+            return [
+                {
+                    "Contents": [
+                        {"Key": "backfill/runs/run-1/manifests/shard-0-of-2.json"},
+                        {"Key": "backfill/runs/run-1/manifests/shard-1-of-2.json"},
+                    ]
+                }
+            ]
+
+    class FakeS3Client:
+        def get_paginator(self, name):
+            assert name == "list_objects_v2"
+            return FakePaginator()
+
+        def download_file(self, bucket, key, filename):
+            download_calls.append((bucket, key, filename))
+            Path(filename).write_text(f'{{"key": "{key}"}}', encoding="utf-8")
+
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.get_s3_client",
+        lambda: FakeS3Client(),
+    )
+
+    manifest_dir = tmp_path / "manifests"
+    paths = download_backfill_manifests("run-1", 2, manifest_dir)
+
+    assert [path.name for path in paths] == ["shard-0-of-2.json", "shard-1-of-2.json"]
+    assert [call[1] for call in download_calls] == [
+        "backfill/runs/run-1/manifests/shard-0-of-2.json",
+        "backfill/runs/run-1/manifests/shard-1-of-2.json",
+    ]
+    assert paths[0].read_text(encoding="utf-8") == (
+        '{"key": "backfill/runs/run-1/manifests/shard-0-of-2.json"}'
+    )
+
+
+def test_download_backfill_manifests_rejects_missing_or_unexpected_keys(
+    tmp_path, monkeypatch
+):
+    class FakePaginator:
+        def paginate(self, **_kwargs):
+            return [
+                {
+                    "Contents": [
+                        {"Key": "backfill/runs/run-1/manifests/notes.txt"},
+                        {"Key": "backfill/runs/run-1/manifests/shard-0-of-2.json"},
+                    ]
+                }
+            ]
+
+    class FakeS3Client:
+        def get_paginator(self, name):
+            assert name == "list_objects_v2"
+            return FakePaginator()
+
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.get_s3_client",
+        lambda: FakeS3Client(),
+    )
+
+    with pytest.raises(ValueError, match="missing or unexpected shard manifests"):
+        download_backfill_manifests("run-1", 2, tmp_path / "manifests")
 
 
 def test_plan_backfill_run_for_new_run_uses_all_missing_non_helper_shards():

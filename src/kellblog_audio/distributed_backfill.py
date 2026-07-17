@@ -499,6 +499,36 @@ def read_backfill_manifest_state(run_id: str, shard_count: int) -> ShardManifest
     )
 
 
+def download_backfill_manifests(
+    run_id: str,
+    shard_count: int,
+    manifest_dir: Path,
+) -> list[Path]:
+    snapshot = read_backfill_manifest_state(run_id, shard_count)
+    if (
+        snapshot.missing_shards
+        or snapshot.unexpected_keys
+        or len(snapshot.found_shards) != shard_count
+    ):
+        raise ValueError(
+            "missing or unexpected shard manifests for "
+            f"{run_id}: found={len(snapshot.found_shards)}/{shard_count}, "
+            f"missing={snapshot.missing_shards or 'none'}, "
+            f"unexpected={snapshot.unexpected_keys or 'none'}"
+        )
+
+    manifest_dir.mkdir(parents=True, exist_ok=True)
+    client = get_s3_client()
+    prefix = _manifest_prefix(run_id)
+    manifest_paths: list[Path] = []
+    for shard_index in range(shard_count):
+        key = f"{prefix}shard-{shard_index}-of-{shard_count}.json"
+        path = manifest_dir / f"shard-{shard_index}-of-{shard_count}.json"
+        client.download_file(R2_BUCKET, key, str(path))
+        manifest_paths.append(path)
+    return manifest_paths
+
+
 def parse_local_helper_shards(raw: str | None, shard_count: int) -> list[int]:
     if shard_count < 1:
         raise ValueError("shard_count must be >= 1")

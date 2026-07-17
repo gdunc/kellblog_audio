@@ -271,71 +271,30 @@ jobs:
           RUN_ID: ${{ needs.prepare.outputs.run_id }}
           SHARD_COUNT: ${{ needs.prepare.outputs.shard_count }}
         run: |
-          mkdir -p artifacts/manifests
+          uv run python - <<'PY'
+          import os
+          from pathlib import Path
+
+          from kellblog_audio.distributed_backfill import download_backfill_manifests
+
+          download_backfill_manifests(
+              os.environ["RUN_ID"],
+              int(os.environ["SHARD_COUNT"]),
+              Path("artifacts/manifests"),
+          )
+          PY
           uv run python - <<'PY'
           import json
           import os
-          import re
           from pathlib import Path
-
-          import boto3
-          from botocore.config import Config
 
           run_id = os.environ["RUN_ID"]
           shard_count = int(os.environ["SHARD_COUNT"])
           manifest_dir = Path("artifacts/manifests")
-          prefix = f"backfill/runs/{run_id}/manifests/"
-          endpoint = f"https://{os.environ['R2_ACCOUNT_ID']}.r2.cloudflarestorage.com"
-          client = boto3.client(
-              "s3",
-              endpoint_url=endpoint,
-              aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"],
-              aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"],
-              config=Config(signature_version="s3v4"),
-          )
-
-          pattern = re.compile(rf"^{re.escape(prefix)}shard-([0-9]+)-of-([0-9]+)\\.json$")
-          found = {}
-          unexpected = []
-          paginator = client.get_paginator("list_objects_v2")
-          for page in paginator.paginate(Bucket=os.environ["R2_BUCKET"], Prefix=prefix):
-              for item in page.get("Contents", []):
-                  key = item["Key"]
-                  match = pattern.match(key)
-                  if not match:
-                      unexpected.append(key)
-                      continue
-                  shard_index = int(match.group(1))
-                  key_shard_count = int(match.group(2))
-                  if key_shard_count != shard_count or not 0 <= shard_index < shard_count:
-                      unexpected.append(key)
-                      continue
-                  found[shard_index] = key
-
-          missing = sorted(set(range(shard_count)) - set(found))
-          if missing or unexpected or len(found) != shard_count:
-              lines = [
-                  "## Finalize blocked",
-                  f"- Run ID: `{run_id}`",
-                  f"- Expected manifests: `{shard_count}`",
-                  f"- Found manifests: `{len(found)}`",
-              ]
-              if missing:
-                  lines.append(f"- Missing shard indexes: `{','.join(str(i) for i in missing)}`")
-              if unexpected:
-                  lines.append(f"- Unexpected manifest keys: `{', '.join(sorted(unexpected))}`")
-              if summary_path := os.environ.get("GITHUB_STEP_SUMMARY"):
-                  with open(summary_path, "a", encoding="utf-8") as fh:
-                      fh.write("\n".join(lines) + "\n")
-              raise SystemExit("missing or unexpected shard manifests; see job summary")
-
-          manifest_keys = []
-          for shard_index in range(shard_count):
-              key = found[shard_index]
-              target = manifest_dir / f"shard-{shard_index}-of-{shard_count}.json"
-              client.download_file(os.environ["R2_BUCKET"], key, str(target))
-              manifest_keys.append(key)
-
+          manifest_keys = [
+              f"backfill/runs/{run_id}/manifests/shard-{shard_index}-of-{shard_count}.json"
+              for shard_index in range(shard_count)
+          ]
           index_path = Path("artifacts/manifest-index.json")
           index_path.write_text(
               json.dumps(
@@ -344,7 +303,6 @@ jobs:
               ),
               encoding="utf-8",
           )
-          print(f"Downloaded {len(manifest_keys)} manifests to {manifest_dir}")
           PY
 
       - name: Merge shard manifests
