@@ -868,6 +868,70 @@ def test_plan_backfill_auto_restart_resumes_missing_non_helper_shards(monkeypatc
     )
 
 
+def test_plan_backfill_auto_restart_stops_for_zero_progress_github_shard(monkeypatch):
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.plan_backfill_run",
+        lambda **_kwargs: SimpleNamespace(
+            gha_shards=[1],
+            missing_shards=[1],
+        ),
+    )
+
+    plan = plan_backfill_auto_restart(
+        run_id="run-1",
+        shard_count=4,
+        qa_first=0,
+        auto_resume=True,
+        resume_depth=2,
+        max_auto_resumes=5,
+        summary_error_count=None,
+        stalled_gha_shards=[1],
+    )
+
+    assert plan == BackfillAutoRestartPlan(
+        should_dispatch=False,
+        mode="manual-helper",
+        reason="missing GitHub shard made no episode progress: 1",
+        next_resume_depth=3,
+        gha_shards=[1],
+        missing_shards=[1],
+        resume_run_id=None,
+        seed_run_id=None,
+    )
+
+
+def test_plan_backfill_auto_restart_waits_for_local_helper_manifest(monkeypatch):
+    monkeypatch.setattr(
+        "kellblog_audio.distributed_backfill.plan_backfill_run",
+        lambda **_kwargs: SimpleNamespace(
+            gha_shards=[],
+            missing_shards=[1],
+        ),
+    )
+
+    plan = plan_backfill_auto_restart(
+        run_id="run-1",
+        shard_count=4,
+        qa_first=0,
+        local_helper_shards_raw="1",
+        auto_resume=True,
+        resume_depth=2,
+        max_auto_resumes=5,
+        summary_error_count=None,
+    )
+
+    assert plan == BackfillAutoRestartPlan(
+        should_dispatch=False,
+        mode="waiting-for-helper",
+        reason="waiting for local helper shard manifests: 1",
+        next_resume_depth=3,
+        gha_shards=[],
+        missing_shards=[1],
+        resume_run_id=None,
+        seed_run_id=None,
+    )
+
+
 def test_plan_backfill_auto_restart_dispatches_retry_run_for_error_rows(monkeypatch):
     monkeypatch.setattr(
         "kellblog_audio.distributed_backfill.plan_backfill_run",

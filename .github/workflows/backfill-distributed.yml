@@ -427,6 +427,7 @@ jobs:
 
           from kellblog_audio.distributed_backfill import (
               plan_backfill_auto_restart,
+              read_backfill_progress,
           )
           from kellblog_audio.publish import get_s3_client
 
@@ -446,6 +447,18 @@ jobs:
           except Exception:
               summary_error_count = None
 
+          stalled_gha_shards = []
+          try:
+              progress = read_backfill_progress(os.environ["RUN_ID"])
+              stalled_gha_shards = [
+                  shard.shard_index
+                  for shard in progress.shards
+                  if shard.processed_count == 0 and not shard.complete
+              ]
+          except Exception:
+              # A runner that never reached synthesize has no progress record and is safe to retry.
+              stalled_gha_shards = []
+
           decision = plan_backfill_auto_restart(
               run_id=os.environ["RUN_ID"],
               shard_count=int(os.environ["SHARD_COUNT"]),
@@ -456,6 +469,7 @@ jobs:
               resume_depth=resume_depth,
               max_auto_resumes=max_auto_resumes,
               summary_error_count=summary_error_count,
+              stalled_gha_shards=stalled_gha_shards,
           )
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
               fh.write(f"should_dispatch={'true' if decision.should_dispatch else 'false'}\n")
@@ -466,6 +480,7 @@ jobs:
               fh.write(f"resume_run_id={decision.resume_run_id or ''}\n")
               fh.write(f"seed_run_id={decision.seed_run_id or ''}\n")
               fh.write(f"next_resume_depth={decision.next_resume_depth}\n")
+              fh.write(f"stalled_gha_shards={','.join(str(shard) for shard in stalled_gha_shards)}\n")
           PY
 
       - name: Dispatch continuation run
@@ -514,6 +529,7 @@ jobs:
             echo "- Reason: \`${{ steps.decide.outputs.reason }}\`"
             echo "- Missing shard manifests: \`${{ steps.decide.outputs.missing_shards || 'none' }}\`"
             echo "- Missing GitHub-hosted shard manifests: \`${{ steps.decide.outputs.gha_shards || 'none' }}\`"
+            echo "- Zero-progress GitHub shards: \`${{ steps.decide.outputs.stalled_gha_shards || 'none' }}\`"
             echo "- Resume run: \`${{ steps.decide.outputs.resume_run_id || 'none' }}\`"
             echo "- Seed run: \`${{ steps.decide.outputs.seed_run_id || 'none' }}\`"
           } >> "$GITHUB_STEP_SUMMARY"
