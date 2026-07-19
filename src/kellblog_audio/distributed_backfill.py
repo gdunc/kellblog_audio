@@ -629,6 +629,7 @@ def plan_backfill_auto_restart(
     resume_depth: int = 0,
     max_auto_resumes: int = 10,
     summary_error_count: int | None = None,
+    stalled_gha_shards: list[int] | None = None,
 ) -> BackfillAutoRestartPlan:
     if resume_depth < 0:
         raise ValueError("resume_depth must be >= 0")
@@ -659,6 +660,18 @@ def plan_backfill_auto_restart(
         resume_run_id=run_id,
     )
 
+    stalled = sorted(set(plan.gha_shards) & set(stalled_gha_shards or []))
+    if stalled:
+        shard_list = ",".join(str(shard) for shard in stalled)
+        return BackfillAutoRestartPlan(
+            should_dispatch=False,
+            mode="manual-helper",
+            reason=f"missing GitHub shard made no episode progress: {shard_list}",
+            next_resume_depth=next_resume_depth,
+            gha_shards=plan.gha_shards,
+            missing_shards=plan.missing_shards,
+        )
+
     if plan.gha_shards:
         shard_list = ",".join(str(shard) for shard in plan.gha_shards)
         return BackfillAutoRestartPlan(
@@ -669,6 +682,17 @@ def plan_backfill_auto_restart(
             gha_shards=plan.gha_shards,
             missing_shards=plan.missing_shards,
             resume_run_id=run_id,
+        )
+
+    if plan.missing_shards:
+        shard_list = ",".join(str(shard) for shard in plan.missing_shards)
+        return BackfillAutoRestartPlan(
+            should_dispatch=False,
+            mode="waiting-for-helper",
+            reason=f"waiting for local helper shard manifests: {shard_list}",
+            next_resume_depth=next_resume_depth,
+            gha_shards=[],
+            missing_shards=plan.missing_shards,
         )
 
     if summary_error_count is None:

@@ -38,6 +38,8 @@ Then dispatch the workflow with `resume_run_id=<run_id>` so `prepare` restores t
 - Completed shard manifests are reused across attempts; timed-out shards rerun from the start of that shard.
 - `auto_resume=1` enables automatic continuation from within the workflow itself.
 - `resume_depth` and `max_auto_resumes` are internal safety controls to prevent infinite restart loops.
+- GitHub-hosted jobs have a six-hour ceiling. If a missing GitHub shard completed zero episodes, `auto-restart` stops instead of repeatedly rerunning it; reserve that shard for a local helper or use a runner without that limit.
+- When the only missing manifests belong to local helper shards, `auto-restart` waits for those manifests instead of dispatching empty continuation runs.
 
 ## Optional local Mac helper shard
 
@@ -66,6 +68,8 @@ uv run kellblog-audio synthesize --pending \
   --manifest-out artifacts/local-shard-0.json \
   --manifest-r2-key backfill/runs/<run_id>/manifests/shard-0-of-N.json
 ```
+
+On Apple Silicon, `auto` selects the Metal/MPS GPU path when PyTorch reports it as available. Verify once with `uv run python -c 'import torch; print(torch.backends.mps.is_available())'`.
 
 7. Do **not** run multiple local MPS shards at once; one MPS worker is still the recommended Mac mode.
 8. Do **not** manually bulk-upload `output/audio/`, and do **not** publish unrelated pre-existing local audio. Let `synthesize --upload-r2` upload only the helper shard's newly generated files, and let workflow `finalize` handle `publish --skip-audio`.
