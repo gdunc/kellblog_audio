@@ -1,0 +1,61 @@
+{
+  "counts": {
+    "done": 5,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-07-20T23:16:57.463361+00:00",
+  "items": [
+    {
+      "audio_bytes": 42136296,
+      "audio_etag": "718bc3ebaf491765995cc81bb19db55f-6",
+      "audio_path": "output/audio/2008/elfyourselfs-7261-word-terms-of-service.mp3",
+      "duration_sec": 2633,
+      "slug": "elfyourselfs-7261-word-terms-of-service",
+      "status": "done",
+      "year": 2008
+    },
+    {
+      "audio_bytes": 527200,
+      "audio_etag": "8fea2408abe699e9528cec62f094bb65",
+      "audio_path": "output/audio/2008/should-we-rename-the-401k-the-201k.mp3",
+      "duration_sec": 32,
+      "slug": "should-we-rename-the-401k-the-201k",
+      "status": "done",
+      "year": 2008
+    },
+    {
+      "audio_bytes": 605397,
+      "audio_etag": "52519c7e4c44dbac57448e2c20769027",
+      "audio_path": "output/audio/2011/what-the-ceo-really-thinks-of-marketing-and-5-things-you-can-do-about-it.mp3",
+      "duration_sec": 37,
+      "slug": "what-the-ceo-really-thinks-of-marketing-and-5-things-you-can-do-about-it",
+      "status": "done",
+      "year": 2011
+    },
+    {
+      "audio_bytes": 10168693,
+      "audio_etag": "cd7f0180ae2767c846c60b42a20d50a3-2",
+      "audio_path": "output/audio/2019/my-final-verdict-on-multi-year-pre-paid-deals.mp3",
+      "duration_sec": 635,
+      "slug": "my-final-verdict-on-multi-year-pre-paid-deals",
+      "status": "done",
+      "year": 2019
+    },
+    {
+      "audio_bytes": 7747870,
+      "audio_etag": "f724066acd73856af5fd4c3b203c3b8e",
+      "audio_path": "output/audio/2026/the-re-emergence-of-product-line-marketing.mp3",
+      "duration_sec": 484,
+      "slug": "the-re-emergence-of-product-line-marketing",
+      "status": "done",
+      "year": 2026
+    }
+  ],
+  "provider": "chatterbox",
+  "qa_checked": 0,
+  "run_id": "20260717T132211Z-qa-reruns",
+  "shard_count": 4,
+  "shard_index": 1,
+  "started_at": "2026-07-20T12:23:01.230869+00:00"
+}

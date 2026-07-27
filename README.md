@@ -9,24 +9,24 @@ Turn [Kellblog](https://www.kellblog.com/) posts into an AI-narrated podcast. On
 - Python 3.11+
 - [uv](https://github.com/astral-sh/uv)
 - `ffmpeg` and `ffprobe` (`brew install ffmpeg`)
-- `espeak-ng` for Kokoro (`brew install espeak`)
+- Chatterbox dependencies installed by the `chatterbox` extra
 
 ### Install
 
 ```bash
 cd kellblog_audio
-uv sync --extra kokoro --extra dev
+uv sync --extra chatterbox --extra dev
 uv pip install -e .
 ```
 
 All TTS engines for bake-off comparisons:
 
 ```bash
-uv sync --extra compare   # kokoro + chatterbox + piper
+uv sync --extra compare   # chatterbox + piper
 uv run kellblog-audio providers
 ```
 
-Individual extras: `--extra kokoro`, `--extra chatterbox`, `--extra piper`
+Individual extras: `--extra chatterbox`, `--extra piper`
 
 ### Phase 0 — TTS bake-off
 
@@ -34,16 +34,16 @@ Individual extras: `--extra kokoro`, `--extra chatterbox`, `--extra piper`
 # Ingest bake-off posts first
 uv run kellblog-audio ingest --slug target-pipeline-coverage-is-not-the-inverse-of-win-rate
 
-uv sync --extra compare   # kokoro + chatterbox + piper (StyleTTS2 uses isolated uv env)
+uv sync --extra compare   # chatterbox + piper (StyleTTS2 uses isolated uv env)
 uv run kellblog-audio bakeoff
 uv run kellblog-audio bakeoff-serve   # http://localhost:8765/index.html
 ```
 
 The bake-off generates **multiple voices per engine** (see `bakeoff_voices.py`). StyleTTS2 was previously a stub; it now runs via an isolated `uv run --with styletts2` subprocess because its dependencies conflict with Chatterbox.
 
-Browse voices online (not your text): [Kokoro demo](https://huggingface.co/spaces/hexgrad/Kokoro-TTS), [Piper samples](https://rhasspy.github.io/piper-samples/), [Chatterbox](https://huggingface.co/ResembleAI/chatterbox), [StyleTTS2 demo](https://styletts2.github.io/).
+Browse voices online (not your text): [Piper samples](https://rhasspy.github.io/piper-samples/), [Chatterbox](https://huggingface.co/ResembleAI/chatterbox), [StyleTTS2 demo](https://styletts2.github.io/).
 
-Default production voice: **Kokoro** `am_michael`.
+Default production voice: **Chatterbox** built-in voice, with the archive configured for its consistent voice profile.
 
 ### Full backfill (default: distributed GitHub Actions)
 
@@ -57,7 +57,7 @@ Use `.github/workflows/backfill-distributed.yml` for the archive run.
 - The Mac helper machine must already have working local `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, and `R2_BUCKET` configured before running `restore-catalog` or `synthesize --upload-r2`.
 - During helper use, do **not** commit/push unrelated changes, and do **not** bulk-upload or publish unrelated pre-existing local audio. See [docs/BACKFILL.md](docs/BACKFILL.md).
 
-### Full backfill (local fallback, ~1–2 days on M-series Mac with Kokoro)
+### Full backfill (local fallback)
 
 ```bash
 uv run kellblog-audio run-backfill
@@ -94,6 +94,11 @@ export KELLBLOG_AUDIO_PUBLIC_URL=https://kellblog.thisisgrant.com
 uv run kellblog-audio publish
 ```
 
+`publish` is QA-gated: every `done` episode must have a passing
+`output/transcribe/qa/<slug>.qa.json` artifact. Generate missing reports with
+`uv run kellblog-audio qa-audio --missing-only`; an R2 publish fails closed if
+any completed episode is missing or fails QA.
+
 ### Podcast directory submission (one-time, manual)
 
 Submit `https://kellblog.thisisgrant.com/feed.xml` to:
@@ -122,11 +127,11 @@ Repository variable: `KELLBLOG_AUDIO_PUBLIC_URL` (optional).
 |---------|-------------|
 | `kellblog-audio ingest` | Sync sitemap + fetch posts |
 | `kellblog-audio synthesize --pending` | TTS for new/stale posts |
-| `kellblog-audio publish` | Upload MP3s + feed to R2 |
+| `kellblog-audio publish` | Upload QA-cleared MP3s + feed to R2 |
 | `kellblog-audio publish --local-only` | Write `output/feeds/feed.xml` only |
 | `kellblog-audio publish --skip-audio` | Refresh feed only from catalog metadata |
 | `kellblog-audio status` | Pipeline counts |
-| `kellblog-audio bakeoff` | Compare Kokoro vs Chatterbox samples |
+| `kellblog-audio bakeoff` | Compare Chatterbox, Piper, and StyleTTS2 samples |
 | `kellblog-audio run-backfill` | ingest → synthesize → publish |
 | `kellblog-audio backup-catalog` | Push SQLite to R2 |
 | `kellblog-audio restore-catalog` | Pull latest SQLite from R2 |

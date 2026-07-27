@@ -15,7 +15,8 @@ from kellblog_audio.config import (
     CHATTERBOX_MAX_CHUNK_CHARS,
     CHATTERBOX_DEVICE,
     CHATTERBOX_EXAGGERATION,
-    KOKORO_VOICE,
+    CHUNK_LOOP_MAX_ATTEMPTS,
+    CHUNK_LOOP_RETRY_ENABLED,
     MAX_CHUNK_CHARS,
     PIPER_VOICE,
     PIPER_VOICES_DIR,
@@ -59,39 +60,6 @@ class TTSProvider(ABC):
 
     def _check_deps(self) -> None:
         pass
-
-
-class KokoroProvider(TTSProvider):
-    name = "kokoro"
-
-    def __init__(self, voice: str = KOKORO_VOICE) -> None:
-        self.voice = voice
-        self._pipeline = None
-
-    def _check_deps(self) -> None:
-        import kokoro  # noqa: F401
-
-    def _get_pipeline(self):
-        if self._pipeline is None:
-            from kokoro import KPipeline
-
-            self._pipeline = KPipeline(lang_code="a")
-        return self._pipeline
-
-    def synthesize_chunk(self, text: str, out_wav: Path) -> None:
-        import numpy as np
-        import soundfile as sf
-
-        pipeline = self._get_pipeline()
-        chunks_audio: list = []
-        sample_rate = 24000
-        for _gs, _ps, audio in pipeline(text, voice=self.voice):
-            chunks_audio.append(audio)
-        if not chunks_audio:
-            raise RuntimeError("Kokoro produced no audio")
-        combined = np.concatenate(chunks_audio)
-        out_wav.parent.mkdir(parents=True, exist_ok=True)
-        sf.write(str(out_wav), combined, sample_rate)
 
 
 class ChatterboxProvider(TTSProvider):
@@ -246,8 +214,6 @@ class StyleTTS2Provider(TTSProvider):
 
 def _make_provider(provider_name: str, **kwargs) -> TTSProvider:
     provider_name = provider_name.lower()
-    if provider_name == "kokoro":
-        return KokoroProvider(voice=kwargs.get("voice", KOKORO_VOICE))
     if provider_name == "chatterbox":
         ex = kwargs.get("exaggeration", CHATTERBOX_EXAGGERATION)
         device = kwargs.get("device", CHATTERBOX_DEVICE)
@@ -302,6 +268,83 @@ def max_chunk_chars_for_provider(provider: TTSProvider) -> int:
     return MAX_CHUNK_CHARS
 
 
+def _chunk_loop_retry_profiles() -> list[tuple[float, float]]:
+    """Calmer profiles relative to the current Chatterbox defaults."""
+    base_ex = float(CHATTERBOX_EXAGGERATION)
+    base_cfg = float(CHATTERBOX_CFG_WEIGHT)
+    return [
+        (base_ex, base_cfg),
+        (max(0.2, round(base_ex - 0.1, 3)), max(0.35, round(base_cfg - 0.05, 3))),
+        (max(0.15, round(base_ex - 0.15, 3)), max(0.3, round(base_cfg - 0.1, 3))),
+    ]
+
+
+def _chunk_loop_retry_enabled(provider: TTSProvider) -> bool:
+    return bool(CHUNK_LOOP_RETRY_ENABLED) and provider.name == "chatterbox"
+
+
+def _apply_chatterbox_params(
+    provider: TTSProvider, *, exaggeration: float, cfg_weight: float
+) -> tuple[float | None, float | None]:
+    prev_ex = getattr(provider, "exaggeration", None)
+    prev_cfg = getattr(provider, "cfg_weight", None)
+    if hasattr(provider, "exaggeration"):
+        provider.exaggeration = exaggeration  # type: ignore[attr-defined]
+    if hasattr(provider, "cfg_weight"):
+        provider.cfg_weight = cfg_weight  # type: ignore[attr-defined]
+    return prev_ex, prev_cfg
+
+
+def _restore_chatterbox_params(
+    provider: TTSProvider,
+    prev_ex: float | None,
+    prev_cfg: float | None,
+) -> None:
+    if prev_ex is not None and hasattr(provider, "exaggeration"):
+        provider.exaggeration = prev_ex  # type: ignore[attr-defined]
+    if prev_cfg is not None and hasattr(provider, "cfg_weight"):
+        provider.cfg_weight = prev_cfg  # type: ignore[attr-defined]
+
+
+def synthesize_chunk_with_loop_retry(
+    provider: TTSProvider,
+    text: str,
+    out_wav: Path,
+) -> None:
+    """Synthesize one chunk; on Chatterbox, re-roll if Whisper detects a phrase loop."""
+    from kellblog_audio.qa import chunk_has_loop, transcribe_audio
+
+    if not _chunk_loop_retry_enabled(provider):
+        provider.synthesize_chunk(text, out_wav)
+        return
+
+    max_attempts = max(1, min(CHUNK_LOOP_MAX_ATTEMPTS, len(_chunk_loop_retry_profiles())))
+    profiles = _chunk_loop_retry_profiles()
+    last_error: Exception | None = None
+    for attempt in range(max_attempts):
+        exaggeration, cfg_weight = profiles[attempt]
+        prev = _apply_chatterbox_params(
+            provider, exaggeration=exaggeration, cfg_weight=cfg_weight
+        )
+        try:
+            if out_wav.exists():
+                out_wav.unlink()
+            provider.synthesize_chunk(text, out_wav)
+            transcript_path = transcribe_audio(
+                out_wav, output_dir=out_wav.parent, output_stem=out_wav.stem
+            )
+            transcript = transcript_path.read_text(encoding="utf-8")
+            if not chunk_has_loop(transcript):
+                return
+        except Exception as exc:  # noqa: BLE001 — keep last attempt for long episodes
+            last_error = exc
+        finally:
+            _restore_chatterbox_params(provider, *prev)
+
+    if not out_wav.exists() and last_error is not None:
+        raise last_error
+
+
 def synthesize_text_to_wav(
     provider: TTSProvider,
     text: str,
@@ -313,14 +356,14 @@ def synthesize_text_to_wav(
         return
     chunks = chunk_text(text, max_chars=max_chunk_chars_for_provider(provider))
     if len(chunks) == 1:
-        provider.synthesize_chunk(chunks[0], out_wav)
+        synthesize_chunk_with_loop_retry(provider, chunks[0], out_wav)
         return
     with tempfile.TemporaryDirectory() as tmp:
         tmp_path = Path(tmp)
         part_files: list[Path] = []
         for i, chunk in enumerate(chunks):
             part = tmp_path / f"part_{i:04d}.wav"
-            provider.synthesize_chunk(chunk, part)
+            synthesize_chunk_with_loop_retry(provider, chunk, part)
             part_files.append(part)
         concat_wavs(part_files, out_wav)
 
@@ -436,7 +479,7 @@ def merge_audio_parts(parts: list[Path], out_mp3: Path, **id3) -> int:
 
 
 def list_available_providers() -> Iterator[str]:
-    for name in ("kokoro", "chatterbox", "piper", "styletts2"):
+    for name in ("chatterbox", "piper", "styletts2"):
         try:
             p = _make_provider(name)
             if p.is_available():

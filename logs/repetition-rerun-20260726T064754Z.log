@@ -1,0 +1,8 @@
+LOG=logs/repetition-rerun-20260726T064754Z.log
+[2026-07-26T06:47:54Z] Resume: 9-episode repetition re-run (--all --force, chunk loop retry).
+[2026-07-26T06:47:54Z] === synthesize an-update-on-the-saas-rule-of-40 ===
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/perth/perth_net/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/diffusers/models/lora.py:393: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)

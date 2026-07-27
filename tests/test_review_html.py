@@ -42,7 +42,7 @@ def test_concern_reasons_flags_review_thresholds():
     assert "repeat x7" in reasons
 
 
-def test_write_review_page_removes_feedback_and_lists_concerns():
+def test_write_review_page_is_clean_listening_page():
     with tempfile.TemporaryDirectory() as tmp:
         tmp_path = Path(tmp)
         cat = _catalog_with_post(tmp_path / "test.sqlite", "test-post")
@@ -51,11 +51,12 @@ def test_write_review_page_removes_feedback_and_lists_concerns():
         (qa_dir / "test-post.qa.json").write_text(
             json.dumps(
                 {
-                    "passed": True,
+                    "passed": False,
+                    "reason": "repetition 16 > 12",
                     "source_coverage": 0.91,
                     "tail_similarity": 0.9,
                     "body_wpm": 170,
-                    "max_repeated_three_gram": 2,
+                    "max_repeated_three_gram": 16,
                 }
             ),
             encoding="utf-8",
@@ -69,15 +70,20 @@ def test_write_review_page_removes_feedback_and_lists_concerns():
 
         html = out.read_text(encoding="utf-8")
         assert not feedback.exists()
-        assert "1 published MP3 available for review" in html
-        assert "Feedback" not in html
-        assert "Needs manual audit" in html
-        assert "coverage 91.0%" in html
-        assert "What to review" in html
+        assert "<title>Kellblog Audio</title>" in html
+        assert "1 episode" in html
         assert "/audio/2024/test-post.mp3" in html
+        assert "Needs manual audit" not in html
+        assert "What to review" not in html
+        assert "QA passed" not in html
+        assert "Whisper QA" not in html
+        assert "Manual audit" not in html
+        assert "RSS feed" not in html
+        assert "Feedback" not in html
+        assert "repetition 16" not in html
 
 
-def test_write_review_page_includes_collaborator_share_controls():
+def test_write_review_page_includes_share_controls():
     with tempfile.TemporaryDirectory() as tmp:
         tmp_path = Path(tmp)
         cat = _catalog_with_post(
@@ -90,13 +96,13 @@ def test_write_review_page_includes_collaborator_share_controls():
         write_review_page(cat, out_path=out, qa_dir=tmp_path / "qa", updated_at="2026-06-08 10:00")
 
         html = out.read_text(encoding="utf-8")
-        assert 'data-copy-review-url="https://kellblog.thisisgrant.com/index.html"' in html
-        assert "subject=Kellblog%20audio%20review%20batch" in html
-        assert "body=Please%20review%20the%20generated%20Kellblog%20audio%20here" in html
+        assert 'data-copy-page-url="https://kellblog.thisisgrant.com/index.html"' in html
+        assert "subject=Kellblog%20Audio" in html
+        assert "body=Listen%20to%20the%20Kellblog%20audio%20archive%20here" in html
         assert (
-            'data-copy-review-url="https://kellblog.thisisgrant.com/index.html#episode-share-me"'
+            'data-copy-page-url="https://kellblog.thisisgrant.com/index.html#episode-share-me"'
             in html
         )
         assert 'data-share-label="Share Me"' in html
         assert "navigator.clipboard.writeText" in html
-        assert "Copy review link" in html
+        assert "Copy link" in html

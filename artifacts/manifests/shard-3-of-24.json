@@ -1,0 +1,34 @@
+{
+  "counts": {
+    "done": 2,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-07-23T11:20:16.422288+00:00",
+  "items": [
+    {
+      "audio_bytes": 5514702,
+      "audio_etag": "04ad975705e22fa1b03c6b4cebd343c1",
+      "audio_path": "output/audio/2019/rule-of-40-glideslope-planning.mp3",
+      "duration_sec": 344,
+      "slug": "rule-of-40-glideslope-planning",
+      "status": "done",
+      "year": 2019
+    },
+    {
+      "audio_bytes": 5281070,
+      "audio_etag": "ba914cd6e3f99b521453c7f10462fda2",
+      "audio_path": "output/audio/2019/the-rule-of-40-down-but-not-out.mp3",
+      "duration_sec": 330,
+      "slug": "the-rule-of-40-down-but-not-out",
+      "status": "done",
+      "year": 2019
+    }
+  ],
+  "provider": "chatterbox",
+  "qa_checked": 0,
+  "run_id": "20260723T094431Z-qa-reruns",
+  "shard_count": 24,
+  "shard_index": 3,
+  "started_at": "2026-07-23T09:50:17.831603+00:00"
+}

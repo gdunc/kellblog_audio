@@ -1,0 +1,25 @@
+{
+  "counts": {
+    "done": 1,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-07-23T10:22:18.649127+00:00",
+  "items": [
+    {
+      "audio_bytes": 3084271,
+      "audio_etag": "179d2456f6436d72e1801236e0c23709",
+      "audio_path": "output/audio/2019/an-update-on-the-saas-rule-of-40.mp3",
+      "duration_sec": 192,
+      "slug": "an-update-on-the-saas-rule-of-40",
+      "status": "done",
+      "year": 2019
+    }
+  ],
+  "provider": "chatterbox",
+  "qa_checked": 0,
+  "run_id": "20260723T094431Z-qa-reruns",
+  "shard_count": 24,
+  "shard_index": 22,
+  "started_at": "2026-07-23T09:49:26.646142+00:00"
+}

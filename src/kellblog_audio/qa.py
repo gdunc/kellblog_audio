@@ -15,6 +15,7 @@ from kellblog_audio.catalog import Catalog
 from kellblog_audio.config import (
     MAX_AUDIO_BODY_WPM,
     QA_TRANSCRIPTS_DIR,
+    SHORT_SOURCE_WORDS,
     WHISPER_CLI,
     WHISPER_MODEL,
     get_settings,
@@ -116,6 +117,16 @@ class TranscriptQAResult:
     body_wpm: float | None
     source_words: int
     transcript_words: int
+    auto_rerun: bool = True
+
+
+def chunk_has_loop(
+    transcript_text: str,
+    *,
+    max_repeated: int = MAX_REPEATED_THREE_GRAM,
+) -> bool:
+    words = normalize_words(transcript_text)
+    return _max_repeated_ngram(words, n=3) > max_repeated
 
 
 def normalize_words(text: str) -> list[str]:
@@ -207,6 +218,13 @@ def analyze_transcript(
             f"repetition {max_repeated} > {MAX_REPEATED_THREE_GRAM} repeated 3-grams"
         )
 
+    soft_only = bool(failures) and all(
+        f.startswith("coverage ") or f.startswith("tail similarity ") for f in failures
+    )
+    auto_rerun = bool(failures) and not (
+        soft_only and len(source_words) < SHORT_SOURCE_WORDS
+    )
+
     return TranscriptQAResult(
         passed=not failures,
         reason="ok" if not failures else "; ".join(failures),
@@ -216,7 +234,20 @@ def analyze_transcript(
         body_wpm=body_wpm,
         source_words=len(source_words),
         transcript_words=len(transcript_words),
+        auto_rerun=auto_rerun,
     )
+
+
+def ensure_local_whisper_ready() -> tuple[str, Path]:
+    whisper = shutil.which(WHISPER_CLI)
+    if not whisper:
+        raise RuntimeError(f"Local Whisper CLI not found: {WHISPER_CLI}")
+
+    model = Path(WHISPER_MODEL).expanduser()
+    if not model.exists():
+        raise RuntimeError(f"Local Whisper model not found: {model}")
+
+    return whisper, model
 
 
 def transcribe_audio(
@@ -225,12 +256,7 @@ def transcribe_audio(
     output_dir: Path = QA_TRANSCRIPTS_DIR,
     output_stem: str | None = None,
 ) -> Path:
-    whisper = shutil.which(WHISPER_CLI)
-    if not whisper:
-        raise RuntimeError(f"Local Whisper CLI not found: {WHISPER_CLI}")
-    model = Path(WHISPER_MODEL).expanduser()
-    if not model.exists():
-        raise RuntimeError(f"Local Whisper model not found: {model}")
+    whisper, model = ensure_local_whisper_ready()
     output_dir.mkdir(parents=True, exist_ok=True)
     stem = output_stem or audio_path.stem
     out_base = output_dir / stem
@@ -279,6 +305,30 @@ def qa_post_audio(
     report_path = output_dir / f"{slug}.qa.json"
     report_path.write_text(json.dumps(asdict(result), indent=2), encoding="utf-8")
     return result
+
+
+def read_qa_report(
+    slug: str,
+    *,
+    output_dir: Path = QA_TRANSCRIPTS_DIR,
+) -> dict[str, object] | None:
+    path = output_dir / f"{slug}.qa.json"
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def qa_report_passed(
+    slug: str,
+    *,
+    output_dir: Path = QA_TRANSCRIPTS_DIR,
+) -> bool:
+    report = read_qa_report(slug, output_dir=output_dir)
+    return bool(report and report.get("passed") is True)
 
 
 def queue_audio_rerun(catalog: Catalog, slug: str, reason: str) -> None:

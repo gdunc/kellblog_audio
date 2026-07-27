@@ -26,9 +26,7 @@ SAMPLE_TEXT = (
 
 def provider_for_variant(variant: BakeoffVariant):
     kwargs: dict = {}
-    if variant.provider == "kokoro":
-        kwargs["voice"] = variant.voice_id
-    elif variant.provider == "piper":
+    if variant.provider == "piper":
         kwargs["voice"] = variant.voice_id
     elif variant.provider == "chatterbox" and variant.exaggeration is not None:
         kwargs["exaggeration"] = variant.exaggeration
@@ -102,14 +100,12 @@ Listen via `index.html` (serve with `kellblog-audio bakeoff-serve`).
 
 | Provider | License | Voice options |
 |----------|---------|---------------|
-| kokoro | Apache 2.0 | 54 presets — demo: https://huggingface.co/spaces/hexgrad/Kokoro-TTS |
 | chatterbox | MIT | Built-in + cloning — https://huggingface.co/ResembleAI/chatterbox |
 | piper | MIT | 100+ presets — https://rhasspy.github.io/piper-samples/ |
 | styletts2 | MIT | Reference WAV cloning — https://styletts2.github.io/ |
 
 Set `KELLBLOG_TTS_PROVIDER` and voice env vars after choosing.
 
-- [ ] kokoro
 - [ ] chatterbox
 - [ ] piper
 - [ ] styletts2

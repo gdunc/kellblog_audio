@@ -1,0 +1,34 @@
+{
+  "counts": {
+    "done": 2,
+    "error": 0,
+    "skipped": 0
+  },
+  "finished_at": "2026-07-23T11:11:38.543370+00:00",
+  "items": [
+    {
+      "audio_bytes": 536814,
+      "audio_etag": "b33ba5ddf17c364930ecc3bd8573c12f",
+      "audio_path": "output/audio/2008/should-we-rename-the-401k-the-201k.mp3",
+      "duration_sec": 33,
+      "slug": "should-we-rename-the-401k-the-201k",
+      "status": "done",
+      "year": 2008
+    },
+    {
+      "audio_bytes": 7877856,
+      "audio_etag": "f0b43dadf75e0d01878bd2c4f194ace4",
+      "audio_path": "output/audio/2026/the-re-emergence-of-product-line-marketing.mp3",
+      "duration_sec": 492,
+      "slug": "the-re-emergence-of-product-line-marketing",
+      "status": "done",
+      "year": 2026
+    }
+  ],
+  "provider": "chatterbox",
+  "qa_checked": 0,
+  "run_id": "20260723T094431Z-qa-reruns",
+  "shard_count": 24,
+  "shard_index": 5,
+  "started_at": "2026-07-23T09:49:18.726532+00:00"
+}

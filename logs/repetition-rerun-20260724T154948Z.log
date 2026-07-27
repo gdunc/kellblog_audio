@@ -1,0 +1,15 @@
+LOG=logs/repetition-rerun-20260724T154948Z.log
+[2026-07-24T15:49:48Z] Starting 9-episode repetition re-run with chunk loop retry (resume after interrupt).
+[2026-07-24T15:49:48Z] === synthesize an-update-on-the-saas-rule-of-40 ===
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/perth/perth_net/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Done: 0 ok, 0 errors (provider=chatterbox)
+[2026-07-24T15:49:56Z] === QA an-update-on-the-saas-rule-of-40 ===
+an-update-on-the-saas-rule-of-40: error Post an-update-on-the-saas-rule-of-40 
+has no audio path
+QA sweep complete: selected=1 checked=0 passed=0 failed=0 errored=1 
+queued-for-rerun=0
+[2026-07-24T15:49:56Z] === synthesize cac-payback-period-the-most-misunderstood-saas-metric ===
+/Users/grant.duncan/Documents/kellblog_audio/.venv/lib/python3.11/site-packages/perth/perth_net/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_filename
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.

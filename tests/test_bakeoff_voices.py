@@ -4,11 +4,11 @@ from kellblog_audio.bakeoff_voices import bakeoff_filename, parse_bakeoff_filena
 
 
 def test_bakeoff_filename_roundtrip():
-    variant = BakeoffVariant("kokoro", "am_michael", "Michael")
+    variant = BakeoffVariant("chatterbox", "builtin-0.4", "Built-in")
     name = bakeoff_filename("__sample__", variant)
-    assert name == "sample__kokoro__am_michael.mp3"
-    parsed = parse_bakeoff_filename("sample__kokoro__am_michael")
-    assert parsed == ("__sample__", "kokoro", "am_michael")
+    assert name == "sample__chatterbox__builtin-0.4.mp3"
+    parsed = parse_bakeoff_filename("sample__chatterbox__builtin-0.4")
+    assert parsed == ("__sample__", "chatterbox", "builtin-0.4")
 
     slug = "target-pipeline-coverage-is-not-the-inverse-of-win-rate"
     name2 = bakeoff_filename(slug, BakeoffVariant("piper", "en_US-ryan-medium", "Ryan"))
@@ -18,4 +18,4 @@ def test_bakeoff_filename_roundtrip():
 
 
 def test_parse_legacy_single_underscore_returns_none():
-    assert parse_bakeoff_filename("sample_kokoro") is None
+    assert parse_bakeoff_filename("sample_chatterbox") is None

@@ -15,7 +15,7 @@ from rich.table import Table
 from kellblog_audio.bakeoff import run_bakeoff
 from kellblog_audio.bakeoff_voices import BAKEOFF_SLUGS
 from kellblog_audio.bakeoff_html import write_bakeoff_page
-from kellblog_audio.catalog import Catalog
+from kellblog_audio.catalog import Catalog, PostRow
 from kellblog_audio.config import (
     CATALOG_PATH,
     QA_TRANSCRIPTS_DIR,
@@ -35,10 +35,11 @@ from kellblog_audio.ingest import ingest_all
 from kellblog_audio.publish import (
     backup_catalog,
     publish_local,
+    publish_site_to_r2,
     publish_to_r2,
     restore_catalog,
 )
-from kellblog_audio.qa import qa_post_audio, queue_audio_rerun
+from kellblog_audio.qa import ensure_local_whisper_ready, qa_post_audio, queue_audio_rerun
 from kellblog_audio.review_html import collect_review_items, write_review_page
 from kellblog_audio.synthesize import synthesize_batch
 from kellblog_audio.tts import list_available_providers
@@ -127,7 +128,7 @@ def synthesize(
     slug: Optional[str] = typer.Option(None, "--slug", "-s"),
     force: bool = typer.Option(False, "--force", help="Re-synthesize even if done"),
     provider: Optional[str] = typer.Option(
-        None, "--provider", "-p", help="kokoro | chatterbox"
+        None, "--provider", "-p", help="chatterbox | piper | styletts2"
     ),
     limit: Optional[int] = typer.Option(None, help="Max episodes"),
     qa_first: int = typer.Option(
@@ -195,19 +196,32 @@ def publish(
         False, "--local-only", help="Write feed.xml locally only"
     ),
     skip_audio: bool = typer.Option(
-        False, "--skip-audio", help="Only rebuild/upload feed"
+        False, "--skip-audio", help="Skip MP3 upload; only rebuild/upload site/feed"
+    ),
+    site_only: bool = typer.Option(
+        False,
+        "--site-only",
+        help="Upload listening page (+ audio) to R2 without updating podcast feed.xml",
     ),
 ) -> None:
-    """Build RSS and upload to R2."""
+    """Build RSS and/or listening page and upload to R2."""
     cat = _catalog()
+    if local_only and site_only:
+        raise typer.BadParameter("--local-only and --site-only cannot be combined")
     if local_only:
         path = publish_local(cat)
         console.print(f"Wrote {path}")
         return
     try:
+        if site_only:
+            url = publish_site_to_r2(cat, upload_audio=not skip_audio)
+            console.print(f"Published site: {url}")
+            return
         url = publish_to_r2(cat, upload_audio=not skip_audio)
         console.print(f"Published feed: {url}")
     except RuntimeError as e:
+        if "R2 not configured" not in str(e):
+            raise
         console.print(f"[yellow]R2 not configured: {e}[/yellow]")
         path = publish_local(cat)
         console.print(f"Wrote local feed: {path}")
@@ -261,10 +275,45 @@ def reset_audio(
     )
 
 
+def _select_qa_posts(
+    catalog: Catalog,
+    *,
+    slug: str | None,
+    missing_only: bool,
+    limit: int | None,
+) -> list[PostRow]:
+    if limit is not None and limit < 0:
+        raise typer.BadParameter("--limit must be >= 0")
+
+    if slug and missing_only:
+        raise typer.BadParameter("--slug and --missing-only cannot be combined")
+
+    if slug:
+        post = catalog.get(slug)
+        return [post] if post else []
+
+    posts = catalog.list_by_filter(audio_status="done")
+    if missing_only:
+        existing = {
+            path.name[: -len(".qa.json")]
+            for path in QA_TRANSCRIPTS_DIR.glob("*.qa.json")
+        }
+        posts = [post for post in posts if post.slug not in existing]
+        return posts if limit is None else posts[:limit]
+
+    effective_limit = 5 if limit is None else limit
+    return posts[:effective_limit]
+
+
 @app.command("qa-audio")
 def qa_audio(
     slug: Optional[str] = typer.Option(None, "--slug", "-s"),
-    limit: int = typer.Option(5, "--limit", help="Max done episodes to QA"),
+    missing_only: bool = typer.Option(
+        False,
+        "--missing-only",
+        help="Only QA done episodes without existing QA artifacts",
+    ),
+    limit: Optional[int] = typer.Option(None, "--limit", help="Max done episodes to QA"),
     rerun_failed: bool = typer.Option(
         False,
         "--rerun-failed",
@@ -273,21 +322,61 @@ def qa_audio(
 ) -> None:
     """Transcribe generated audio with local Whisper and compare it to source text."""
     cat = _catalog()
-    posts = [cat.get(slug)] if slug else cat.list_by_filter(audio_status="done")[:limit]
+    posts = _select_qa_posts(cat, slug=slug, missing_only=missing_only, limit=limit)
+    if not posts:
+        console.print(
+            "QA sweep complete: "
+            "selected=0 checked=0 passed=0 failed=0 errored=0 queued-for-rerun=0"
+        )
+        return
+
+    ensure_local_whisper_ready()
+    selected = len(posts)
+    checked = 0
+    passed = 0
+    failed = 0
+    errored = 0
+    queued = 0
+
     for post in posts:
         if not post:
             continue
-        result = qa_post_audio(cat, post.slug)
-        if rerun_failed and not result.passed:
+
+        try:
+            result = qa_post_audio(cat, post.slug)
+        except Exception as exc:
+            errored += 1
+            console.print(f"[yellow]{post.slug}: error {exc}[/yellow]")
+            continue
+
+        checked += 1
+        if rerun_failed and not result.passed and getattr(result, "auto_rerun", True):
             queue_audio_rerun(cat, post.slug, result.reason)
-        style = "green" if result.passed else "red"
-        rerun_note = " queued-for-rerun" if rerun_failed and not result.passed else ""
+            queued += 1
+
+        if result.passed:
+            passed += 1
+            style = "green"
+        else:
+            failed += 1
+            style = "red"
+
+        queued_this = (
+            rerun_failed and not result.passed and getattr(result, "auto_rerun", True)
+        )
+        rerun_note = " queued-for-rerun" if queued_this else ""
         console.print(
             f"[{style}]{post.slug}: {result.reason}{rerun_note} "
             f"(coverage={result.source_coverage:.1%}, "
             f"tail={result.tail_similarity:.1%}, "
             f"repeat3={result.max_repeated_three_gram})[/{style}]"
         )
+
+    console.print(
+        "QA sweep complete: "
+        f"selected={selected} checked={checked} passed={passed} "
+        f"failed={failed} errored={errored} queued-for-rerun={queued}"
+    )
 
 
 @app.command("qa-stats")

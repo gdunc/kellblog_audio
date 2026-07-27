@@ -42,9 +42,8 @@ PUBLIC_BASE_URL = os.environ.get(
 )
 FEED_URL = f"{PUBLIC_BASE_URL}/feed.xml"
 
-# TTS: kokoro | chatterbox | styletts2
-TTS_PROVIDER = os.environ.get("KELLBLOG_TTS_PROVIDER", "kokoro")
-KOKORO_VOICE = os.environ.get("KELLBLOG_KOKORO_VOICE", "am_michael")
+# TTS: chatterbox | piper | styletts2
+TTS_PROVIDER = os.environ.get("KELLBLOG_TTS_PROVIDER", "chatterbox")
 CHATTERBOX_EXAGGERATION = float(os.environ.get("KELLBLOG_CHATTERBOX_EXAGGERATION", "0.4"))
 # Torch device for Chatterbox: auto | mps | cpu | cuda (auto prefers MPS/CUDA when available)
 CHATTERBOX_DEVICE = os.environ.get("KELLBLOG_CHATTERBOX_DEVICE", "auto")
@@ -93,6 +92,16 @@ CHATTERBOX_MAX_CHUNK_CHARS = int(
     os.environ.get("KELLBLOG_CHATTERBOX_MAX_CHUNK_CHARS", "600")
 )
 MAX_AUDIO_BODY_WPM = float(os.environ.get("KELLBLOG_MAX_AUDIO_BODY_WPM", "230"))
+SHORT_SOURCE_WORDS = int(os.environ.get("KELLBLOG_SHORT_SOURCE_WORDS", "80"))
+# Off by default so bulk GHA shards stay fast; enable for quality re-runs.
+CHUNK_LOOP_RETRY_ENABLED = os.environ.get("KELLBLOG_CHUNK_LOOP_RETRY", "0") not in {
+    "0",
+    "false",
+    "False",
+    "no",
+    "NO",
+}
+CHUNK_LOOP_MAX_ATTEMPTS = int(os.environ.get("KELLBLOG_CHUNK_LOOP_MAX_ATTEMPTS", "3"))
 WHISPER_CLI = os.environ.get("KELLBLOG_WHISPER_CLI", "whisper-cli")
 WHISPER_MODEL = os.environ.get(
     "KELLBLOG_WHISPER_MODEL",

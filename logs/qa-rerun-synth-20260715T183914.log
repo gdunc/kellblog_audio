@@ -1,0 +1,39 @@
+╭───────────────────── Traceback (most recent call last) ──────────────────────╮
+│ /Users/grant.duncan/Documents/kellblog_audio/src/kellblog_audio/cli.py:172   │
+│ in synthesize                                                                │
+│                                                                              │
+│   169 │   if manifest_enabled and shard_index is None:                       │
+│   170 │   │   raise typer.BadParameter("--shard is required when writing     │
+│       shard manifests")                                                      │
+│   171 │   cat = _catalog()                                                   │
+│ ❱ 172 │   ok, err = synthesize_batch(                                        │
+│   173 │   │   cat,                                                           │
+│   174 │   │   pending_only=pending,                                          │
+│   175 │   │   year=year,                                                     │
+│                                                                              │
+│ /Users/grant.duncan/Documents/kellblog_audio/src/kellblog_audio/synthesize.p │
+│ y:276 in synthesize_batch                                                    │
+│                                                                              │
+│   273 │   assigned_count = len(posts)                                        │
+│   274 │                                                                      │
+│   275 │   # Build the model once and reuse it for the whole batch.           │
+│ ❱ 276 │   provider = get_provider(provider_name)                             │
+│   277 │   s3_client = get_s3_client() if (upload_r2 or manifest_r2_key) else │
+│       None                                                                   │
+│   278 │   progress_enabled = (                                               │
+│   279 │   │   s3_client is not None                                          │
+│                                                                              │
+│ /Users/grant.duncan/Documents/kellblog_audio/src/kellblog_audio/tts.py:268   │
+│ in get_provider                                                              │
+│                                                                              │
+│   265 │   p = _make_provider(provider_name, **kwargs)                        │
+│   266 │   if not p.is_available():                                           │
+│   267 │   │   extra = provider_name if provider_name != "styletts2" else     │
+│       "compare + uv"                                                         │
+│ ❱ 268 │   │   raise ImportError(                                             │
+│   269 │   │   │   f"TTS provider '{provider_name}' is not installed. "       │
+│   270 │   │   │   f"Run: uv sync --extra {extra}"                            │
+│   271 │   │   )                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+ImportError: TTS provider 'chatterbox' is not installed. Run: uv sync --extra 
+chatterbox

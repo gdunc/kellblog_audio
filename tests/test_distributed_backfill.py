@@ -211,7 +211,10 @@ def test_publish_to_r2_skip_audio_marks_done_rows_feed_published(tmp_path, monke
         "get_settings",
         lambda: SimpleNamespace(root=tmp_path, ensure_dirs=lambda: None),
     )
-    monkeypatch.setattr(publish_mod, "write_review_page", lambda _catalog: review_page)
+    monkeypatch.setattr(publish_mod, "qa_report_passed", lambda _slug: True)
+    monkeypatch.setattr(
+        publish_mod, "write_review_page", lambda _catalog, **_kwargs: review_page
+    )
 
     url = publish_mod.publish_to_r2(cat, upload_audio=False)
 

@@ -1,0 +1,1525 @@
+=== QA a-look-at-the-tintri-s-1 ===
+
+[00:00:00.000 --> 00:00:06.000]   This is an audio version of a Dave Kellogg post from July 6, 2017, titled "A Look at the Tintry
+[00:00:06.000 --> 00:00:10.960]   S1." Every now and then, I take a dive into an S1 to see what clears the current, ever-changing
+[00:00:10.960 --> 00:00:15.920]   bar for going public. After a somewhat rocky IPO process, Tintry went public June 30 after
+[00:00:15.920 --> 00:00:20.560]   cutting the IPO offering price and has traded flat thus far since then. Let's read an excerpt
+[00:00:20.560 --> 00:00:24.800]   from this business insider story before taking a look at the numbers. With the performance of this
+[00:00:24.800 --> 00:00:31.200]   IPO, the company is now valued at about about $231 million, based on $750 a share and its
+[00:00:31.200 --> 00:00:36.160]   roughly 31 million outstanding shares, if the IPO's bankers don't buy their optional, additional,
+[00:00:36.160 --> 00:00:42.480]   roughly 1.3 million shares. In other words, this IPO killed a good $570 million of the company's
+[00:00:42.480 --> 00:00:48.720]   value. In other words, Tintry looks like a down-round IPO of Last Resort, something that frankly almost
+[00:00:48.720 --> 00:00:53.360]   never happened before the recent mid-slash late-stage private valuation bubble of the past four years.
+[00:00:54.480 --> 00:01:01.440]   Let's look at some numbers. Off-note, $125 million in FY2017 revenue. They have scale,
+[00:01:01.440 --> 00:01:05.680]   but this is not a SaaS company so the revenue is mostly non-recurring, making it easier to get to
+[00:01:05.680 --> 00:01:10.240]   grow quickly and making the revenue is worth less because only the support/maintenance component of
+[00:01:10.240 --> 00:01:15.920]   it renews each year. 45% Yo-Yi total revenue growth. On the low side, especially given that
+[00:01:15.920 --> 00:01:21.040]   they have a traditional license/maintenance model and recognize revenue on shipment. 65% gross
+[00:01:21.040 --> 00:01:25.680]   margins, low, but they do seem to sell flash memory hardware as part of their storage solutions.
+[00:01:25.680 --> 00:01:32.800]   87% of revenue spent on S, and M High, again particularly for a non-SaaS company. 43% of
+[00:01:32.800 --> 00:01:38.320]   revenue spent on R&D High, but usually seen as a good ding if you view the R&D money as well spent.
+[00:01:38.320 --> 00:01:43.440]   81% operating margins, low, particularly for a non-SaaS company.
+[00:01:44.320 --> 00:01:51.280]   $74 million in cash flow from operating activities in 2017, $17 million average quarterly cash burn
+[00:01:51.280 --> 00:01:58.400]   from operations. Incremental S&M/incremental product revenue, 73%. So they're buying $1
+[00:01:58.400 --> 00:02:05.280]   worth of incremental, Yoi revenue for an incremental 73 cents in S&M. Expensive but better than some.
+[00:02:05.280 --> 00:02:10.240]   My impression is of an on-premises and, to a lesser extent, hardware company in SaaS clothing.
+[00:02:10.240 --> 00:02:14.560]   That is, Tintry's metrics look like a SaaS company, but they aren't so they should look better.
+[00:02:14.560 --> 00:02:18.560]   SaaS company metrics typically look worse than traditional software companies for two reasons.
+[00:02:18.560 --> 00:02:22.800]   One revenue growth is depressed by the need to amortize revenue over the course of the subscription,
+[00:02:22.800 --> 00:02:27.200]   and two subscriptions companies are willing to spend more on S&M to acquire a customer because
+[00:02:27.200 --> 00:02:32.720]   of the recurring nature of a subscription. Concretely, if you compare two 100-unit customers,
+[00:02:32.720 --> 00:02:37.520]   the SaaS customer is worth twice the license/maintenance customer over five years.
+[00:02:37.520 --> 00:02:42.720]   Moreover, even if Tintry were a SaaS company, it is quite out of compliance with the rule of 40
+[00:02:42.720 --> 00:02:48.960]   that says growth rate plus operating margin age 40%. In Tintry's case, we get 25%,
+[00:02:48.960 --> 00:02:54.240]   45% growth plus 81% operating margin, so they're 75 points off the rule.
+[00:02:54.240 --> 00:03:01.440]   Other notes. 1251st customers, 21 of the Fortune 5 27 employees as of January 31,
+[00:03:01.440 --> 00:03:11.040]   2017. CEO 2017 Cash Compensation, $525,000. CFO 2017 Cash Compensation, $330,000.
+[00:03:11.040 --> 00:03:16.800]   Issued special retention stock grants in May 2017 that vest into two years following an IPO did.
+[00:03:16.800 --> 00:03:24.000]   Option repricing in May 2017 to $2.28/share down from weighted average exercise price of $4.85.
+[00:03:24.960 --> 00:03:32.560]   $260 million in capital raised prior to IPO loans to CFO and CEO to exercise stock options at 1.6%,
+[00:03:32.560 --> 00:03:39.120]   to 1 2013 interest in 2013. 4.5% ownership. Insight Venture Partners,
+[00:03:39.120 --> 00:03:47.680]   2022% ownership. Silver Lake, 2024% ownership. CEO 3.8% ownership. CFO doing $29 million in
+[00:03:47.680 --> 00:03:54.240]   long-term debt, $2028 million in 2017 stock-based compensation expense overall and see my disclaimers.
+[00:03:54.240 --> 00:03:59.680]   But this is one that I'll be passing on. This audio version was created by Grant Duncan and AI,
+[00:03:59.680 --> 00:04:01.280]   with permission from Dave.
+a-look-at-the-tintri-s-1: tail similarity 58.8% < 70% (coverage=85.9%, 
+tail=58.8%, repeat3=3)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+=== QA an-update-on-the-saas-rule-of-40 ===
+
+[00:00:00.000 --> 00:00:06.000]   This is an audio version of a Dave Kellogg post from January 19, 2019, titled "An Update on the
+[00:00:06.000 --> 00:00:11.120]   SaaS Rule of 40." Thanks to the folks at Piper Jaffray and the recently published 2018 Software
+[00:00:11.120 --> 00:00:15.760]   Market Review, we can take a look at a recent chart that plots public software company enterprise
+[00:00:15.760 --> 00:00:21.600]   value, EV versus Rule of 40, Rule of 40, Rule of 40 score free cash flow margin plus revenue growth
+[00:00:21.600 --> 00:00:27.280]   rate. As a reminder, the Rule of 40 is an industry rule of thumb that says a high-growth SaaS company
+[00:00:27.280 --> 00:00:32.000]   can burn as much cash as it likes in order to drive growth, as long as its growth rate is 40
+[00:00:32.000 --> 00:00:36.960]   percentage points higher than its free cash flow margin. It's an attempt at devising a simple rule
+[00:00:36.960 --> 00:00:41.760]   to help software companies with the complex question of how to balance growth and profitability.
+[00:00:41.760 --> 00:00:45.680]   One past study showed that while Rule of 40 compliant software companies made up a little
+[00:00:45.680 --> 00:00:50.560]   more than half of all public software companies, that they captured more than 80% of all public
+[00:00:50.560 --> 00:00:55.520]   market cap. Let's take a look at Piper's chart which plots Rule of 40 score on the x-axis and
+[00:00:55.520 --> 00:01:01.600]   enterprise value, EV, divided by revenue on the y-axis. It also plots a presumably least squares
+[00:01:01.600 --> 00:01:07.360]   fit line through the data points, SaaS, PJC analysis, and SAP Capital IQ as of December
+[00:01:07.360 --> 00:01:13.360]   34 in 2018. Of note, less than half of all companies in this set are Rule of 40 compliant.
+[00:01:13.360 --> 00:01:20.160]   The median Rule of 40 score was 31.7%. The median multiple for companies in the set was 6.6 times.
+[00:01:20.160 --> 00:01:24.720]   The slope of the line is 12, meaning that for each 10 percentage points of Rule of 40 score
+[00:01:24.720 --> 00:01:31.040]   improvement, a company's revenue multiple increases by 1.2 times. R to the 2 is 0.42,
+[00:01:31.040 --> 00:01:36.160]   which, if I recall correctly, means that the Rule of 40 score explains 42% of the variability
+[00:01:36.160 --> 00:01:40.800]   of the data. So, while there's lots it doesn't explain, it's still a useful indicator.
+[00:01:40.800 --> 00:01:45.920]   Remember that the line is only valid in the data range presented. Since no companies had a negative
+[00:01:45.920 --> 00:01:51.360]   Rule of 40 score, it would be invalid extrapolation to simply continue the line down and to the left.
+[00:01:52.080 --> 00:01:56.480]   Early-stage startup executives often misapply these charts for getting the selection bias
+[00:01:56.480 --> 00:02:01.280]   within them. Every company on the chart did well enough at some point in terms of size and growth
+[00:02:01.280 --> 00:02:07.120]   to become a public SaaS company. Just because LivePerson LPSN has a 4x multiple within Rule
+[00:02:07.120 --> 00:02:13.360]   of 40 score of 10% doesn't mean your $20 million startup with the same score is also worth 4x10.
+[00:02:13.360 --> 00:02:20.240]   SLPSN is a much bigger company, roughly $250 million, and already cleared many hurdles to
+[00:02:20.240 --> 00:02:25.360]   get there. The big question around the Rule of 40 is, when should companies start to target it?
+[00:02:25.360 --> 00:02:33.280]   A superstar like Elastic had 76% growth in 8% FCF margin, so a Rule of 40 score of 84% at
+[00:02:33.280 --> 00:02:41.520]   its spectacular IPO. However, Avalara had 26% growth and 28% FCF margin for an Rule of 40 score
+[00:02:41.520 --> 00:02:47.920]   of 2% and its IPO went fine. Ditto, Annaplan. I'll be doing some work in the next few months to try
+[00:02:47.920 --> 00:02:52.640]   and get better data on Rule of 40 trajectory into an IPO. My instinct at this point is that many
+[00:02:52.640 --> 00:02:57.200]   companies target Rule of 40 compliance too early, sacrifice growth in the process, and hurt their
+[00:02:57.200 --> 00:03:01.520]   valuations because they fail to deliver high growth and don't get the assumed customer acquisition
+[00:03:01.520 --> 00:03:05.920]   cost efficiencies built in the financial models, which end up, as one friend called them,
+[00:03:05.920 --> 00:03:11.040]   "spreadsheet-induced hallucinations." This audio version was created by Grant Duncan and AI
+[00:03:11.040 --> 00:03:12.480]   with permission from Dave.
+an-update-on-the-saas-rule-of-40: repetition 17 > 12 repeated 3-grams 
+(coverage=92.5%, tail=100.0%, repeat3=17)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+=== QA cac-payback-period-the-most-misunderstood-saas-metric ===
+
+[00:00:00.000 --> 00:00:05.880]   This is an audio version of a Dave Kellogg post from March 17, 2016 titled "CAC Payback
+[00:00:05.880 --> 00:00:11.840]   Period, The Most Misunderstood SAS Metric". Note, this post includes images. See the original
+[00:00:11.840 --> 00:00:14.340]   post on Kellblog for visuals.
+[00:00:14.340 --> 00:00:18.640]   The single most misunderstood software as a service a SAS metric I have encountered
+[00:00:18.640 --> 00:00:24.640]   is the CAC Payback Period, CPP, a compound metric that is generally defined as the months
+[00:00:24.640 --> 00:00:28.700]   of contribution margin to pay back the cost of acquiring a customer.
+[00:00:28.700 --> 00:00:34.360]   Bessemer defines the CPP as, "I quibble with some of the Bessemerisms in the definition.
+[00:00:34.360 --> 00:00:40.360]   For example, 1. Most enterprise SAS companies should use annual recurring revenue (ARR)
+[00:00:40.360 --> 00:00:45.120]   not monthly recurring revenue (MRR) because most enterprise companies are doing annual
+[00:00:45.120 --> 00:00:50.320]   not monthly (contracts) to the committed MRR. Concept is an overreach because it includes
+[00:00:50.320 --> 00:00:55.640]   anticipated churn which is basically impossible to measure and often unknown. And 3. I don't
+[00:00:55.640 --> 00:01:00.760]   know why they use the prior period for both S&M costs and new ARR. Almost everybody else
+[00:01:00.760 --> 00:01:04.020]   uses prior period S&M divided by current period."
+[00:01:04.020 --> 00:01:10.480]   ARR in customer A. Quisition cost, CAC calculations on the theory that last quarter's S&M generated
+[00:01:10.480 --> 00:01:15.300]   this quarter's new ARR. Switching to ARR nomenclature, and with a quick slide of mathematical
+[00:01:15.300 --> 00:01:21.280]   hand for simplification, I define the CAC Payback Period, CPP, as follows. Let's run
+[00:01:21.280 --> 00:01:22.600]   some numbers.
+[00:01:22.600 --> 00:01:28.240]   If your company has a CAC ratio of 1.5 and subscription gross margins of 75%, then your
+[00:01:28.240 --> 00:01:34.960]   CPP 24 months. If your company has a CAC ratio of 1.2 and subscription gross margins of 80%,
+[00:01:34.960 --> 00:01:40.240]   then your CPP 18 months. If your company has a CAC ratio of 0.8 and subscription gross
+[00:01:40.240 --> 00:01:47.280]   margins of 80%, then your CPP AD 12 months. All seems pretty simple, right? Not so fast.
+[00:01:47.280 --> 00:01:51.560]   There are two things that constantly confound people when looking at CAC Payback Period,
+[00:01:51.560 --> 00:01:56.180]   PPA. They forget payback metrics are risk metrics, not return metrics. They fail to
+[00:01:56.180 --> 00:02:00.560]   correctly interpret the impact of annual or multi-year contracts. Payback metrics are
+[00:02:00.560 --> 00:02:06.840]   for risk, not return. Quick, basic, NBA question. You have two projects, both require an investment
+[00:02:06.840 --> 00:02:12.140]   of 100 units, and you have only 100 units to invest. Which do you pick? Project A, which
+[00:02:12.140 --> 00:02:17.520]   has a payback period of 12 months. Project B, which has a payback period of 6 months.
+[00:02:17.520 --> 00:02:23.860]   Quick, which do you pick? Well, Project B, duh. But wait, now I tell you this. Project
+[00:02:23.860 --> 00:02:31.400]   A has a net present value, NPV of 500 units. Project B has an NPV of 110 units. Well,
+[00:02:31.400 --> 00:02:35.400]   don't you feel silly for picking Project B? Payback is all about how long your money
+[00:02:35.400 --> 00:02:39.560]   is committed so it can't be used for other projects and at risk, meaning you might not
+[00:02:39.560 --> 00:02:43.320]   get it back. Payback doesn't tell you anything about return.
+[00:02:43.320 --> 00:02:48.040]   In capital budgeting, NPV tells you about return. In a SaaS business, customer lifetime
+[00:02:48.040 --> 00:02:52.840]   value, LTV, tells you about return. There are situations where it makes a lot of sense
+[00:02:52.840 --> 00:02:57.720]   to look at CPP. For example, if you're running a monthly SaaS service with a high churn rate,
+[00:02:57.720 --> 00:03:00.840]   then you need to look closely how long you're putting your money at risk because there is
+[00:03:00.840 --> 00:03:05.120]   a very real chance you won't recoup your CAC investment, let alone get any return on
+[00:03:05.120 --> 00:03:08.640]   it. Consider a monthly SaaS company with a $3,500
+[00:03:08.640 --> 00:03:14.720]   acquisition cost, subscription gross margin of 70%, a monthly fee of $100, and 3% month
+[00:03:14.720 --> 00:03:19.800]   the churn. I'll calculate the ratios and examine the CAC recovery of a 100 customer
+[00:03:19.800 --> 00:03:23.600]   cohort. While the CPP formula outputs a long 33.3-month
+[00:03:23.600 --> 00:03:29.520]   CAC payback period, reality is far, far worse. One problem with the CPP formula is that it
+[00:03:29.520 --> 00:03:33.800]   does not factor in churn and how exposed a cohort is to it. The more chances customers
+[00:03:33.800 --> 00:03:37.620]   have to not renew during the payback period, the more you need to consider the possibility
+[00:03:37.620 --> 00:03:41.920]   of non-renewal in your math. In this example, when you properly account for churn, you still
+[00:03:41.920 --> 00:03:47.560]   have $6 worth of CAC to recover after 30 years. You literally never get back your CAC to recover
+[00:03:47.560 --> 00:03:51.360]   after 30 years. Soapbox. This is another case where using
+[00:03:51.360 --> 00:03:56.640]   a model is infinitely preferable to back of the envelope BOT analysis using SaaS metrics.
+[00:03:56.640 --> 00:03:59.840]   If you want to understand the financials of a SaaS company, then build a driver-based
+[00:03:59.840 --> 00:04:05.160]   model and vary the drivers. In this case, and many others, BOT analysis fails due to
+[00:04:05.160 --> 00:04:09.880]   subtle complexity, whereas a well-built model will always produce correct answers even if
+[00:04:09.880 --> 00:04:13.840]   they are counterintuitive. Such cases aside, the real problem with being
+[00:04:13.840 --> 00:04:19.000]   too focused on CAC payback period is that CPP is a risk metric that tells you nothing
+[00:04:19.000 --> 00:04:24.360]   about returns. Companies are in business to get returns, not simply to minimize risk,
+[00:04:24.360 --> 00:04:27.920]   so to properly analyze a SaaS business we need to look at both.
+[00:04:27.920 --> 00:04:33.840]   The impact of annual and multi-year prepaid contracts on CAC payback period. The CPP formula
+[00:04:33.840 --> 00:04:38.320]   outputs a payback period in months, but most enterprise SaaS businesses today run on an
+[00:04:38.320 --> 00:04:43.920]   annual rhythm. Despite pricing that is sometimes still stated per user per month, SaaS companies
+[00:04:43.920 --> 00:04:48.120]   realized years ago that enterprise customers preferred annual contracts and actually disliked
+[00:04:48.120 --> 00:04:53.680]   monthly invoicing. Just as MRR is a bit of a relic from the old SaaS days, so is a CAC
+[00:04:53.680 --> 00:04:59.320]   payback period stated in months. In a 100% annual prepaid contract world, the CPP formula
+[00:04:59.320 --> 00:05:04.540]   should output in multiples of 12, rounding up for all values greater than 12. For example,
+[00:05:04.540 --> 00:05:10.280]   if a company's CAC payback period is notionally 13 months, in reality it is 24 months, because
+[00:05:10.280 --> 00:05:14.120]   the leftover January 13 of the cost isn't collected until the A customer's second
+[00:05:14.120 --> 00:05:19.320]   payment at month 24. And that's only if the customer chooses to renew, see above discussion
+[00:05:19.320 --> 00:05:22.680]   of churn. In an annual prepaid world, if your CAC payback
+[00:05:22.680 --> 00:05:26.280]   period is less than or equal to 12 months, then it should be rounded down to one day
+[00:05:26.280 --> 00:05:30.560]   because you are invoicing the entire year up front and at once. Even if the formula
+[00:05:30.560 --> 00:05:35.580]   says the CPP is notionally 12.0 months, in an annual prepaid world your CAC investment
+[00:05:35.580 --> 00:05:40.800]   money is at risk for just one day. So, wait a minute, what is the actual CAC payback period
+[00:05:40.800 --> 00:05:45.520]   in this case? 12.0 months or one day? It's one day.
+[00:05:45.520 --> 00:05:50.240]   Anyone who argues 12.0 months is forgetting the point of the metric. Payback periods are
+[00:05:50.240 --> 00:05:54.840]   risk metrics and measured by the amount of time it takes to get your investment back.
+[00:05:54.840 --> 00:05:59.760]   If you want to look at S&M efficiency, look at the CAC ratio. If you want to know about
+[00:05:59.760 --> 00:06:04.160]   the efficiency of running the SaaS service, look at subscription gross margins. If you
+[00:06:04.160 --> 00:06:09.840]   want to talk about lifetime value, then look at LTV/CACC.
+[00:06:09.840 --> 00:06:15.080]   AC payback period is a risk metric that measures how long your CAC investment is, on the table,
+[00:06:15.080 --> 00:06:20.600]   before getting paid back. In this instance, the 12 months generated by the S. Tandred formula
+[00:06:20.600 --> 00:06:25.320]   is incorrect because the formula misses the prepayment and the correct answer is one day.
+[00:06:25.320 --> 00:06:28.800]   A lot of very smart people get stuck here. They say, "Yes, sure, it's one day, but
+[00:06:28.800 --> 00:06:32.080]   really it's not. It's 12 months." No, it's one day.
+[00:06:32.080 --> 00:06:35.000]   If you want to look at something other than payback, then pick another metric. But the
+[00:06:35.000 --> 00:06:38.920]   CPP is one day. You asked how long it takes for the company to recoup the money it spends
+[00:06:38.920 --> 00:06:44.600]   to acquire a customer. For CPPs less than or equal to 12 in a 100% annual prepaid world,
+[00:06:44.600 --> 00:06:46.920]   the answer is one day. It gets harder.
+[00:06:46.920 --> 00:06:51.600]   Imagine a company that sells in a sticky category, for example, where typical lifetimes may be
+[00:06:51.600 --> 00:06:55.880]   10 years, and thus is a high-consideration purchase, where prospective customers do deep
+[00:06:55.880 --> 00:07:01.600]   evaluations before making a decision, for example, ERP. As a result of all that homework,
+[00:07:01.600 --> 00:07:05.920]   customers are happy to sign long contracts and thus the company does only 3-year prepaid
+[00:07:05.920 --> 00:07:06.920]   contracts.
+[00:07:06.920 --> 00:07:11.660]   Now, let's look at CAC payback period. Adapting our rules above, any output from the formula
+[00:07:11.660 --> 00:07:16.240]   greater than 36 months should be rounded up in multiples of 36 months, should be rounded
+[00:07:16.240 --> 00:07:22.360]   up in multiples of 36 months, and, similarly, any output less than or equal to 12. Out to
+[00:07:22.360 --> 00:07:26.780]   36 months should be rounded down to one day. Here we go again.
+[00:07:26.780 --> 00:07:32.680]   Say the CAC payback period formula outputs 33 months. Is the real CPP 33 months or one
+[00:07:32.680 --> 00:07:37.840]   day? Same argument. It's one day. But the formula outputs 33 months. Yes, but the CAC
+[00:07:37.840 --> 00:07:41.780]   recovery time is one day. If you want to look at something else, then pick another metric.
+[00:07:41.780 --> 00:07:45.720]   It gets even harder. Now imagine a company that does half one-year deals and half three-year
+[00:07:45.720 --> 00:07:52.040]   deals on an ARR-weighted basis. Let's assume it has a CAC ratio of 1.5 75% subscription
+[00:07:52.040 --> 00:07:56.840]   gross margins and thus a notional CAC payback period of 24 months. Let's see what really
+[00:07:56.840 --> 00:07:58.520]   happens using a model.
+[00:07:58.520 --> 00:08:03.820]   Using this model, you can see that the actual CAC payback period is one day. Why? We need
+[00:08:03.820 --> 00:08:11.240]   to recoup $1.5 million in CAC. On day one, we invoice $2.0 million, resulting in $1.5
+[00:08:11.240 --> 00:08:16.960]   million in contribution margin, and thus leaving $0 in CAC that needs to be recovered.
+[00:08:16.960 --> 00:08:20.640]   While I have not yet devised general rounding rules for this situation, the model again
+[00:08:20.640 --> 00:08:24.440]   demonstrates the key point, that the mix of one-year and three-year payment structure
+[00:08:24.440 --> 00:08:30.440]   confounds the CPP formula resulting in a notional CPP of 24 months, when in reality, it is again
+[00:08:30.440 --> 00:08:31.960]   one day.
+[00:08:31.960 --> 00:08:35.320]   If you want to make rounding rules, beware the temptation to treat the average contract
+[00:08:35.320 --> 00:08:40.800]   duration, ACD, as a rounding multiple. Because it's incorrect. While the ACD is two years
+[00:08:40.800 --> 00:08:44.920]   in the above example, not a single customer is paying you at two-year intervals. Half
+[00:08:44.920 --> 00:08:47.400]   are paying you every year, while half are paying you every T.
+[00:08:47.400 --> 00:08:54.080]   CREE. That complexity, combined with the reality that the mix is pretty unlikely to be 50/50,
+[00:08:54.080 --> 00:08:58.880]   suggests it's just easier to use a model than devise a generalized rounding formula.
+[00:08:58.880 --> 00:09:03.000]   But pulling back up, let's make sure we drive the key point home. The CAC payback
+[00:09:03.000 --> 00:09:07.200]   period is the single most often misunderstood SAS metric, because people forget that payback
+[00:09:07.200 --> 00:09:12.760]   metrics are about risk, not return, and, because the basic formulas, like those for many SAS
+[00:09:12.760 --> 00:09:16.440]   metrics, assume a monthly model that simply does not apply in today's enterprise SAS
+[00:09:16.440 --> 00:09:22.800]   world, and fail to handle common cases like annual or multi-year prepaid contracts.
+[00:09:22.800 --> 00:09:26.240]   NOTS CE. Notes follow. Notes.
+[00:09:26.240 --> 00:09:31.520]   This is a huge omission for a metric that was defined in terms of MRR, and which thus
+[00:09:31.520 --> 00:09:36.600]   assumes a monthly business model. As the example shows, the formula, which fails to account
+[00:09:36.600 --> 00:09:43.760]   for churn outputs, a CAC payback of 33 months, but in reality, it's never. Quite a difference.
+[00:09:43.760 --> 00:09:47.880]   If I wanted to be even more rigorous, I would argue that you should not include subscription
+[00:09:47.880 --> 00:09:54.000]   gross margin in the calculation of CAC payback period. If your CAC ratio is 1.0 and you do
+[00:09:54.000 --> 00:09:59.480]   annual prepaid contracts, then you immediately recoup 100% of your CAC investment on day
+[00:09:59.480 --> 00:10:04.620]   one. Yes, a new customer comes with a future liability attached, you need to bear the costs
+[00:10:04.620 --> 00:10:08.160]   of running the service for them for one year, but if you're looking at a payback metric
+[00:10:08.160 --> 00:10:12.120]   that shouldn't matter, you got your money back. Yes, going forward, you need to spend
+[00:10:12.120 --> 00:10:17.960]   about 30% atypical subscription, atypical subscription COGS. Figure of that money over
+[00:10:17.960 --> 00:10:22.520]   the next year to pay for operating the service, but you got your money back in one day. Payback
+[00:10:22.520 --> 00:10:26.840]   is one day, not one flash dot in 17 months, as the formula calculates.
+[00:10:26.840 --> 00:10:31.240]   This audio version was created by Grant, Duncan, and AI, with permission from Dave.
+cac-payback-period-the-most-misunderstood-saas-metric: repetition 16 > 12 
+repeated 3-grams (coverage=95.8%, tail=85.0%, repeat3=16)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+=== QA chatting-about-marketing-slides-from-a-pe-portfolio-company-ceo-summit ===
+
+[00:00:00.000 --> 00:00:05.360]   This is an audio version of a Dave Kellogg post from December 10th, 2020, titled "Chatting About
+[00:00:05.360 --> 00:00:11.040]   Marketing - Slides from a P.E. Portfolio Company CEO Summit." The good people of Riverside
+[00:00:11.040 --> 00:00:16.000]   Acceleration Capital and my old friend John Temple invited me to speak at their portfolio company
+[00:00:16.000 --> 00:00:21.360]   CEO Summit and I was only too happy to oblige, particularly because John asked me to speak about
+[00:00:21.360 --> 00:00:27.280]   one of my favorite topics, marketing and early, and growth stage enterprise SaaS companies.
+[00:00:27.280 --> 00:00:32.080]   In particular, John asked me to speak about seven topics, how to think about marketing,
+[00:00:32.080 --> 00:00:37.280]   professionalizing marketing, managing the sales/marketing relationship, planning and budgeting
+[00:00:37.280 --> 00:00:43.040]   marketing, the age-old people versus programs debate, success metrics and KPIs for marketing.
+[00:00:43.040 --> 00:00:48.960]   I've embedded the slides from the presentation below. Slideshare Ida 23.9.928.8.1.5ing,
+[00:00:48.960 --> 00:00:59.280]   and Docker Portfolio Summit, Kellogg Marketing Chatsr 1. 2020-2027-47447-4420, Tetsr 1. 2020-2027-4747.
+[00:00:59.280 --> 00:01:02.560]   K. Bellag for Market Muse and Garen Haas from Consensus.
+[00:01:02.560 --> 00:01:07.280]   This audio version was created by Grant Duncan and A.I. with permission from Dave.
+chatting-about-marketing-slides-from-a-pe-portfolio-company-ceo-summit: coverage
+75.8% < 85%; tail similarity 61.3% < 70% (coverage=75.8%, tail=61.3%, repeat3=3)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+=== QA i-dont-want-to-talk-to-you-anymore ===
+
+[00:00:00.000 --> 00:00:05.120]   This is an audio version of a Dave Kellogg post from September 1, 2015 titled "I Don't Want to
+[00:00:05.120 --> 00:00:09.920]   Talk to You Anymore." One time, back in the day at Business Objects, we were all flying back from
+[00:00:09.920 --> 00:00:14.560]   Paris to San Francisco when the plane pulled ten feet back from the gate and then stopped.
+[00:00:14.560 --> 00:00:19.120]   The pilot announced that we were taking a delay of several hours. Frustrated, one of our board
+[00:00:19.120 --> 00:00:23.920]   members, a very polished, powerful, statuesque man immediately asked the flight attendant if he could
+[00:00:23.920 --> 00:00:28.800]   get off the plane. He wanted to take another flight and felt unfairly trapped. She said no.
+[00:00:28.800 --> 00:00:33.600]   A polite dispute ensued. As we, the management team, watched in awe of his calm yet firm,
+[00:00:33.600 --> 00:00:38.640]   argumentative style, a strange thing happened. "I don't want to talk to you anymore," he said.
+[00:00:38.640 --> 00:00:43.200]   "I want to speak to the pilot. But, but, but, what do you mean you need to talk to me? Because,
+[00:00:43.200 --> 00:00:48.560]   uh, uh, uh, I don't want to talk to you anymore," he repeated. For years, many of us on the executive
+[00:00:48.560 --> 00:00:53.440]   team would joke about how one day our terminations might go down. But you don't understand. The
+[00:00:53.440 --> 00:00:57.120]   seminar attendance was low because there was a blizzard that closed the roads and shut down
+[00:00:57.120 --> 00:01:02.400]   public transportation. All I know is we failed to achieve our lead generation goal. But it was a
+[00:01:02.400 --> 00:01:07.520]   freak April snowstorm. I don't want to talk to you anymore. But, but, uh, uh, I don't want to talk to
+[00:01:07.520 --> 00:01:12.240]   you anymore. The phrase developed a certain legend status to it. I'd forgotten about it for years,
+[00:01:12.240 --> 00:01:15.920]   until one day at Mark Logic, I was supposed to meet with one of my direct reports and I didn't
+[00:01:15.920 --> 00:01:20.560]   want to. I wasn't looking forward to it. I didn't want to talk to the person anymore. And then a huge
+[00:01:20.560 --> 00:01:24.320]   gut check went off. Wait a minute. What does it mean when I don't want to talk to the person who
+[00:01:24.320 --> 00:01:28.880]   runs at my company is an important part of the company. I run the company. I am hugely committed
+[00:01:28.880 --> 00:01:33.440]   to the company's success, which cannot happen without success in "how can this be?" In business,
+[00:01:33.440 --> 00:01:37.280]   we are generally taught to be logical and data-driven, which lines up very well with my natural
+[00:01:37.280 --> 00:01:41.760]   style. But this was emotional. This was a feeling. I didn't want to talk with someone. What did it
+[00:01:41.760 --> 00:01:45.920]   mean? Should I listen to the feeling or ignore it? I didn't want to talk with someone. What did it
+[00:01:45.920 --> 00:01:50.400]   mean? Should I listen to the feeling or ignore it? I didn't know. It got me to thinking about why I
+[00:01:50.400 --> 00:01:54.640]   wouldn't want to meet with someone. Generically, why would I not want to speak to one of my direct
+[00:01:54.640 --> 00:01:59.760]   reports? I started to generate classes of people who I wouldn't want to talk to. People who don't
+[00:01:59.760 --> 00:02:04.240]   listen. There's no point in talking to someone who doesn't listen. It gets boring over time.
+[00:02:04.240 --> 00:02:07.920]   People who don't follow through. What good is agreeing to a plan and then have it not get
+[00:02:07.920 --> 00:02:12.480]   executed? People who can't keep up. When someone is over their head in a job, they can't keep up
+[00:02:12.480 --> 00:02:17.040]   with the conversation. Who wants to talk to someone when you have to keep backing up and slowing down?
+[00:02:17.040 --> 00:02:21.200]   People who grin, k you. Who wants to talk to people who nod their head in agreement when you
+[00:02:21.200 --> 00:02:26.000]   know they disagree? People who can't or won't change. How many times do you want to have the
+[00:02:26.000 --> 00:02:31.760]   same converse? Ion? People who are negative. A huge amount of business is identifying and solving
+[00:02:31.760 --> 00:02:36.800]   problems. But it can always be done a positive, constructive way. Who wants to talk to Debbie
+[00:02:36.800 --> 00:02:42.400]   Downer every day? People who are mean. There's a reason. The No Asshole Rule is one of my favorite
+[00:02:42.400 --> 00:02:47.360]   books, and it's not just because I think the world of Bot Sutton. Once I generated this list, I began
+[00:02:47.360 --> 00:02:51.680]   to realize that the feeling was hugely important. If I didn't want to meet with one of my direct
+[00:02:51.680 --> 00:02:56.480]   reports, if I didn't want to talk to them anymore, it was no small sign. It was an indicator of a
+[00:02:56.480 --> 00:03:01.760]   potentially huge problem. So now I listen to the feeling. Because I now know that if I don't want
+[00:03:01.760 --> 00:03:05.840]   to talk to you anymore, then it's a sign that someone is in one of the above classes and that's
+[00:03:05.840 --> 00:03:11.440]   an issue we need to, well, talk about. Whether I want to or not. This audio version was created
+[00:03:11.440 --> 00:03:14.480]   by Grant Duncan and AI with permission from Dave.
+i-dont-want-to-talk-to-you-anymore: repetition 13 > 12 repeated 3-grams 
+(coverage=99.3%, tail=97.5%, repeat3=13)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+=== QA kellblog-predictions-for-2026 ===
+
+[00:00:00.000 --> 00:00:06.400]   This is an audio version of a Dave Kellogg post from January 22nd, 2026 titled "Kellblog
+[00:00:06.400 --> 00:00:11.820]   Predictions for 2026". Note, this post includes images. See the original post on
+[00:00:11.820 --> 00:00:16.720]   Kellblog for visuals. Today, we continue my annual tradition of making 10 predictions
+[00:00:16.720 --> 00:00:20.860]   for the coming year while reviewing my 10 predictions for the prior one.
+[00:00:20.860 --> 00:00:25.360]   As always, I'll remind you of some disclaimers. I don't view this as investment advice or
+[00:00:25.360 --> 00:00:30.620]   anything resembling it (b), while I generally avoid politics on my blog. I make an exception
+[00:00:30.620 --> 00:00:34.800]   in these posts because I like to start macro and then zoom in. You remember that I do this
+[00:00:34.800 --> 00:00:39.160]   for fun and entertainment, so please take it as such, and (d) my self-scoring for the
+[00:00:39.160 --> 00:00:45.680]   previous year is always generous. This is my 12th annual predictions post. Let's begin.
+[00:00:45.680 --> 00:00:50.040]   Review of 2025 predictions 1. America gets what we deserve
+[00:00:50.040 --> 00:00:56.560]   2. Hit. I predicted a more brazen, more interest-conflicted and less-constrained Trump and scored a hat-trick.
+[00:00:56.560 --> 00:00:59.580]   The more interesting question today, given that Trump has increasingly diverged from
+[00:00:59.580 --> 00:01:03.560]   his official platform (one if less so from his unofficial one) is whether people are
+[00:01:03.560 --> 00:01:07.280]   getting what they think they voted for and if they are happy with the results. Some visible
+[00:01:07.280 --> 00:01:12.120]   MAGA types from MTG to the QAnon Shaman are saying no. Either way, we voted for Trump
+[00:01:12.120 --> 00:01:15.760]   and we got him. I believe that will one day serve as an enduring reminder that character
+[00:01:15.760 --> 00:01:20.840]   matters and leaders say E, collection, 2. The Brilla Garks enjoy their 15 minutes of
+[00:01:20.840 --> 00:01:25.240]   fame. Hit. I almost scored this a mess because some of the tech bros have enjoyed more than
+[00:01:25.240 --> 00:01:29.260]   their 15 minutes, but I'll credit myself with the hit because Elon Musk was the poster
+[00:01:29.260 --> 00:01:34.580]   child for this group and, with the Dogue fiasco, he exemplified what I was predicting. Many
+[00:01:34.580 --> 00:01:38.800]   Silicon Valley leaders appear to have aligned themselves around four priorities (a) a more
+[00:01:38.800 --> 00:01:43.640]   favorable exit environment, including a revival of big tech M&A after an FGC posture that
+[00:01:43.640 --> 00:01:48.000]   had largely stymied it; b) crypto, which, despite substantial effort to convince myself
+[00:01:48.000 --> 00:01:54.460]   otherwise; I continue to view as suspect b) quick-ratulatory framework for (a) I, (i)
+[00:01:54.460 --> 00:02:01.320]   (a) I; and b) garage-atch regulatory framework for (a) I; and d) pro-growth energy policy,
+[00:02:01.320 --> 00:02:06.880]   given (a) I's heavy dependence on power. We are non-partisan, one-issue voters. If
+[00:02:06.880 --> 00:02:11.920]   a candidate supports an optimistic technology-enabled future, we are for them. If they want to choke
+[00:02:11.920 --> 00:02:16.800]   off important technologies, we are against them. Thus far, the administration has largely
+[00:02:16.800 --> 00:02:22.420]   delivered so the dejarity may well feel vindicated, though I could do without the same washing.
+[00:02:22.420 --> 00:02:26.280]   In the coming year, we will learn more about precisely what they traded in this Faustian
+[00:02:26.280 --> 00:02:30.080]   bargain. 3. The startup ecosystem purge continues.
+[00:02:30.080 --> 00:02:35.000]   Hit. I got lucky here because I meant to say "accelerates," but wrote "continues,"
+[00:02:35.000 --> 00:02:41.660]   which is more indicative of what happened. In 2023, 769 startups shut down. In 2024,
+[00:02:41.660 --> 00:02:46.960]   that figure rose to 966, and Carda's commentary suggests the 2025 total will fall between
+[00:02:46.960 --> 00:02:52.160]   1,000 and 1,000-run. Interestingly, per simple closure, startups shut down later in their
+[00:02:52.160 --> 00:02:58.800]   life cycle compared to 2024. But an ecosystem purge is also about M&A, not just shutdowns.
+[00:02:58.800 --> 00:03:06.720]   Per Burberry Noise 2025 NNA volume was up 66% from 2025 $3 billion to 4 $20 billion,
+[00:03:06.720 --> 00:03:13.040]   with deal count up 8% from 1099 to 2022. The point was that many startups were going to
+[00:03:13.040 --> 00:03:17.840]   hunker down in 2025, extending cash runways to buy time until the return of a healthier
+[00:03:17.840 --> 00:03:22.720]   exit environment. That return did not happen in 2025, so many of them will need to keep
+[00:03:22.720 --> 00:03:27.800]   hunkering. Exit multiples were flat to down in 2025, though I am hopeful they will bounce
+[00:03:27.800 --> 00:03:32.640]   up in 2026. 4. Attention is the new oil. Hit. This one
+[00:03:32.640 --> 00:03:37.400]   is an accidental double entendre because of the popularization of LOMs enabled by the
+[00:03:37.400 --> 00:03:42.480]   transformer architecture published in the famous 2017 paper Attention is All You Need.
+[00:03:42.480 --> 00:03:47.160]   But my intent here was not to talk about transformers but communications, inspired by Chris Hayes's
+[00:03:47.160 --> 00:03:51.320]   book The Siren's Call. Anyone who's lived with addictive dopamine-fueled doomscrolling
+[00:03:51.320 --> 00:03:55.400]   — that is, anyone who's ever used social media — knows that this is true. It's
+[00:03:55.400 --> 00:04:00.120]   a clickbait world, often a rage-bait, won Oxford's 2025 Word of the Year, and we have
+[00:04:00.120 --> 00:04:03.600]   enormous trouble resisting. Click here to learn the 9 ways to use clickbait
+[00:04:03.600 --> 00:04:07.240]   tactics in your marketing strategy. The point of this prediction was to say that
+[00:04:07.240 --> 00:04:10.920]   we're leaving the age of information and entering the age of attention. Information
+[00:04:10.920 --> 00:04:15.960]   used to be scarce. That drove content marketing strategies and the use of gated assets to drive
+[00:04:15.960 --> 00:04:19.960]   leads. But a few things changed. The algorithms have taken over social media
+[00:04:19.960 --> 00:04:23.480]   to the point where the word "follow" is meaningless. It's no longer enough to have
+[00:04:23.480 --> 00:04:27.200]   a large follower count — you need to write posts that the algorithm likes or no one will
+[00:04:27.200 --> 00:04:30.680]   see them. Thanks to AI, content generation has become
+[00:04:30.680 --> 00:04:35.880]   free. Whereas information was once scarce, information is now plentiful and cheap. Unfortunately,
+[00:04:35.880 --> 00:04:40.760]   it's often AI slop. Thus, the challenge is no longer producing and optimizing gated
+[00:04:40.760 --> 00:04:44.880]   assets but instead trying to break through the noise with your point of view. All while
+[00:04:44.880 --> 00:04:47.880]   the gatekeepers are changing from search engines to genre.
+[00:04:47.880 --> 00:04:53.040]   Out of AI engines, requiring new and different optimization strategies. There are two strategies
+[00:04:53.040 --> 00:04:57.880]   in this environment. A-play the game by fighting for attention in the media and on social platforms
+[00:04:57.880 --> 00:05:03.520]   and B-build your own audience via newsletters, podcasts, blogs, and educational content.
+[00:05:03.520 --> 00:05:07.060]   Companies should do both, subject to the constraint of not playing the game so well that you damage
+[00:05:07.060 --> 00:05:11.760]   your credibility. Trust matters. See prediction 6 for 2026.
+[00:05:11.760 --> 00:05:17.840]   5. The World Wide Web As We Knew It Is Dead Hit. The economists called this one for me.
+[00:05:17.840 --> 00:05:21.680]   Here's what they had to say. Artificial intelligence is transforming the way that people
+[00:05:21.680 --> 00:05:26.360]   navigate the web. As users post their queries to chatbots rather than conventional search
+[00:05:26.360 --> 00:05:30.720]   engines, they are given answers rather than links to follow. The result is that content
+[00:05:30.720 --> 00:05:35.360]   publishers for news providers and online forums to reference sites such as Wikipedia are seeing
+[00:05:35.360 --> 00:05:39.720]   alarming drops in their traffic. As AI changes how people browse, it is altering
+[00:05:39.720 --> 00:05:44.240]   the economic bargain at the heart of the internet. Human traffic has long been monetized using
+[00:05:44.240 --> 00:05:48.880]   online advertising now that traffic is drying up. Content producers are urgently trying
+[00:05:48.880 --> 00:05:53.780]   to find new ways to make AI companies pay them for information. If they cannot, the
+[00:05:53.780 --> 00:05:57.880]   open web may evolve into something very different. There's no better example of the effects
+[00:05:57.880 --> 00:06:02.360]   of AI front running on web traffic than Stack Overflow, chart posted by a top 10 all-time
+[00:06:02.360 --> 00:06:05.960]   contributor as you can read about in this post by Gergali Oros.
+[00:06:05.960 --> 00:06:12.360]   6. Working for the Algo. Hit. This was a contrarian prediction inspired by an odd fact. The Turing
+[00:06:12.360 --> 00:06:16.540]   test asked whether a computer could convince a human that it was human. Today we're living
+[00:06:16.540 --> 00:06:20.960]   through the inverse. Humans increasingly have to convince computers that we are human. If
+[00:06:20.960 --> 00:06:24.920]   that sounds strange, think about CAPTCHAs. Every time you solve one, that's exactly
+[00:06:24.920 --> 00:06:28.960]   what you're doing. More generally, working for the algo means we are working to please
+[00:06:28.960 --> 00:06:33.560]   an algorithm as opposed to it working to please you. Every time you optimize a social media
+[00:06:33.560 --> 00:06:37.680]   post to drive amplification, every time you jiggle your mouse to show you are still working
+[00:06:37.680 --> 00:06:42.760]   from home, every time an Amazon driver pees in a bottle, every time you two-factor authenticate
+[00:06:42.760 --> 00:06:47.700]   to prove that you are you, every time you change a webpage for SEO or AEO, every time
+[00:06:47.700 --> 00:06:51.560]   you modify your spending behavior to boost your credit score, every time you do any of
+[00:06:51.560 --> 00:06:57.320]   these things you are working for the algo. 7. The death of SaaS is greatly exaggerated.
+[00:06:57.320 --> 00:07:02.120]   Partial. This prediction was playing off two things. A. A. A. A popular rant by Saach and
+[00:07:02.120 --> 00:07:08.180]   Adela about how Saach Epps were just UIs atop a CRUD database and B. The widely distributed
+[00:07:08.180 --> 00:07:14.500]   September 2024 story of Klarna's plans to replace Salesforce with in-house AI applications.
+[00:07:14.500 --> 00:07:18.620]   Since then, the storm around the Saach Erant quieted quickly and the Klarna CEO went on
+[00:07:18.620 --> 00:07:22.840]   record saying he was terribly embarrassed about the whole situation. While the reality
+[00:07:22.840 --> 00:07:26.540]   is that enterprise software platforms are very hard to extract, you inject them into
+[00:07:26.540 --> 00:07:30.640]   your corporate veins, as my friend Paul Wiefels likes to say, and ergo at relatively low risk
+[00:07:30.640 --> 00:07:34.460]   from generative AI replacement, there are nevertheless seeds of truth in the death of
+[00:07:34.460 --> 00:07:38.960]   SaaS argument. It doesn't start with ripping out Salesforce or Workday. It starts with
+[00:07:38.960 --> 00:07:43.340]   a huge variety of new applications focused either functionally, for example FIC.i in
+[00:07:43.340 --> 00:07:48.140]   accounts payable, or vertically, for example. Even up in personal injury law continues into
+[00:07:48.140 --> 00:07:52.580]   enterprise AI, application platforms such as Rider and Glean, and a new generation of
+[00:07:52.580 --> 00:07:57.220]   low-code/no-code tools for building bespoke applications from the red-hot vibe coding
+[00:07:57.220 --> 00:08:01.400]   companies, for example, Loveable, Replet, to new offerings from established enterprise
+[00:08:01.400 --> 00:08:06.060]   vendors, like Outz items from established enterprise vendors like Outz items. SaaS is
+[00:08:06.060 --> 00:08:10.540]   sick, but it isn't dying. Though, if you're not actively incorporating AI into your traditional
+[00:08:10.540 --> 00:08:14.620]   SaaS product as your top product priority, then your company might be.
+[00:08:14.620 --> 00:08:18.100]   My most viewed article of the year was the newsletter I wrote for Top Line broadly on
+[00:08:18.100 --> 00:08:19.100]   this topic.
+[00:08:19.100 --> 00:08:24.260]   8. An Unlikely Revival of Branding. Hit. Brand versus demand was the marketing watch
+[00:08:24.260 --> 00:08:29.420]   phrase of 2025. Brand is not only gaining relative steam in this dichotomy, but marketers
+[00:08:29.420 --> 00:08:31.480]   would like it to gain even more.
+[00:08:31.480 --> 00:08:35.340]   The idea is simple. As traditional demand gen and performance marketing channels become
+[00:08:35.340 --> 00:08:39.380]   more expensive and less effective, marketers increasingly want to allocate budget to more
+[00:08:39.380 --> 00:08:44.260]   brand-oriented programs. I think this is a good idea because a.brand and demand spend
+[00:08:44.260 --> 00:08:48.460]   feed each other, you're more likely to register for a webinar from a company that you know,
+[00:08:48.460 --> 00:08:53.380]   and be over the past five years. We, as an industry, have over-rotated to highly measurable
+[00:08:53.380 --> 00:08:58.060]   marketing into a myopic position where boards and CEOs are now reluctant to invest unless
+[00:08:58.060 --> 00:09:01.360]   you can "show me the money" quickly and directly.
+[00:09:01.360 --> 00:09:06.260]   But DE. That's not how marketing works. It's not how people work. And while measuring
+[00:09:06.260 --> 00:09:10.960]   brand program effectiveness requires stepping outside the world of traditional CRM reporting,
+[00:09:10.960 --> 00:09:12.920]   it is by no means impossible.
+[00:09:12.920 --> 00:09:16.500]   That said, brand measurement is something of a lost art that marketers will need to relearn
+[00:09:16.500 --> 00:09:21.260]   in 2026. For listeners of The Metrics Brothers, Ray and I are scheduling an episode on this
+[00:09:21.260 --> 00:09:23.060]   topic for early in the year.
+[00:09:23.060 --> 00:09:27.780]   9. PR is the New SEO Miss. While I think people would acknowledge the underlying
+[00:09:27.780 --> 00:09:32.780]   point, that great PR hits can have a strong positive effect on answer engine inclusion.
+[00:09:32.780 --> 00:09:37.260]   I don't think this realization sparked the PR renaissance that I was hoping for in 2025.
+[00:09:37.260 --> 00:09:41.580]   First, because few companies can generate such a hit regardless of their PR investment,
+[00:09:41.580 --> 00:09:46.900]   that is, even a great PR flack needs an articulate and charismatic founder, a product with demonstrable
+[00:09:46.900 --> 00:09:51.580]   customer impact and momentum, and a story that maps pretty directly to mainstream business,
+[00:09:51.580 --> 00:09:54.100]   hypergrowth and an enormous fundraising roundee.
+[00:09:54.100 --> 00:09:58.940]   Enter it either. More importantly, it's because PR has changed. It's a lot more
+[00:09:58.940 --> 00:10:03.460]   trench warfare across dozens of bloggers, podcasters, and influencers than it is swinging
+[00:10:03.460 --> 00:10:08.660]   for home run stories. If any spending shot up in 2025, it was on lobbying, not public
+[00:10:08.660 --> 00:10:13.380]   relations. Though the two fields are less far apart than one may think. But no same
+[00:10:13.380 --> 00:10:17.900]   marketer is going to propose a big PR budget in order to boost their AEO program, there
+[00:10:17.900 --> 00:10:22.580]   are so many other things they can do first. So, hopefully that was thought-provoking.
+[00:10:22.580 --> 00:10:24.460]   But a myth.
+[00:10:24.460 --> 00:10:28.620]   LinkedIn enters the social media death cycle. Partial. Followers will know I've been trying
+[00:10:28.620 --> 00:10:32.700]   to manifest LinkedIn improvement because I've had troubles remaining on X. And this prediction
+[00:10:32.700 --> 00:10:36.900]   was kind of a caution, an anti-manifestation, as if anyone was listening to say if LinkedIn
+[00:10:36.900 --> 00:10:40.700]   doesn't get better, it might get a lot worse. But neither happened. It didn't get better,
+[00:10:40.700 --> 00:10:44.340]   but it didn't really get worse. It's still the same vanilla, namby-pamby, excessively
+[00:10:44.340 --> 00:10:48.780]   self-promoting content as it was in 2024. But I do see an increasing number of posts
+[00:10:48.780 --> 00:10:54.420]   from second-hand recyclers of ideas. Think Steve Jay's Cyclers of Ideas. Ubb said this,
+[00:10:54.420 --> 00:10:58.100]   or "revoluted" that from people who were not first-hand involved in the company or
+[00:10:58.100 --> 00:11:04.000]   its story, which, when they are, is the ultimate cool thing about social media. So, while I
+[00:11:04.000 --> 00:11:09.340]   think LinkedIn has thus far avoided enchitification and the social media death cycle, it's still
+[00:11:09.340 --> 00:11:13.660]   a site that I'm rarely excited to visit. So, an 8 out of 10 overall.
+[00:11:13.660 --> 00:11:17.260]   Let's move on to the coming year. Predictions, 2026.
+[00:11:17.260 --> 00:11:19.780]   1. Trump, but even more so.
+[00:11:19.780 --> 00:11:24.780]   With checks and balances significantly weakened, expect an even less-constrained Trump presidency.
+[00:11:24.780 --> 00:11:29.660]   His leadership and communication style, modeled more off a 1970s mafia dawn than a democratic
+[00:11:29.660 --> 00:11:34.980]   statesman, will likely become even more pronounced. That means more indecency, corruption, lip
+[00:11:34.980 --> 00:11:39.780]   service to the rule of law, revisionism, power plays, and "dawn row."
+[00:11:39.780 --> 00:11:43.940]   Doctrine foreign policy. Given his age and health, Trump may view 2026
+[00:11:43.940 --> 00:11:48.000]   as a culminating chapter, raising the odds of bolder, riskier moves aimed at both leaving
+[00:11:48.000 --> 00:11:52.380]   his mark and cementing his legacy. Speaking of legacy, prediction market Cauchy
+[00:11:52.380 --> 00:11:58.300]   currently assigns a 16% chance that Trump leaves office in 2026. Thus, the possibility of a
+[00:11:58.300 --> 00:12:04.660]   Vance presidency is becoming more plausible, if not in 2026, then perhaps in 2027. Maybe,
+[00:12:04.660 --> 00:12:09.220]   among other things, we'll learn to stop electing Septuagenarians. Meantime, if you're interested
+[00:12:09.220 --> 00:12:13.100]   in learning how people can perceive reality so differently, try reading Good Reasonable
+[00:12:13.100 --> 00:12:18.420]   People by Keith Paine. It's insightful, if not particularly optimistic. I second that
+[00:12:18.420 --> 00:12:22.660]   emotion. 2. It's a bubble, but this time it's different.
+[00:12:22.660 --> 00:12:27.100]   Make no mistake, today's AI market has many of the hallmarks of a classic bubble, for
+[00:12:27.100 --> 00:12:32.700]   example, technology catalyst, euphoria, high valuations, debt accumulation, and, of course,
+[00:12:32.700 --> 00:12:37.620]   part of the euphoria is everyone saying it isn't a bubble, that is, this time is different.
+[00:12:37.620 --> 00:12:40.760]   But I think there are some key differences between today's situation and the internet
+[00:12:40.760 --> 00:12:45.460]   bubble that will affect how this one unwinds. Usually bubbles pop. I think this one is going
+[00:12:45.460 --> 00:12:50.660]   to leak. That is, the deflation will run in slow motion relative to traditional bubbles.
+[00:12:50.660 --> 00:12:52.780]   Why? Three things.
+[00:12:52.780 --> 00:12:57.380]   (a) This is a private market bubble where most of the players are not public companies.
+[00:12:57.380 --> 00:13:04.240]   (e) Everything happens in slow motion in VC/PE land, where funds last a decade and trading.
+[00:13:04.240 --> 00:13:10.340]   That is, valuation determination is infrequent. And (e) there is opacity in the private markets
+[00:13:10.340 --> 00:13:15.180]   that can make it hard or imp, possible to see when the bubble is deflating. For example,
+[00:13:15.180 --> 00:13:21.060]   consider a native. AI company growing at 200% that recently raised money at 50x $20 million
+[00:13:21.060 --> 00:13:26.860]   in ARR, so a $1 billion valuation. Now, let's say growth slows well below 100%, but they
+[00:13:26.860 --> 00:13:32.180]   grind it for 2-3 years to double revenues. For a flat round, they'd need a 25x valuation,
+[00:13:32.180 --> 00:13:34.740]   but with things deteriorating that's not going to happen.
+[00:13:34.740 --> 00:13:39.300]   So, how can you obscure a down round if you want to? Structure. You can put a 2x liquidation
+[00:13:39.300 --> 00:13:43.460]   preference on the new money to preserve the headline $1 billion valuation, but ceteras
+[00:13:43.460 --> 00:13:48.460]   aren't peripas. A down round in a wig and lipstick. But since terms are not disclosed,
+[00:13:48.460 --> 00:13:52.460]   the world will basically never know. And multiple liquidation preferences are just one type
+[00:13:52.460 --> 00:13:56.900]   of structure you can use in this situation. This can't happen when companies are public.
+[00:13:56.900 --> 00:14:01.580]   Thus, I believe that private bubbles end differently than public ones. They deflate, as opposed
+[00:14:01.580 --> 00:14:07.140]   to pop. The process happens more slowly and with less hysteria. But it happens. Some will
+[00:14:07.140 --> 00:14:12.460]   argue it's already happened to the last generation of SaaS unicorns. In 2026, it will start to
+[00:14:12.460 --> 00:14:16.460]   happen to many of the AI ones, including a few of the big ones.
+[00:14:16.460 --> 00:14:22.540]   3. IPOs are back, baby. Many folks thought 2025 would be a banner year for tech IPOs,
+[00:14:22.540 --> 00:14:26.620]   but while they did increase over 2024, the dam didn't break open due to tariff shock
+[00:14:26.620 --> 00:14:31.180]   in the spring and the government shut down in the fall. I think 2026 will see a big uptick
+[00:14:31.180 --> 00:14:36.100]   relative to 2025, both in the number of transactions and the deal sizes.
+[00:14:36.100 --> 00:14:41.500]   Why? First, because there is a backlog of amazing companies waiting in line. Second,
+[00:14:41.500 --> 00:14:45.500]   because while companies can stay private longer, sometimes indefinitely, that's becoming
+[00:14:45.500 --> 00:14:49.700]   the luxury of the ultra-elite firms, so all the merely elite ones will still need to go
+[00:14:49.700 --> 00:14:54.180]   public at some point to get proper liquidity. Third, because a better exit environment is
+[00:14:54.180 --> 00:14:58.900]   one of the top priorities Trump supporting VCs wanted, and I believe both Sand Hill Road
+[00:14:58.900 --> 00:15:03.860]   and Wall Street will apply significant pressure. To get what they bargained for. Finally, because
+[00:15:03.860 --> 00:15:08.540]   there is a liquidity crisis in parts of VC/PE and if the public markets can successfully
+[00:15:08.540 --> 00:15:12.340]   absorb the elite companies, then lower-tier companies will be in a hurry to go public
+[00:15:12.340 --> 00:15:14.780]   while the IPO window remains open.
+[00:15:14.780 --> 00:15:18.040]   And that's not to mention the potential gale force tailwind if the administration ends
+[00:15:18.040 --> 00:15:21.660]   up setting interest rates, at least before the subsequent sugar high would likely lead
+[00:15:21.660 --> 00:15:27.100]   to 1970s-level inflation. 4. AI takes jobs, but not as we think. There's
+[00:15:27.100 --> 00:15:31.220]   no doubt that AI will replace jobs in plenty of them. The questions are, A) will they be
+[00:15:31.220 --> 00:15:36.180]   missed and BBM will it drive folks up or out? I don't think anyone misses elevator operators,
+[00:15:36.180 --> 00:15:41.180]   a job that peaked in the 1950s and all but extinct today. The same is true of switchboard
+[00:15:41.180 --> 00:15:46.500]   operators, pinsetters, lamplighters, linotype setters, icemen, typists, shorthand secretaries,
+[00:15:46.500 --> 00:15:51.260]   and slubber doffers. Yet, all these jobs were automated away. While unsure transition was
+[00:15:51.260 --> 00:15:56.000]   rough for any given elevator operator, as a society we don't miss them. Most coal miners
+[00:15:56.000 --> 00:15:58.500]   work hard so their children won't have to be coal miners.
+[00:15:58.500 --> 00:16:02.580]   Let's remember where the word Luddite comes from. Today, we used the word to describe
+[00:16:02.580 --> 00:16:06.740]   people opposed to new technology. But the Luddites were part of a labor movement. They
+[00:16:06.740 --> 00:16:10.540]   didn't destroy machines because they were technophobes, they destroyed them to protect
+[00:16:10.540 --> 00:16:15.740]   jobs. So, the transitions can be rough and come with social unrest, when jobs are automated
+[00:16:15.740 --> 00:16:20.100]   away. But we still don't miss the jobs they fought for. And sometimes, when we think a
+[00:16:20.100 --> 00:16:22.940]   job is going to be automated away, we get it wrong.
+[00:16:22.940 --> 00:16:29.020]   In 2016, the godfather of AI, Jeffrey Hinton, said that we should stop training new radiologists
+[00:16:29.020 --> 00:16:33.820]   because AI could read images better than people. And he was right. AI has outperformed people
+[00:16:33.820 --> 00:16:38.140]   for nearly a decade at image reading. But today, we have more radiologists than ever
+[00:16:38.140 --> 00:16:43.820]   with an average salary of $500,000. It turns out that reading images isn't all that radiologists
+[00:16:43.820 --> 00:16:48.940]   do. This is an example of AI driving a job up, not out. But this doesn't always happen,
+[00:16:48.940 --> 00:16:53.420]   either. I watched Jensen Huang trying to apply this exact argument to Uber drivers. Let's
+[00:16:53.420 --> 00:16:57.660]   just say that it didn't work. For some jobs, such as drivers, they just drive. Those jobs
+[00:16:57.660 --> 00:17:02.220]   are more driven out than up. So, are we all condemned to become unthinking L lemmings?
+[00:17:02.220 --> 00:17:06.780]   I'm not as negative as the "we won't be missed" crowd-thoughtful rebuttal here.
+[00:17:06.780 --> 00:17:11.620]   Nor do I believe that the path to AGI is through LLMs. But, with admittedly little background
+[00:17:11.620 --> 00:17:16.540]   in the space, I am nevertheless drawn to the idea of world models, which act as state-prediction
+[00:17:16.540 --> 00:17:21.820]   machines as opposed to world-prediction machines. In short, AI will displace a lot of jobs,
+[00:17:21.820 --> 00:17:26.100]   but many will be pushed up, not out. While the transition costs will be painful for those
+[00:17:26.100 --> 00:17:31.460]   affected, society overall will benefit. In the end, a lot of bygone jobs won't be missed,
+[00:17:31.460 --> 00:17:35.140]   and I'm quite optimistic about our ability to make interesting, new ones.
+[00:17:35.140 --> 00:17:40.300]   5. The polymaths aren't polymathing. Since money isn't the flex it used to be in Silicon
+[00:17:40.300 --> 00:17:44.740]   Valley, something was bound to replace it. Now you can't just be well-educated, you
+[00:17:44.740 --> 00:17:48.860]   can't just be rich, you can't just be smart about technology. You need something
+[00:17:48.860 --> 00:17:52.900]   more. You need to be smart about everything. That is, you need to be a polymath.
+[00:17:52.900 --> 00:17:57.100]   So, the first part of this prediction is simple. I think being a polymath will be the ultimate
+[00:17:57.100 --> 00:18:01.380]   flex in Silicon Valley in 2026 and thus we'll see an increasing number of people working
+[00:18:01.380 --> 00:18:06.420]   to attain and demonstrating the flex of "polymath status." If you want to join the wave, start
+[00:18:06.420 --> 00:18:09.900]   by reading these lists of books recommended by Mark Andreessen. There's some great stuff
+[00:18:09.900 --> 00:18:14.740]   in there. Don't get me wrong, I'm all for well-rounded individuals who don't specialize
+[00:18:14.740 --> 00:18:19.580]   too early and end up one-dimensional as a result. Many of my friends are super interesting
+[00:18:19.580 --> 00:18:24.300]   because in addition to high proficiency in tech, they're students of business, languages,
+[00:18:24.300 --> 00:18:29.500]   philosophy, or history. This is all cool. Great stuff. What's less cool is when Silicon
+[00:18:29.500 --> 00:18:33.860]   Valley leaders decide that they are smarter than everybody about everything. Sure, in
+[00:18:33.860 --> 00:18:38.100]   the spirit of the bear joke, you might be smarter about history than the other MIT engineer,
+[00:18:38.100 --> 00:18:41.980]   but are you smarter than the person whose lifelong passion is history? Do you know more
+[00:18:41.980 --> 00:18:46.580]   about international relations than the person who went to cease and then to the State Department?
+[00:18:46.580 --> 00:18:49.700]   Do you know more about improving government efficiency than people who've spent their
+[00:18:49.700 --> 00:18:53.900]   entire careers working in government? Moreover, were the people who built the data structure
+[00:18:53.900 --> 00:18:57.620]   behind tweets the best people to predict the societal impact of Twitter? Are the people
+[00:18:57.620 --> 00:19:01.820]   who build GPUs or foundation models really the best people to predict the societal impact
+[00:19:01.820 --> 00:19:05.760]   of AI? We tend to confuse the ability to build something with being in the best position
+[00:19:05.760 --> 00:19:09.760]   to understand its impact. Albinheimer knew how to build a bomb, but later said, quoting
+[00:19:09.760 --> 00:19:13.980]   the Bhagavad Gita, "Now I am become death, the destroyer of worlds." If you want to
+[00:19:13.980 --> 00:19:17.580]   know how to build a bomb, ask a physicist. If you want to know how to build a bomb, ask
+[00:19:17.580 --> 00:19:20.700]   a physicist. If you want to know its impact, ask a general.
+[00:19:20.700 --> 00:19:24.980]   Finally, there's a difference between being well-rounded and being a dilettante. When
+[00:19:24.980 --> 00:19:29.660]   the new Silicon Valley overlords, whose primary competency is making money by creating technology
+[00:19:29.660 --> 00:19:33.580]   businesses, start thinking they should be in charge of government and society, blind to
+[00:19:33.580 --> 00:19:38.220]   their own ambitions and agendas, we're going to get more messes, for example, dog, more
+[00:19:38.220 --> 00:19:42.780]   inane statements, and more crazy interviews. The reputation of Silicon Valley will continue
+[00:19:42.780 --> 00:19:48.360]   to suffer, and eventually, probably in 2027 or 2028, we'll see backlash-driven policies
+[00:19:48.360 --> 00:19:53.780]   that actually hurt the ecosystem. As bizarre as the thigh, Elle interview was, and as hilarious
+[00:19:53.780 --> 00:19:57.700]   its parodies, if he wanted to drum up popular support for a billionaire tax, it's hard
+[00:19:57.700 --> 00:20:01.140]   to find a better tool. If they were really dialed in, the new overlords would take a
+[00:20:01.140 --> 00:20:05.500]   lesson from the robber barons, such as Andrew Carnegie, and build libraries and write essays
+[00:20:05.500 --> 00:20:10.180]   like The Gospel of Wealth. They'd also take fewer dubious actions and obviously self-interested
+[00:20:10.180 --> 00:20:11.540]   policy positions.
+[00:20:11.540 --> 00:20:14.000]   6. Trust is the antidote.
+[00:20:14.000 --> 00:20:17.620]   Across a web of AI-generated algorithm-juiced content, people don't know who they can
+[00:20:17.620 --> 00:20:22.500]   trust anymore. What news can they trust? What companies can they believe? Can they trust
+[00:20:22.500 --> 00:20:27.820]   the answers to seemingly basic questions like, how much does this hotel cost? The mandatory
+[00:20:27.820 --> 00:20:32.740]   resort fee? Or, how much does this ticket cost? Convenience fees or seat reservation
+[00:20:32.740 --> 00:20:38.380]   fees? And, with generative AI, can they even trust what they see with their own eyes? Was
+[00:20:38.380 --> 00:20:41.220]   that video real? How about this photo?
+[00:20:41.220 --> 00:20:44.300]   People can't trust the algorithms to show them content they want to read. Slide into
+[00:20:44.300 --> 00:20:49.180]   the wrong thread, and X instantly turns into a bot-driven cesspool of ad hominem attacks.
+[00:20:49.180 --> 00:20:53.540]   LinkedIn has become a tedious sea of corporate news, thinly veiled pitches, humblebrags,
+[00:20:53.540 --> 00:20:58.060]   and ghost-written content. Review sites, despite consumer protection rules, are often gamed.
+[00:20:58.060 --> 00:21:02.620]   Soon, if not already, we'll be using AI both to generate and summarize our communications.
+[00:21:02.620 --> 00:21:07.460]   And, as Scott Brinker says in his predictions, AI inbox gatekeepers will turn email marketing
+[00:21:07.460 --> 00:21:10.380]   into earned media. Ponder that for a second.
+[00:21:10.380 --> 00:21:15.100]   So, what's a marketer to do? One thing. Focus on trust. Only trust will get people
+[00:21:15.100 --> 00:21:19.140]   to open your emails. Only trust will get them to sign up for your newsletters and subscribe
+[00:21:19.140 --> 00:21:23.300]   to your podcasts. Only trust will allow them to believe the reviews and testimonials about
+[00:21:23.300 --> 00:21:27.380]   your product. Only trust will get them to listen to what you have to say.
+[00:21:27.380 --> 00:21:30.620]   Trust that you produce great content. Trust that you won't lie to them. Trust that you
+[00:21:30.620 --> 00:21:33.740]   won't waste their time. Trust that you won't sell their contact information to someone
+[00:21:33.740 --> 00:21:35.860]   else. Trust that you won't speed-bag them with
+[00:21:35.860 --> 00:21:40.100]   SDR calls. Trust that if someone unsubscribes, you'll stop. Trust that your product does
+[00:21:40.100 --> 00:21:43.900]   what the marketing says it does. Trust that customers get the outcomes you promise.
+[00:21:43.900 --> 00:21:48.640]   I've always felt that branding was simply about trust. Trust that you'll be you. You.
+[00:21:48.640 --> 00:21:51.740]   Trust that you'll look like you visual. Trust that you'll sound like you voice. Trust
+[00:21:51.740 --> 00:21:55.660]   that you'll act like you values. Operating principles. Trusting your mission vision,
+[00:21:55.660 --> 00:21:58.260]   it's funny. The further we got into the internet era,
+[00:21:58.260 --> 00:22:01.780]   the more we heard that people didn't have time anymore, and that long-form content was
+[00:22:01.780 --> 00:22:06.460]   dead. So, everything needed to be bite-sized morsels. There's no time. Make it shorter.
+[00:22:06.460 --> 00:22:10.900]   Make it a short video. Make it a short video. Make it a short video. Make it an infographic.
+[00:22:10.900 --> 00:22:14.960]   I always believed David Ogilvy, long copy sells. You know when people don't have time
+[00:22:14.960 --> 00:22:19.140]   for your content? When it's bad. And there's so much bad content out there that we started
+[00:22:19.140 --> 00:22:23.520]   to believe that lazy people were the problem. No, they aren't. Bad content is the problem.
+[00:22:23.520 --> 00:22:27.380]   And now it's easier than ever to generate it. So, do we win the war by out-slopping
+[00:22:27.380 --> 00:22:31.420]   our competition? Or do we try something else? You know when people do have time for your
+[00:22:31.420 --> 00:22:35.060]   content? When it's good and they're interested in the subject? You know, like when people
+[00:22:35.060 --> 00:22:38.820]   are betting a part of their career in your software package? Ask the guys that acquired
+[00:22:38.820 --> 00:22:41.740]   and observe evolution of their average episode length.
+[00:22:41.740 --> 00:22:48.140]   Season 1, 45 minutes. Seasons 2-4, Season 1 hour, 15 minutes. Seasons 5-8, E2 hours,
+[00:22:48.140 --> 00:22:55.120]   30 minutes. Seasons 9-11, E3 hours, 30 minutes. Seasons 12-14, Seasons 12-14, see swirly no
+[00:22:55.120 --> 00:22:59.180]   better example that when people are interested and you produce good content, that they will
+[00:22:59.180 --> 00:23:00.380]   make the time for it.
+[00:23:00.380 --> 00:23:05.460]   I like the 3 hour episode on Costco so much I listen to it twice. So, overall, what would
+[00:23:05.460 --> 00:23:10.660]   I do? Make good content. Make long content. Get rid of artificial and outdated best practices
+[00:23:10.660 --> 00:23:15.180]   and constraints. Take the time to tell the story you need to tell. Build your own, first-party
+[00:23:15.180 --> 00:23:20.260]   audience. Get access to and respect the rules of, private communities for example, the SaaS
+[00:23:20.260 --> 00:23:24.460]   CFO exit fees that are increasingly forming to provide trusted spaces. And don't be
+[00:23:24.460 --> 00:23:28.020]   afraid to place marketing chips on brand over demand in 2026.
+[00:23:28.020 --> 00:23:33.580]   7. Fee culture changes VC. As with several of my predictions, this one
+[00:23:33.580 --> 00:23:39.660]   is already in progress, but I do see it accelerating in 2026. The trend in VC is towards increasingly
+[00:23:39.660 --> 00:23:45.100]   larger funds. For example, A1-6Z's E's recent announcement of over $15 billion across
+[00:23:45.100 --> 00:23:51.440]   about 6 funds, representing 18% of all VC dollars raised in the USA in 2025. Read the
+[00:23:51.440 --> 00:23:56.860]   metamorphosis of A1-6Z's for a fascinating, if somewhat conspiratorial, take. While many
+[00:23:56.860 --> 00:24:02.220]   smart people are writing about how VC is changing in terms of expected outcomes, fund performance,
+[00:24:02.220 --> 00:24:06.980]   concentration, kingmaking, and how founders can deal with it, risk, value creation, and
+[00:24:06.980 --> 00:24:11.340]   scalability, there's one thing that few people are talking about, fee culture, which
+[00:24:11.340 --> 00:24:16.300]   is enabled by these ever-increasing fund sizes. Back in the day, using several assumptions,
+[00:24:16.300 --> 00:24:22.140]   a successful VC running four funds in parallel could make around $3 million/year-in-fee income.
+[00:24:22.140 --> 00:24:25.980]   With that, they could live a very comfortable Silicon Valley life, a house in Atherton,
+[00:24:25.980 --> 00:24:30.620]   a place in Tahoe, tuition at the Menlo School, and all the rest. But to get really rich,
+[00:24:30.620 --> 00:24:33.980]   fly your PJ to your Montana ranch rich, then you need a carry.
+[00:24:33.980 --> 00:24:39.580]   What's carry? The second half of the 2-in-20 fee structure common in BC. The 2% is the
+[00:24:39.580 --> 00:24:45.460]   annual fee on committed capital. The 20% is the carry, or cut, that VCs take after the
+[00:24:45.460 --> 00:24:51.100]   fund returns its initial capital to investors. For example, if a $250 million fund returns
+[00:24:51.100 --> 00:24:57.340]   3 times to investors, the VCs would make $100 million in carry, 20% of $500 million, over
+[00:24:57.340 --> 00:25:03.140]   the fund's roughly 10-year lifecycle. Split that $100 million across five general partners,
+[00:25:03.140 --> 00:25:07.340]   and after one fund you've got the Montana ranch and, after another, the PJ to fly to
+[00:25:07.340 --> 00:25:08.340]   it.
+[00:25:08.340 --> 00:25:14.240]   But 2% of a huge number is a huge number. So today, with a $5 billion fund, a VC can
+[00:25:14.240 --> 00:25:19.340]   make more money off fees alone than they previously made off fees in carry, by my rough math more
+[00:25:19.340 --> 00:25:25.860]   than double. On top of this, the carry, split across 15 GPs, would be $33 million each.
+[00:25:25.860 --> 00:25:29.640]   While I've spent my career in and around VC-backed startups, I don't consider myself
+[00:25:29.640 --> 00:25:34.560]   an expert on VC per se, but I think this new megafund reality changes things. Remember
+[00:25:34.560 --> 00:25:38.320]   the Charlie Munger quote, "Show me the incentive, and I'll show you the outcome."
+[00:25:38.320 --> 00:25:42.280]   While today's megafund VCs are certainly incented to earn the aforementioned substantial
+[00:25:42.280 --> 00:25:47.140]   amount of carry, they can live better, on fees alone, than the VCs of your did on total
+[00:25:47.140 --> 00:25:48.480]   compensation.
+[00:25:48.480 --> 00:25:53.540]   Satterist PE Guy has a substantial following. So, what do I think this means?
+[00:25:53.540 --> 00:25:57.940]   People managing large amounts of money need to deploy it. You can't raise $5 billion,
+[00:25:57.940 --> 00:26:02.280]   accept $100 million/year in fees, and then not invest the money. They will generally
+[00:26:02.280 --> 00:26:07.960]   prefer to deploy it in bigger chunks. It's easier to deploy $5 billion with $250 million
+[00:26:07.960 --> 00:26:13.020]   to $500 million checks than $25 million to $50 million. It's the difference between
+[00:26:13.020 --> 00:26:18.000]   20 investments and 200 investments. There's a fixed cost and a relatively high one in
+[00:26:18.000 --> 00:26:22.920]   pre-investment diligence and investment commitment presentations. Kingmaking should increase.
+[00:26:22.920 --> 00:26:29.840]   If I'm sure $4 million to $500 million checks than $25 million checks than $25 million checks,
+[00:26:29.840 --> 00:26:34.160]   then Heldrin and whatever reason, that founder X will be the winner, I can load them up with
+[00:26:34.160 --> 00:26:38.960]   money to help ensure that outcome happens. While more VC gets deployed, it ends up being
+[00:26:38.960 --> 00:26:42.000]   a have-and-have and have-not financing environment.
+[00:26:42.000 --> 00:26:46.240]   There will be a temptation to foie gras startups. Unlike the geese, this requires thunders as
+[00:26:46.240 --> 00:26:50.120]   willing accomplices, but if you follow the simple rule of raise money when you can on
+[00:26:50.120 --> 00:26:54.800]   good terms, most will say yes. Hopefully they then won't piss it away, which is how you
+[00:26:54.800 --> 00:26:58.760]   get in real trouble. This should create a "damn the torpedoes" attitude. If you need
+[00:26:58.760 --> 00:27:05.160]   to deploy $5 billion in or a day, or to make $20 million/year-end fee income, then I'm
+[00:27:05.160 --> 00:27:08.880]   pretty sure you're going to find a way to do so. Moreover, if the game becomes "Tales
+[00:27:08.880 --> 00:27:13.000]   I win big, Heads I win five times bigger," then who doesn't want to play?
+[00:27:13.000 --> 00:27:18.160]   Put differently, it's not hard to be a techno-optimist when your firm is collecting $300 million/year-end
+[00:27:18.160 --> 00:27:24.160]   fee income off your last $15 billion round of funds. Heck, I'd be one too. Mega VCs
+[00:27:24.160 --> 00:27:26.680]   will become more investors and less business partners.
+[00:27:26.680 --> 00:27:30.580]   I remember when Sequoia's tagline was "the entrepreneurs behind the entrepreneurs."
+[00:27:30.580 --> 00:27:32.760]   Around that time, I also…
+[00:27:32.760 --> 00:27:36.080]   Remember being shocked, and this is going to sound incredibly stupid, when I heard someone
+[00:27:36.080 --> 00:27:40.960]   refer to VC as part of financial services. What? VCs aren't Wall Street types, I thought.
+[00:27:40.960 --> 00:27:45.120]   They're tech people. Of course, I was wrong at the time, but part of me nevertheless continues
+[00:27:45.120 --> 00:27:50.040]   to see this as the financialization of VC. Or more aptly, perhaps, the PE-ization of
+[00:27:50.040 --> 00:27:51.040]   VC.
+[00:27:51.040 --> 00:27:52.760]   8. A Growth Retention Apocalypse
+[00:27:52.760 --> 00:27:55.260]   I'll start this one with an excerpt from the Grapes of Wrath.
+[00:27:55.260 --> 00:27:58.720]   "Then the grapes ripen. We can't make good wine. People can't buy good wine."
+[00:27:58.720 --> 00:28:03.200]   "Rip the grapes from the vines. Good grapes. Rotten grapes. Wasp-stung grapes. Press stems.
+[00:28:03.200 --> 00:28:07.480]   Press dirt and rot. But there's mildew and formic acid in the vats. Add sulfur and tannic
+[00:28:07.480 --> 00:28:10.880]   acid. The smell from the ferment is not the rich odor of wine, but the smell of decay
+[00:28:10.880 --> 00:28:11.880]   and chemicals."
+[00:28:11.880 --> 00:28:17.980]   That's the way I feel about ARR today. Press trials. Press onboarding. Press professional
+[00:28:17.980 --> 00:28:23.240]   services. Press overages and hardware. Take anything, multiply it by 12, and then press
+[00:28:23.240 --> 00:28:24.240]   that.
+[00:28:24.240 --> 00:28:29.000]   The smell from the ferment is not the oh-so-sweet smell of annual recurring revenue, but that
+[00:28:29.000 --> 00:28:34.520]   of bygone customers, tire kickers, experiments, and decay. In other words, I see what Cassie
+[00:28:34.520 --> 00:28:38.680]   Young calls a growth retention apocalypse. I think we should measure it with a metric
+[00:28:38.680 --> 00:28:41.680]   that I call retention spread.
+[00:28:41.680 --> 00:28:48.840]   Retention spread, n-r-r-g-r-r. That is, the gap in percentage points between n-r-r-g-r-r.
+[00:28:48.840 --> 00:28:52.960]   When the apocalypse hits, you might see it in n-r-r alone, but to the extent that spectacular
+[00:28:52.960 --> 00:28:56.920]   growth can hide heinous retention, you might not. That's why we need to look at retention
+[00:28:56.920 --> 00:28:57.920]   spread.
+[00:28:57.920 --> 00:29:03.000]   9. Context graphs storm the market. Sing with me. On the negative third day of Christmas,
+[00:29:03.000 --> 00:29:07.160]   my ex-feed sent to me a billion posts on so-called context graphs.
+[00:29:07.160 --> 00:29:11.720]   The first post I saw was this paper by Jaya Gupta and Ashu Garg of Foundation Capital.
+[00:29:11.720 --> 00:29:16.680]   I've rarely seen any enterprise idea hit harder, take off faster, and get more engagement.
+[00:29:16.680 --> 00:29:20.000]   Over the next few days, here are some of the folks who joined the conversation. Darmesh
+[00:29:20.000 --> 00:29:25.840]   Shahab spot Aaron Levibox, Nick Metta, Gainside Emeritus, Arvind Jain Glean, Satyen Sangani,
+[00:29:25.840 --> 00:29:32.400]   Alation, Anshu Sharma, Skyflow, Colin Trisolaire, Supernormal, Radiant, Animesh Korotana, Supernormal,
+[00:29:32.400 --> 00:29:38.120]   Radiant, Animesh Korotana, Player Zero, Diego Lomanto-Writer, CMO, who made a particularly
+[00:29:38.120 --> 00:29:43.280]   compelling case for marketing, Kirk Marple-Grufflett, Anshul Gupta-Active. Lai, and whose sister
+[00:29:43.280 --> 00:29:47.840]   was a co-author of the original article, and Tony Seal, the knowledge graph guy.
+[00:29:47.840 --> 00:29:52.280]   This is not a new academic paper from a research lab, but an article from a VC firm on what
+[00:29:52.280 --> 00:29:57.160]   they see as a trillion dollar opportunity. Why did it resonate? First, they either got
+[00:29:57.160 --> 00:30:01.520]   profoundly lucky or did a very well-coordinated launch that leveraged their considerable social
+[00:30:01.520 --> 00:30:06.700]   network, or perhaps a bit of both. It hits on a sensitive issue within the enterprise,
+[00:30:06.700 --> 00:30:11.060]   the predicted imminent death of systems of record made by AI zealots who may understand
+[00:30:11.060 --> 00:30:15.720]   AI well, but who lack an understanding of the enterprise. Even if you believe in an
+[00:30:15.720 --> 00:30:21.720]   upcoming wave of AI agents as I do, the question remains, where will the truth live in enterprise
+[00:30:21.720 --> 00:30:26.720]   systems? It raises the critical, and often forgotten question of context, not just the
+[00:30:26.720 --> 00:30:31.120]   current state which operate, ional systems capture, and not just historical states which
+[00:30:31.120 --> 00:30:35.640]   data warehouses and analytic infrastructure capture, but the context for why it happened,
+[00:30:35.640 --> 00:30:40.680]   which they individually call decision traces, whose accumulation results in a context graph.
+[00:30:40.680 --> 00:30:44.460]   As someone who started in operating systems and then moved into databases, I had to be
+[00:30:44.460 --> 00:30:49.000]   dragged into caring about context. That's not what we do here. We store stuff. We index
+[00:30:49.000 --> 00:30:53.640]   it. We back it up. We ensure asset transactions. We let you query it in flexible ways. But
+[00:30:53.640 --> 00:30:57.920]   how did it get here? Where did it come from? What has come from? What have come from?
+[00:30:57.920 --> 00:31:02.800]   As the Tom Lure lyric goes, "Once the rockets are up, who cares where they come down? That's
+[00:31:02.800 --> 00:31:07.280]   not my department," says Warren Hervon Braun. But data warehouses taught me to care about
+[00:31:07.280 --> 00:31:12.800]   technical and operational metadata. Data catalogs taught me to care about governance, collaboration,
+[00:31:12.800 --> 00:31:18.120]   and quality metadata. Over time, I became a true believer in context around data. Thirty
+[00:31:18.120 --> 00:31:23.000]   years in business taught me to care about business metadata. Stuff that, until recently,
+[00:31:23.000 --> 00:31:27.840]   most of us only dreamed of keeping in systems. Ultimately, what's exciting is that this
+[00:31:27.840 --> 00:31:32.080]   is much more than just replacing existing systems or building value-added layers atop
+[00:31:32.080 --> 00:31:36.760]   them. It's about capturing a category of information, knowledge, and enterprise systems
+[00:31:36.760 --> 00:31:41.720]   that has, for the past five decades, generally eluded us in all but the most specialized
+[00:31:41.720 --> 00:31:47.680]   systems. That's big. In the 1980s, I got to watch the industry transform by capturing
+[00:31:47.680 --> 00:31:52.060]   data. Now, I'm going to watch the sequel by capturing knowledge, not just in the sense
+[00:31:52.060 --> 00:31:56.720]   of documents and text but process. Remember the old Lou Platt quote, "If HP knew what
+[00:31:56.720 --> 00:32:01.400]   HP knows, we'd be three times more productive." I know that context graphs hit hard over the
+[00:32:01.400 --> 00:32:05.080]   holidays. Will we still be talking about them next Christmas or will they set a new record
+[00:32:05.080 --> 00:32:10.240]   for high-cycle traversal? I think the former. 10. The Rule of 60 replaces the Rule of 40
+[00:32:10.240 --> 00:32:15.320]   for traditional SaaS. As industries mature, so do their financial metrics. And their multiples
+[00:32:15.320 --> 00:32:19.920]   change. Consider this tweet. Looks like we're paying five times sales for software.
+[00:32:19.920 --> 00:32:26.520]   Mr. Valentine has set the price. Let's observe that five times sales with 33%, EBITDA margins
+[00:32:26.520 --> 00:32:33.020]   means 15 times EBITDA, which by PE standards is a healthy multiple for a software company.
+[00:32:33.020 --> 00:32:38.920]   Also remember that five times is about twice the average price/sales ratio of the S&P 500.
+[00:32:38.920 --> 00:32:42.360]   So software companies are still well-valued as they were before.
+[00:32:42.360 --> 00:32:46.740]   The Rule of 40 is a SaaS metric that was created to be a better predictor of a company's
+[00:32:46.740 --> 00:32:53.880]   value to revenue, EV/RA multiple than growth or EBITDA alone. The intent, coming off a
+[00:32:53.880 --> 00:32:58.280]   growth-crazed period, was that the best company should balance growth and profit. Hence, the
+[00:32:58.280 --> 00:33:04.360]   Rule of 40 was generally calculated as "Rule of 40 score YoY revenue growth rate + FCF
+[00:33:04.360 --> 00:33:06.840]   margin." Year later, Bessemer came along and correctly
+[00:33:06.840 --> 00:33:10.400]   argued that a point of growth should be worth more than a point of profit, and created the
+[00:33:10.400 --> 00:33:14.320]   unfortunately named Rule of X which put a slow-varying multiple on growth relative to
+[00:33:14.320 --> 00:33:19.540]   profit, typically around 2.3 times. Years before and less visibly, the Software Equity
+[00:33:19.540 --> 00:33:23.940]   Group had created a two-times growth-weighted Rule of 40, which did roughly the same thing.
+[00:33:23.940 --> 00:33:28.400]   But today's debate is not about growth weighting, it's about the proper score. Increasingly,
+[00:33:28.400 --> 00:33:32.720]   you hear people, particularly in PE, say that are now pushing towards a Rule of 40 score
+[00:33:32.720 --> 00:33:37.480]   of 60, or in their parlance, a Rule of 60. Let's look at a spreadsheet that compares
+[00:33:37.480 --> 00:33:42.000]   two companies. They both start out in year one at the same size, with the same Rule of
+[00:33:42.000 --> 00:33:50.420]   40, Rule of 40 score of 40, composed of 20%, 20%. The first company remains at 20%, 20%,
+[00:33:50.420 --> 00:33:57.920]   while the second evolves from 20%, 20%, 20%, to 15%, 45% over the four-year period.
+[00:33:57.920 --> 00:34:02.400]   Let's see what happens to valuation. Over the four years, the first company ends up
+[00:34:02.400 --> 00:34:10.120]   valued at $508 million on a 15x FCF basis and 815x FCF basis. Since there's a question
+[00:34:10.120 --> 00:34:13.840]   whether either of those companies would get valued on a revenue multiple, which is usually
+[00:34:13.840 --> 00:34:18.980]   associated with higher growth, let's look primarily at the FCF multiples.
+[00:34:18.980 --> 00:34:24.760]   The second company ends up worth $1.03 billion based on 15x FCF, whereas the first one ends
+[00:34:24.760 --> 00:34:30.960]   up worth only about half that at $518 million. Since PE investors usually see profit as more
+[00:34:30.960 --> 00:34:36.880]   of a sure thing, that is, more within management, and its control, then growth, I think the
+[00:34:36.880 --> 00:34:42.600]   vast majority would push to become the company on the right. And most do. Hence, why I predict,
+[00:34:42.600 --> 00:34:47.240]   particularly in the traditional SaaS, non-native, AI part of the market, that most companies
+[00:34:47.240 --> 00:34:52.320]   will be shooting for Rule of 40 scores of between 40 and 60 in 2026. The Rule of 40
+[00:34:52.320 --> 00:34:56.900]   is dead, long live the Rule of 60. That is, unless you're a native AI startup and growing
+[00:34:56.900 --> 00:34:58.740]   like a weed. Conclusion.
+[00:34:58.740 --> 00:35:02.080]   If you've read all the way through, let me offer a special thank you for sticking with
+[00:35:02.080 --> 00:35:07.520]   me. I wish everyone a happy, healthy, and above planned 2026. I'll conclude with a
+[00:35:07.520 --> 00:35:12.200]   hat tip to Bob Weir of the Grateful Dead who died 12 days ago. Here's John Mayer playing
+[00:35:12.200 --> 00:35:16.600]   a touching ripple on one of Bobby's guitars at his life celebration in San Francisco last
+[00:35:16.600 --> 00:35:18.880]   weekend. Notes follow.
+[00:35:18.880 --> 00:35:23.420]   Notes also see terms and conditions as well as other disclaimers in the Kell blog FAQ.
+[00:35:23.420 --> 00:35:27.760]   In my view, the most consistently monetizable activity in the crypto ecosystem has been
+[00:35:27.760 --> 00:35:32.600]   the promotion and issuance of new tokens. Given that such tokens usually lack intrinsic
+[00:35:32.600 --> 00:35:38.320]   value, these dynamics can, in practice, start to resemble Ponzi structures. Moreover, crypto
+[00:35:38.320 --> 00:35:43.480]   assets have also been associated with a range of questionable and/or illegal use cases,
+[00:35:43.480 --> 00:35:48.640]   including money laundering, ransomware, online fraud and investment scams, political influence,
+[00:35:48.640 --> 00:35:53.240]   tax evasion, and payments for illegal goods. Remember how Tim Draper came across his considerable
+[00:35:53.240 --> 00:35:58.720]   Bitcoin position? The most legitimate use cases, in my view, are speculation, which
+[00:35:58.720 --> 00:36:03.320]   may be unwise but should not be unlawful, and stablecoins for use in countries lacking
+[00:36:03.320 --> 00:36:08.240]   reliable local currencies. At the time I remember thinking two things.
+[00:36:08.240 --> 00:36:14.360]   How unusual, and arguably unwise, it was for VC firms to declare a political position and
+[00:36:14.360 --> 00:36:19.680]   be that as soon as you declare yourself a single-issue voter on any issue, you absolve
+[00:36:19.680 --> 00:36:24.040]   yourself from looking at the bigger picture and the very real complexities within it.
+[00:36:24.040 --> 00:36:28.680]   In short, it's a cop-out. The start of this video talks at length about the president's
+[00:36:28.680 --> 00:36:33.360]   personality, which I find un-compelling because virtually all con men are personable, it's
+[00:36:33.360 --> 00:36:38.440]   kind of a job requirement, and there is ample data suggesting his behavior speaks otherwise.
+[00:36:38.440 --> 00:36:42.920]   Ergo a higher bar than pleasant conversation and good listening skills should be applied.
+[00:36:42.920 --> 00:36:46.960]   That there exists a startup focused on helping founders close startups is itself indicative
+[00:36:46.960 --> 00:36:50.320]   of something. Please tell me I didn't get you with this one.
+[00:36:50.320 --> 00:36:54.200]   On LinkedIn and X, I can write posts that reach 1% of my followers if I don't pay
+[00:36:54.200 --> 00:36:58.680]   attention to the rules, and playing the game works differently on different platforms.
+[00:36:58.680 --> 00:37:03.080]   LinkedIn swims upstream on many of its choices, so what works elsewhere will tend not to work
+[00:37:03.080 --> 00:37:08.160]   on LinkedIn, and conversely, where I sit on the board, where Balderton is an investor,
+[00:37:08.160 --> 00:37:13.800]   with whom I also do some work. As of the day I wrote this January 14, 2026. That includes
+[00:37:13.800 --> 00:37:18.320]   only resignation or removal. Prediction markets don't allow bets on deaths, so this market
+[00:37:18.320 --> 00:37:22.840]   will not resolve to yes in that event. The things I do for my readers. Heretofore, I'd
+[00:37:22.840 --> 00:37:26.920]   never watched an episode of the Joe Rogan Experience. Saying roughly the drivers, other
+[00:37:26.920 --> 00:37:33.680]   than driving, do lots of things like security? Not exactly an example we can all relate to.
+[00:37:33.680 --> 00:37:37.440]   While billionaires often use drivers for security, for most people, if they're even using one
+[00:37:37.440 --> 00:37:41.760]   at all, a driver just drives, even if those businesses are not ultimately successful or
+[00:37:41.760 --> 00:37:46.440]   profitable. In some cases, it's creating. In others, it's more walking in front of
+[00:37:46.440 --> 00:37:52.600]   a parade. For example, Benioff, Musk, Altman, and many others, all to a greater or lesser
+[00:37:52.600 --> 00:37:57.240]   degree walked in front of a parade. This, of course, is also a skill, both in identifying
+[00:37:57.240 --> 00:38:01.360]   the right parade and in finding a way to get in front of it, and then, of course, building
+[00:38:01.360 --> 00:38:06.240]   the business once you're there, and deciding who you want to be is a key part of the exercise.
+[00:38:06.240 --> 00:38:14.000]   Assumptions, $250 million funds, 5 GPs, 2+20 fees, 4 funds in parallel, $3 million staff
+[00:38:14.000 --> 00:38:18.760]   and admin expense. This ignores the carry that is distributed to staff within the firm.
+[00:38:18.760 --> 00:38:22.960]   But all math here is approximate just to demonstrate the higher-level point. Or, more realistically,
+[00:38:22.960 --> 00:38:29.360]   a nice fraction of a G5. Assumptions, $5 billion fund, 15 GPs, 2+20 fees, 4 funds in parallel,
+[00:38:29.360 --> 00:38:35.000]   $30 million staff and admin expense. Assumptions, 20% of $10 billion returned in excess of the
+[00:38:35.000 --> 00:38:41.040]   $5 billion fund divided across 15 GPs. The naming here gets tricky due to existing conventions.
+[00:38:41.040 --> 00:38:45.040]   If I were to call it net expansion rate, it would be too easily confused with net revenue
+[00:38:45.040 --> 00:38:49.240]   retention, NRR, they sound too similar. What I'm trying to get at is the mechanism through
+[00:38:49.240 --> 00:38:55.360]   which you hit your NRR. You can hit any given NRR, for example, 100% in several ways. For
+[00:38:55.360 --> 00:38:59.480]   example, expansion of 50 against shrinkage of 50, or expansion of 0 against shrinkage
+[00:38:59.480 --> 00:39:04.960]   of 0. The first example has a retention spread of 50 points, 100 minus 50. The first example
+[00:39:04.960 --> 00:39:08.920]   has a retention spread of 50 points, 100 minus 100.
+[00:39:08.920 --> 00:39:13.800]   Kyle Poyer wrote a nice report, the AI churn wave, on this topic. While he doesn't explicitly
+[00:39:13.800 --> 00:39:17.600]   look at retention spreads, and while his data doesn't show what I'd expect, that is, higher
+[00:39:17.600 --> 00:39:22.360]   retention spreads in AI than B2B SaaS, we do both arrive at the same conclusion. There
+[00:39:22.360 --> 00:39:25.320]   is a wave of churn in AI startups coming.
+[00:39:25.320 --> 00:39:29.960]   But launching something on December 22? Was this the ultimate contrarian timing? Or a launch
+[00:39:29.960 --> 00:39:33.840]   that slipped a few weeks and they thought, "Oh, just do it anyway." I no longer tell
+[00:39:33.840 --> 00:39:38.340]   my erstwhile favorite joke, the only thing you can make with metadata is metamoney. Much
+[00:39:38.340 --> 00:39:43.320]   like how AI was a thing decades ago, but only became real and widespread recently, so had
+[00:39:43.320 --> 00:39:47.700]   knowledge management been a thing for decades. But it's also never been real and mainstream,
+[00:39:47.700 --> 00:39:49.360]   maybe now it finally will.
+[00:39:49.360 --> 00:39:53.120]   Similarly, I know that process mining has been around for a while, and Solonus has created
+[00:39:53.120 --> 00:39:58.760]   a $113 billion valuation business doing it. I view this as validation for lighter, more
+[00:39:58.760 --> 00:40:03.080]   automated, more robust process graphs. As the William Gibson quote goes, "The future
+[00:40:03.080 --> 00:40:07.640]   is already here. It's just unevenly distributed." Due to its odd name, there are some tum-tying
+[00:40:07.640 --> 00:40:12.760]   semantics around it, for example, my rule of 40 is 30, or we are a rule of 30 company.
+[00:40:12.760 --> 00:40:17.440]   To avoid this, I insert the word "score", that is, our rule of 40 score is 30. I'll
+[00:40:17.440 --> 00:40:21.200]   use growth, profit, as my nomenclature for communicating the elements of the rule of
+[00:40:21.200 --> 00:40:26.380]   40 score. This audio version was created by Grant Duncan and AI, with permission from
+[00:40:26.380 --> 00:40:26.780]   Dave.
+kellblog-predictions-for-2026: repetition 13 > 12 repeated 3-grams 
+(coverage=95.0%, tail=98.8%, repeat3=13)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+=== QA my-final-verdict-on-multi-year-pre-paid-deals ===
+
+[00:00:00.000 --> 00:00:04.640]   This is an audio version of a Dave Kellogg post from May 30, 2019,
+[00:00:04.640 --> 00:00:08.080]   titled "My Final Verdict on Multi-Year Prepaid Deals."
+[00:00:08.080 --> 00:00:11.840]   Revised May 4, 2019, 10,041 a.m.
+[00:00:11.840 --> 00:00:16.320]   After years of experience with and thinking about multi-year prepaid SaaS deals,
+[00:00:16.320 --> 00:00:19.280]   my mental jury is back in the box and the verdict is in.
+[00:00:19.280 --> 00:00:23.120]   If you're a startup that is within my assumption set below, don't do them.
+[00:00:23.120 --> 00:00:26.960]   Before jumping in, let me first define precisely what I mean by multi-year.
+[00:00:26.960 --> 00:00:30.160]   Prepaid deals and, second, detail the assumptions behind my logic
+[00:00:30.160 --> 00:00:33.600]   in response to some Twitter conversations I've had this morning about this post.
+[00:00:33.600 --> 00:00:36.080]   What do I mean by multi-year prepaid deals?
+[00:00:36.080 --> 00:00:39.120]   While there are many forms of multi-year prepaid deals,
+[00:00:39.120 --> 00:00:44.000]   when I use the term I am thinking primarily of a three-year agreement that is fully prepaid.
+[00:00:44.000 --> 00:00:49.040]   For example, if a customer's ARR cost is 100 units for a one-year deal,
+[00:00:49.040 --> 00:00:52.400]   you might approach them saying something akin to "By default,
+[00:00:52.400 --> 00:00:56.000]   our annual contracts have a 10% annual increase built in.
+[00:00:56.000 --> 00:01:01.520]   If you sign and prepay a three-year agreement, that is, pay me 300 units within 60 days,
+[00:01:01.520 --> 00:01:04.640]   then I will lock you in at the 100 units per year price."
+[00:01:04.640 --> 00:01:07.120]   Some people didn't know these kinds of deals were possible.
+[00:01:07.120 --> 00:01:07.920]   They are.
+[00:01:07.920 --> 00:01:10.960]   In my experience, particularly for high-consideration purchases,
+[00:01:10.960 --> 00:01:15.440]   where the customer has completed a thorough evaluation and is quite sure the system will work,
+[00:01:15.440 --> 00:01:18.720]   a fairly high percentage of buyers will engage in this conversation.
+[00:01:18.720 --> 00:01:22.640]   In a world where companies have a lot of cash, a 10% return is a lot.
+[00:01:22.640 --> 00:01:24.320]   Better than bank interest.
+[00:01:24.320 --> 00:01:26.960]   Multi-year prepaid deals can take other forms as well.
+[00:01:26.960 --> 00:01:30.320]   The duration can vary, I've seen anything from two to seven years.
+[00:01:30.320 --> 00:01:33.760]   The contract duration and the prepaid duration can decouple, for example,
+[00:01:33.760 --> 00:01:36.560]   a five-year deal where the first three years are prepaid.
+[00:01:36.560 --> 00:01:41.440]   But to make it simple, just think of a three-year fully prepaid deal as the canonical example.
+[00:01:41.440 --> 00:01:43.840]   What are my underlying assumptions?
+[00:01:43.840 --> 00:01:48.160]   As several readers pointed out, there are some very good reasons to do multi-year prepaid deals.
+[00:01:48.160 --> 00:01:51.920]   Most of all, they are a financial win/win for both vendor and customer.
+[00:01:51.920 --> 00:01:54.560]   The customer earns a higher rate of return than bank interest,
+[00:01:54.560 --> 00:01:57.440]   and the vendor gets access to capital at a modest cost.
+[00:01:57.440 --> 00:02:00.720]   If you're bootstrapping a company with your own money, have no intention to raise
+[00:02:00.720 --> 00:02:05.680]   venture capital and are concerned about complicating an eventual exit to a private equity PE or
+[00:02:05.680 --> 00:02:10.640]   strategic acquirer, then I'd say go ahead and do them if you want to and your customers are game.
+[00:02:10.640 --> 00:02:15.040]   However, if you are venture-backed, intend to raise one or more additional rounds before an
+[00:02:15.040 --> 00:02:19.280]   exit and anticipate selling to either a strategic or private equity acquirer,
+[00:02:19.280 --> 00:02:23.200]   then I'd say you should make yourself quite familiar with the following list of disadvantages
+[00:02:23.200 --> 00:02:26.480]   before building multi-year prepaid deals into your business model.
+[00:02:26.480 --> 00:02:29.600]   Why do I recommend avoiding multi-year prepaid deals?
+[00:02:29.600 --> 00:02:32.000]   In a phrase, it's because they're not the norm.
+[00:02:32.000 --> 00:02:36.400]   If you want to raise money from and eventually sell to people who are used to SaaS businesses
+[00:02:36.400 --> 00:02:40.480]   that look a certain way, unless you are specifically trying to disrupt the business model,
+[00:02:40.480 --> 00:02:42.960]   then you should generally do things that certain way.
+[00:02:42.960 --> 00:02:47.200]   Multi-year prepaid deals complicate numerous things, and each of those complications will
+[00:02:47.200 --> 00:02:51.040]   be seen not as endemic to the space but as idiosyncratic to your company.
+[00:02:51.040 --> 00:02:54.160]   Here's the list of reasons why you should watch out.
+[00:02:54.160 --> 00:02:58.480]   Multi-year prepaid deals are not the norm, so they raise eyebrows among investors and
+[00:02:58.480 --> 00:03:00.080]   can backfire with customers.
+[00:03:00.080 --> 00:03:01.680]   Complexify SaaS metrics.
+[00:03:01.680 --> 00:03:04.160]   SaaS businesses are hard enough to understand already.
+[00:03:04.160 --> 00:03:08.480]   Multi-year deals make metrics calculation and interpretation even more complicated.
+[00:03:08.480 --> 00:03:13.680]   For example, do you want to argue with investors that your CAC payback period is not 18 months,
+[00:03:13.680 --> 00:03:18.560]   but one day, you can, but you'll face a great risk of "dying right" in so doing?
+[00:03:18.560 --> 00:03:20.720]   And I have done so on more than one occasion.
+[00:03:20.720 --> 00:03:22.000]   Amplify churn rates.
+[00:03:22.000 --> 00:03:27.200]   An annual renewal rate of 90% is equivalent to a 3-year renewal rate of 72%.
+[00:03:27.200 --> 00:03:27.840]   B.
+[00:03:27.840 --> 00:03:32.880]   You do want to argue that, say, 79% is better than 90%, or that you should take the nth
+[00:03:32.880 --> 00:03:36.400]   route of n-year renewal rates to properly compare them to 1-year rates.
+[00:03:36.400 --> 00:03:39.600]   You can, but real math is all too often seen as company spin,
+[00:03:39.600 --> 00:03:42.160]   especially once eyebrows are already raised.
+[00:03:42.160 --> 00:03:43.920]   Confuse churn rates.
+[00:03:43.920 --> 00:03:47.840]   In a world where investors generally fear complexity, do you want to have to calculate
+[00:03:47.840 --> 00:03:53.040]   churn rates on both and available to renew ATRAR and overall ARR pool basis and then
+[00:03:53.040 --> 00:03:54.320]   explain the difference?
+[00:03:54.320 --> 00:03:55.280]   I don't.
+[00:03:55.280 --> 00:03:57.440]   Turn your renewal's rate into a renewal's matrix.
+[00:03:57.440 --> 00:04:03.360]   Technically speaking, if you're doing a mix of 1, 2, and 3-year deals, then your renewal
+[00:04:03.360 --> 00:04:06.000]   rate isn't a single rate at all but a matrix.
+[00:04:06.000 --> 00:04:07.920]   Do you want to explain that to investors?
+[00:04:07.920 --> 00:04:10.400]   T you up for price knockoff at sales time.
+[00:04:10.400 --> 00:04:15.040]   Some buyers, particularly those in private equity, PE, will look at the relatively large
+[00:04:15.040 --> 00:04:19.360]   long-term deferred revenue balance as cashless revenue and try to deduct the cost of it from
+[00:04:19.360 --> 00:04:20.800]   an acquisition price.
+[00:04:20.800 --> 00:04:24.880]   Moreover, if not discussed upfront, someone might try to knock it off what you thought
+[00:04:24.880 --> 00:04:26.320]   was a final number.
+[00:04:26.320 --> 00:04:28.560]   Can reduce value for strategic acquirers.
+[00:04:28.560 --> 00:04:32.000]   Under today's rules for reasons that I don't antennae,
+[00:04:32.000 --> 00:04:36.160]   entirely understand deferred revenue seems to get written off and thus never recognized
+[00:04:36.160 --> 00:04:37.760]   in a SaaS acquisition.
+[00:04:37.760 --> 00:04:43.360]   So, ceteris paribus, an acquirer would greatly prefer non-repaid TC5, which it will get to
+[00:04:43.360 --> 00:04:46.720]   recognize over time, to deferred revenues, which it won't.
+[00:04:46.720 --> 00:04:49.120]   Can give pause to strategic acquirers.
+[00:04:49.120 --> 00:04:52.960]   Anything that might cause the acquirer to need to start release pro forma financials
+[00:04:52.960 --> 00:04:58.080]   has the potential to scare them off, particularly one with otherwise pristine financial statements.
+[00:04:58.080 --> 00:05:02.080]   For example, having to explain why revenue from a recently acquired startup is shrinking
+[00:05:02.080 --> 00:05:03.760]   year over year might.
+[00:05:03.760 --> 00:05:05.200]   Do precisely that.
+[00:05:05.200 --> 00:05:07.040]   Can inflate revenues.
+[00:05:07.040 --> 00:05:13.520]   Under ASC606, multi-year, prepaid deals are seen as significant financing events, so if
+[00:05:13.520 --> 00:05:17.840]   I have this correct, revenue will exceed the cash received from the customer as interest
+[00:05:17.840 --> 00:05:20.960]   expense will be recorded and increase the amount of revenue.
+[00:05:20.960 --> 00:05:25.600]   Some buyers, particularly PE ones, will see this as another form of cashless revenue and
+[00:05:25.600 --> 00:05:29.040]   want to deflate your financials to account for it since they are not primarily concerned
+[00:05:29.040 --> 00:05:32.480]   with GAAP financials but are more cash focused.
+[00:05:32.480 --> 00:05:35.280]   We'll similarly inflate remaining performance obligation,
+[00:05:35.280 --> 00:05:37.040]   URPO.
+[00:05:37.040 --> 00:05:41.360]   SAS companies are increasingly releasing a metric called RPO which I believe is supposed
+[00:05:41.360 --> 00:05:46.320]   to be a more rigorous form of what one might call remaining TCVIVE total contract value.
+[00:05:46.320 --> 00:05:50.400]   That is, whether prepaid or not, the value of remaining obligations undertaken in the
+[00:05:50.400 --> 00:05:52.120]   company's current set of contracts.
+[00:05:52.120 --> 00:05:56.240]   If this is calculated on a GAAP basis, you're going to have the same inflation issue as
+[00:05:56.240 --> 00:05:59.840]   with revenues when multi-year, prepaid deals are involved.
+[00:05:59.840 --> 00:06:04.560]   For example, I think a 3-year 100-unit deal done with annual payments will show up as 200-unit
+[00:06:04.560 --> 00:06:09.040]   deal done with annual payments will show up as 200 units of RPO but the same deal done
+[00:06:09.040 --> 00:06:15.920]   a prepaid basis will show up as 200-something for example, 200-any 200, due to imputed interest.
+[00:06:15.920 --> 00:06:17.840]   Impede analysis of billings.
+[00:06:17.840 --> 00:06:21.760]   If you want to go public or get acquired by a public company, financial analysts are going
+[00:06:21.760 --> 00:06:25.600]   to focus on a metric called calculated billings which is equal to revenue plus,
+[00:06:25.600 --> 00:06:28.320]   the change in deferred revenue for a given time period.
+[00:06:28.320 --> 00:06:33.440]   For SAS purest companies, that is, those that do only annual contracts with one-year prepays,
+[00:06:33.440 --> 00:06:36.720]   calculated billings is actually a pretty good measure of new sales.
+[00:06:36.720 --> 00:06:41.280]   Multi-year prepays impede analysis of billings because deferred revenue ends up a mishmash
+[00:06:41.280 --> 00:06:45.520]   of deals of varying L. Inks and is thus basically impossible to interpret.
+[00:06:45.520 --> 00:06:48.800]   This could preclude an acquisition by a SAS purest company.
+[00:06:48.800 --> 00:06:52.640]   More than anything, I think when you take these factors together, you can end up with
+[00:06:52.640 --> 00:06:57.120]   complexity fatigue which ultimately takes you back to whether it's a normal industry practice.
+[00:06:57.120 --> 00:07:01.440]   If it were, people would just think, that's the complexity endemic in the space.
+[00:07:01.440 --> 00:07:05.520]   If it's not, people think, gosh, it's just too darn hard to normalize this company to the
+[00:07:05.520 --> 00:07:10.880]   ones in our portfolio and my head hurts. Yes, there are a few very good reasons to do multi-year
+[00:07:10.880 --> 00:07:15.760]   prepaid deals. But overall, I'd say most investors and acquirers would prefer if you
+[00:07:15.760 --> 00:07:20.320]   just raised a bit more capital and didn't try to finance your growth using customer prepayments.
+[00:07:20.320 --> 00:07:24.960]   In my experience, the norm in enterprise software is increasingly converging to three-year deals with
+[00:07:24.960 --> 00:07:29.200]   annual payments which provide many of the advantages of multi-year deals without a lot of the added
+[00:07:29.200 --> 00:07:37.280]   complexity. Stasenot stasenot notes. Notes follow. Notes. While 10% is indeed high,
+[00:07:37.280 --> 00:07:43.360]   it makes the math easier for the example. That is, the three-year cost is 33/1 versus 300.
+[00:07:43.360 --> 00:07:48.320]   In reality, I think 5-6% is more reasonable, though it's always easier to reduce something
+[00:07:48.320 --> 00:07:53.280]   than increase it in a negotiation, especially if your competition primes them by saying,
+[00:07:53.280 --> 00:07:57.120]   "Those guys are in financial trouble, they need cash, so they're going to ask you for a
+[00:07:57.120 --> 00:08:03.040]   multi-year prepaid deal. Mark my words. Think, I know the formula you're using says 18 months,
+[00:08:03.040 --> 00:08:07.360]   but I'm holding an invoice or, if you wait 30 days, check in my hand for more than the customer
+[00:08:07.360 --> 00:08:11.840]   acquisition cost. Or, remember from B-School that payback periods are supposed to measure risk,
+[00:08:11.840 --> 00:08:15.200]   no return, and to do so by measuring how long your money is on the table.
+[00:08:15.200 --> 00:08:19.680]   Or, the problem with your formula is, you're producing a continuous result in a world where
+[00:08:19.680 --> 00:08:24.960]   you actually only collect modulo 12 months. Isn't that a problem for a would-be payback metric?
+[00:08:24.960 --> 00:08:28.000]   Renewal rate s1, churn rate. Jewing.
+[00:08:28.000 --> 00:08:34.160]   That is, that a 79% three-year rate is ergo better than a one-year 90% renewal rate.
+[00:08:34.160 --> 00:08:39.280]   Arguing that while the buyer will get to recognize the deferred revenue over time that the cash has
+[00:08:39.280 --> 00:08:43.520]   already been collected and ergo that the purchase price should be reduced by the cost of delivering
+[00:08:43.520 --> 00:08:52.000]   that revenue, that is COGS, Urslon, and one-year, that is COGS, Urslon. Hoppily, the deferred
+[00:08:52.000 --> 00:08:56.800]   revenue write-down approach seems to be in the midst of reevaluation. If the acquired company
+[00:08:56.800 --> 00:09:01.600]   does a high percentage of multi-year pre-paid deals and you write off its deferred revenue,
+[00:09:01.600 --> 00:09:06.160]   it will certainly reduce its apparent growth rate and possibly cause it to shrink on a year-over-year
+[00:09:06.160 --> 00:09:11.920]   basis. What was "in the bag revenue" for the acquired company gets vaporized for the acquirer,
+[00:09:11.920 --> 00:09:16.800]   or are other subsidiaries for a strategic acquirer, known either as billings or calculated
+[00:09:16.800 --> 00:09:21.920]   billings. I prefer the latter because it emphasizes that it's not a metric that most companies publish,
+[00:09:21.920 --> 00:09:26.240]   but one commonly derived by financial analysts. We are testing the limits of my accounting
+[00:09:26.240 --> 00:09:30.800]   knowledge here, but I suppose if deferred revenue is split into current and long-term, you might
+[00:09:30.800 --> 00:09:35.280]   still be able to get a reasonable guesstimate for new ARR sales by calculating billings based only
+[00:09:35.280 --> 00:09:39.680]   on current, but I'm not sure that's true and worry that the constant flow from long-term to
+[00:09:39.680 --> 00:09:44.960]   current deferred revenue will impede that analysis. A pure SaaS company, and they do exist, would
+[00:09:44.960 --> 00:09:49.520]   actually see two problems. First, potential year-over-year shrinkage due to the write-down discussed in
+[00:09:49.520 --> 00:09:53.360]   footnote. Second, they'd face a dilemma in choosing between the risk associated with
+[00:09:53.360 --> 00:09:57.920]   immediately transitioning the acquired company's business to annual only and the potential pollution
+[00:09:57.920 --> 00:10:02.720]   of its otherwise pristine deferred revenue if they don't. Minute 128 of the same video referenced
+[00:10:02.720 --> 00:10:08.080]   in the prior link. Good reasons to do multi-year pre-paid deals include (a) they are arguably a
+[00:10:08.080 --> 00:10:12.480]   clever form of financing using customer money. They tend to buy you a second chance if a customer
+[00:10:12.480 --> 00:10:17.200]   fails an implementation. For example, if you failed nine months into a one-year contract,
+[00:10:17.200 --> 00:10:22.640]   odds are you won't try again. With a three-year pre-pay you might well XED. They are usually a
+[00:10:22.640 --> 00:10:27.280]   financing win/win for both vendor and customer as the discount offered exceeds the time value of
+[00:10:27.280 --> 00:10:31.760]   money. You do get one new form of complexity which is whether to count payments as renewals,
+[00:10:31.760 --> 00:10:36.320]   but if everyone is doing three-year annual payment deals then a norm will be established.
+[00:10:36.320 --> 00:10:40.720]   This audio version was created by Grant Duncan and AI with permission from Dave.
+my-final-verdict-on-multi-year-pre-paid-deals: repetition 14 > 12 repeated 
+3-grams (coverage=95.8%, tail=92.5%, repeat3=14)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+=== QA my-saastr-2018-presentation-ten-non-obvious-things-about-scaling-saas ===
+
+[00:00:00.000 --> 00:00:04.160]   This is an audio version of a Dave Kellogg post from February 7, 2018,
+[00:00:04.160 --> 00:00:09.040]   titled "My Saster 2018 Presentation 10 Non-Ovious Things About Scaling SAS."
+[00:00:09.040 --> 00:00:14.560]   Below, please find the slides from the presentation I gave today at Saster 2018,
+[00:00:14.560 --> 00:00:17.120]   about which I wrote a teaser blog post last week.
+[00:00:17.120 --> 00:00:19.440]   I hope you enjoy it as much as I enjoyed making it.
+[00:00:19.440 --> 00:00:25.840]   Slide share ITER 87427535 and doc who saw ASTR 18 DOF Kellogg tenon.
+[00:00:25.840 --> 00:00:31.760]   Obvious things are 1-1-2-0-2-7-1-2-0-9. I hope to see everyone next year at Saster.
+[00:00:31.760 --> 00:00:35.280]   I think it's the preeminent software, SAS, and startups conference.
+[00:00:35.280 --> 00:00:40.080]   This audio version was created by Grant Duncan and AI, with permission from Dave.
+my-saastr-2018-presentation-ten-non-obvious-things-about-scaling-saas: tail 
+similarity 63.1% < 70% (coverage=86.2%, tail=63.1%, repeat3=2)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+=== QA rule-of-40-glideslope-planning ===
+
+[00:00:00.000 --> 00:00:05.440]   This is an audio version of a Dave Kellogg post from January 30, 2019 titled Rule of
+[00:00:05.440 --> 00:00:10.880]   40 Glideslope Planning. Enterprise SaaS companies need a lot of money to grow. The median company
+[00:00:10.880 --> 00:00:17.600]   spends $1.32 to acquire $1.0 in annual recurring revenue (ARRR). They need to make that investment
+[00:00:17.600 --> 00:00:23.520]   for 14 years before getting to an IPO. It all adds up to a median of $300 million in capital
+[00:00:23.520 --> 00:00:28.640]   raised prior to an IPO. With such vast amounts of money in play, some say it's a growth at all
+[00:00:28.640 --> 00:00:33.520]   costs (game), but others hold to the rule of 40 which attempts to balance growth and profitability
+[00:00:33.520 --> 00:00:38.320]   with a simple rule. Grow as fast as you want, as long as your revenue growth rate rate plus your
+[00:00:38.320 --> 00:00:44.000]   free cash flow margin. 40%. The rule of 40 gets a lot of attention, but I think that companies are
+[00:00:44.000 --> 00:00:48.640]   not asking the right question about it. The right question is not, "When should my growing startup
+[00:00:48.640 --> 00:00:53.200]   be Rule of 40 compliant?" For more than half of all public SaaS companies, the answer to that
+[00:00:53.200 --> 00:00:59.200]   question is not yet. Per multiple studies, I've read the median role of 40 score for public SaaS
+[00:00:59.200 --> 00:01:04.880]   companies is E31%, meaning that more than half of public SaaS companies are not Rule of 40 compliant.
+[00:01:04.880 --> 00:01:09.920]   So, unless you're an absolutely amazing company like Elastic, which had a rule of 40 score of 87%
+[00:01:09.920 --> 00:01:14.720]   at its IPO, you probably shouldn't be unrealistically planning to become Rule of 40 compliant
+[00:01:14.720 --> 00:01:19.600]   three years before your IPO. If you do, especially if you're well-funded and don't need additional
+[00:01:19.600 --> 00:01:24.160]   expense constraints, you might well compromise growth with a premature focus on the rule of 40,
+[00:01:24.160 --> 00:01:27.120]   which could shoot off your corporate foot in terms of your eventual valuation.
+[00:01:27.120 --> 00:01:32.160]   If "When should we be Rule of 40 compliant?" is the wrong question, then what's the wrong question,
+[00:01:32.160 --> 00:01:37.200]   then one question, then one's the right one. What should my company's Rule of 40 glideslope be?
+[00:01:37.200 --> 00:01:41.520]   That is, over the next several years, what is your eventual Rule of 40 score target,
+[00:01:41.520 --> 00:01:45.840]   and how do you want to evolve to it? The big advantage of this question is that the answer
+[00:01:45.840 --> 00:01:50.560]   isn't a year, and it doesn't assume Rule of 40 compliance, but it does get you to start thinking
+[00:01:50.560 --> 00:01:54.720]   about and tracking your Rule of 40 score. I built a little model to help do some what-if
+[00:01:54.720 --> 00:01:59.520]   analysis around this question, you can download it here. In our example, we've got a 5-year-old,
+[00:01:59.520 --> 00:02:05.200]   $30 million ARR SaaS company planning the next 5 years of its evolution, hopefully with an IPO
+[00:02:05.200 --> 00:02:09.920]   in year 8 or 9. The driver sells orange to find how fast you want to grow and what you want your
+[00:02:09.920 --> 00:02:14.800]   Rule of 40 glideslope to be. Everything else is calculated. At the bottom, we have an overall
+[00:02:14.800 --> 00:02:19.440]   efficiency analysis. In each year, how much more are we spending than the previous year? How much
+[00:02:19.440 --> 00:02:24.000]   more revenue do we expect to get? And what's the ratio between the two? That is, which works like
+[00:02:24.000 --> 00:02:29.360]   kind of an incremental revenue – CAC. As we improve the Rule of 40 glideslope to be,
+[00:02:29.360 --> 00:02:33.600]   40 score you can see that we need to improve efficiency by spending less for each incremental
+[00:02:33.600 --> 00:02:38.400]   dollar of revenue. You can use this as a sanity check on your results, as we'll see in a minute.
+[00:02:38.400 --> 00:02:42.800]   Let me demonstrate why I predict that 9 out of 10 10 CFOs will love this modeling approach.
+[00:02:42.800 --> 00:02:47.280]   Let's look at every CFO's nightmare scenario. Think, we can't really control revenues, but we
+[00:02:47.280 --> 00:02:51.360]   can control expenses. So my wake up in the middle of the night sweating outcome is that we build
+[00:02:51.360 --> 00:02:56.160]   expenses for the plan and miss the revenues. In the above CFO nightmare scenario, we hold
+[00:02:56.160 --> 00:03:00.400]   expenses constant with the original plan and come in considerably lighter on revenue.
+[00:03:00.400 --> 00:03:04.960]   The drives us miles off our desired Rule of 40 glideslope see red cells. We end up needing to
+[00:03:04.960 --> 00:03:10.160]   fund $42.4 million more in operating losses than the original plan, all to generate a company
+[00:03:10.160 --> 00:03:15.760]   that's $30.5 million smaller in revenue and generating much larger losses. It's no wonder
+[00:03:15.760 --> 00:03:21.040]   why CFOs worry about this. They should. What would the CFOs worry about this? They should.
+[00:03:21.040 --> 00:03:25.840]   What would a CFO really like? As in, let's agree to a Rule of 40 glideslope. And then
+[00:03:25.840 --> 00:03:30.480]   if revenues come up short, we have all pre-agreed to adjust expenses to fall in line with the new,
+[00:03:30.480 --> 00:03:35.280]   reduced revenues, and the desired Rule of 40 score. That's what the third block shows above.
+[00:03:35.280 --> 00:03:39.360]   We hold to the reduced revenues of the middle scenario, but reduce expenses to hold to the
+[00:03:39.360 --> 00:03:44.160]   planned Rule of 40 glideslope. Here's the bad news. In this scenario, and probably most
+[00:03:44.160 --> 00:03:48.800]   real-life ones resembling it, you can't actually do it. The required revenue gathering efficiency
+[00:03:48.800 --> 00:03:54.960]   more than double C red cells. You are spending $138 to get an incremental $1 of revenue and,
+[00:03:54.960 --> 00:04:00.800]   to hold to the glideslope, you need to instantly jump to spending only $49. That's not going to
+[00:04:00.800 --> 00:04:08.240]   happen. While it's probably impossible to hold to the original die. 10%, duro percent, 5% glideslope,
+[00:04:08.240 --> 00:04:13.360]   if you at least try. And, for example, don't build expenses fully to plan when other indicators
+[00:04:13.360 --> 00:04:19.760]   don't support it, then you will certainly do a lot better than the EU 10%. 32%, 42% glideslope
+[00:04:19.760 --> 00:04:24.640]   in the second scenario. In this post, we've talked about the Rule of 40 and why startups
+[00:04:24.640 --> 00:04:29.040]   should think about it as a glideslope rather than a short or mid-term destination.
+[00:04:29.040 --> 00:04:33.360]   We've provided you with a downloadable model where you can play with your Rule of 40 glideslope,
+[00:04:33.360 --> 00:04:38.400]   and we've shown why CFOs will inherently be drawn to the Rule of 40 as a long-term planning constraint,
+[00:04:38.400 --> 00:04:41.600]   because in many ways it will help your company act like a self-writing ship.
+[00:04:41.600 --> 00:04:49.520]   Nespersi. Nesp follow. Nespersi e. Nets follow. Nespersi ee. Nespersi ee for CE.
+[00:04:49.520 --> 00:04:55.680]   Spersi e. Nespi $2. And $25 per seat spend more than that, per key bank.
+[00:04:55.680 --> 00:05:01.040]   Rule of 40 compliant means a company has a Rule of 40 score 40%. See next note.
+[00:05:01.040 --> 00:05:06.480]   Rule of 40 score is generally defined as revenue growth rate press-free cash flow FCF margin.
+[00:05:06.480 --> 00:05:12.880]   Sometimes operating margin or EBITDA margin is used instead because FCF margin can be somewhat
+[00:05:12.880 --> 00:05:18.000]   harder to find. I'm trying to find data, a good data set of Rule of 40 scores at IPO time,
+[00:05:18.000 --> 00:05:22.880]   but thus far haven't found one. Anecdotally, I can say that lots of successful high-growth SaaS
+[00:05:22.880 --> 00:05:29.440]   IPOs for example, MongoDB, AniPlan, and Blackline were not Rule of 40 compliant at IPO time.
+[00:05:29.440 --> 00:05:34.800]   Nor were they well after, for example, as of October 2018 per JMP's Quarterly Software Review.
+[00:05:34.800 --> 00:05:38.400]   It seems that if growth is sufficiently there that the profitability constraint can be somewhat
+[00:05:38.400 --> 00:05:43.280]   deferred in the mind of the market. This audio version was created by Grant Duncan and AI,
+[00:05:43.280 --> 00:05:44.960]   with permission from Dave.
+rule-of-40-glideslope-planning: repetition 26 > 12 repeated 3-grams 
+(coverage=92.8%, tail=88.8%, repeat3=26)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+=== QA should-we-rename-the-401k-the-201k ===
+
+[00:00:00.000 --> 00:00:05.800]   This is an audio version of a Dave Kellogg post from November 22nd, 2008 titled, "Should
+[00:00:05.800 --> 00:00:08.960]   we rename the 401k the 2000k?"
+[00:00:08.960 --> 00:00:12.960]   This quip popped into my mind the other day, and, hoping to coin a phrase, I decided to
+[00:00:12.960 --> 00:00:13.960]   blog on it.
+[00:00:13.960 --> 00:00:17.920]   Sadly, however, a few others seem to have beaten me to the punch.
+[00:00:17.920 --> 00:00:20.400]   Nothing like a bit of gallows humor to cheer us up.
+[00:00:20.400 --> 00:00:25.820]   If 401ks are now 21ks, should the S&P 500 be the S&P 256?
+[00:00:25.820 --> 00:00:29.240]   My 21,000, which used to be my 401,000?
+[00:00:29.240 --> 00:00:33.240]   This audio version was created by Grant Duncan and AI with permission from Dave.
+should-we-rename-the-401k-the-201k: ok (coverage=85.5%, tail=88.4%, repeat3=2)
+QA sweep complete: selected=1 checked=1 passed=1 failed=0 errored=0 
+queued-for-rerun=0
+=== QA sqlxquery-franglais-frankenqueries ===
+
+[00:00:00.000 --> 00:00:06.080]   This is an audio version of a Dave Kellogg post from November 9th, 2007, titled "SQLC XQuery
+[00:00:06.080 --> 00:00:11.840]   Frankly Franken Queries." One of our consultants is doing some testing of MarkLogic vs XML Extended
+[00:00:11.840 --> 00:00:16.000]   Relational Databases, and he sent me an example of the kinds of queries you need to write when
+[00:00:16.000 --> 00:00:23.760]   you're mixing SQL and XQuery/XPath. Here is an example. Select XML query, tiler and tile, tile
+[00:00:23.760 --> 00:00:33.680]   s-e-s-s/citation/index/concept-code-list/concept-code passing p-x-m-l-data (ASP from all citations).
+[00:00:33.680 --> 00:00:42.240]   ASP-WIR contains XML data, s-action/index/index/chemical-data/chemical-list/chemical-name,
+[00:00:42.240 --> 00:00:48.880]   leukovorin and s-action/index/index/concept-code-list/concept-code.
+[00:00:48.880 --> 00:00:54.240]   Pharmacology and R, W1, a few things spring to mind when I see queries like this.
+[00:00:54.240 --> 00:00:58.000]   This is why people made XQuery, so you wouldn't have to write stuff like this.
+[00:00:58.000 --> 00:01:04.320]   Why in the world do you need to mix XPath and SQL in this way? In a theoretically bilingual SQL/XQuery
+[00:01:04.320 --> 00:01:08.960]   database, can I just write document-oriented queries purely in XQuery and not mess around
+[00:01:08.960 --> 00:01:15.760]   with selecting columns that are themselves XML-QU arrays? Answer, in DB2's ironically named PureXML,
+[00:01:15.760 --> 00:01:20.480]   you need to use SQL as the outer framework if you want to use full-text indexing, so yes,
+[00:01:20.480 --> 00:01:24.720]   you must do this. Are there more than 10 people in the world who will understand what the answer
+[00:01:24.720 --> 00:01:30.240]   to this query is supposed to be? SQL and XQuery each have their own semantics, and few people
+[00:01:30.240 --> 00:01:36.400]   deeply understand them. How many people understand not only both SQL and XQuery semantics, but also
+[00:01:36.400 --> 00:01:41.680]   how they interact? It reminds me of trying to find a tax guy in France who could do both the US and
+[00:01:41.680 --> 00:01:46.480]   French systems at the same time. I watched two world-class experts debate what the correct
+[00:01:46.480 --> 00:01:51.440]   answer was to such a query for 20 minutes. Does Joe Programmer even have a chance?
+[00:01:51.440 --> 00:01:56.080]   This audio version was created by Grant Duncan and AI, with permission from Dave.
+sqlxquery-franglais-frankenqueries: coverage 84.3% < 85% (coverage=84.3%, 
+tail=100.0%, repeat3=3)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+=== QA the-20th-century-called-it-wants-its-relational-database-back ===
+
+[00:00:00.000 --> 00:00:05.040]   This is an audio version of a Dave Kellogg post from November 1, 2010 titled "The Twentieth
+[00:00:05.040 --> 00:00:09.360]   Century Called." It wants its relational database back. I saw this piece of creative
+[00:00:09.360 --> 00:00:13.680]   the other day for a trade show ad and loved it. Remember, Ted Codd invented the relational
+[00:00:13.680 --> 00:00:18.960]   database in 1970 with his paper "A Relational Model for Shared Databanks." This PDF of the
+[00:00:18.960 --> 00:00:24.640]   classic looks about as old as the ad. Do PDFs age? Enjoy. This audio version was created by
+[00:00:24.640 --> 00:00:27.740]   by Grant Duncan and AI with permission from Dave.
+the-20th-century-called-it-wants-its-relational-database-back: coverage 83.6% < 
+85% (coverage=83.6%, tail=86.8%, repeat3=1)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+=== QA the-re-emergence-of-product-line-marketing ===
+
+[00:00:00.000 --> 00:00:05.760]   This is an audio version of a Dave Kellogg post from May 3rd, 2026, titled "The Re-emergence
+[00:00:05.760 --> 00:00:07.460]   of Product Line Marketing."
+[00:00:07.460 --> 00:00:11.040]   A few years ago I wrote a post called "The Decomposition of Marketing."
+[00:00:11.040 --> 00:00:15.820]   The argument was that startup CEOs were increasingly breaking marketing apart, moving product marketing
+[00:00:15.820 --> 00:00:20.280]   under product and moving demand gen under sales, in order to get strong leadership in
+[00:00:20.280 --> 00:00:24.840]   both product marketing and demand gen without having to find the rare CMO who's genuinely
+[00:00:24.840 --> 00:00:26.000]   great at both.
+[00:00:26.000 --> 00:00:29.920]   I think that trend has accelerated, and it's created a problem that nobody seems to be
+[00:00:29.920 --> 00:00:32.580]   talking about, mind.
+[00:00:32.580 --> 00:00:33.580]   The gap.
+[00:00:33.580 --> 00:00:37.780]   Here's what happens when you decompose marketing in a multi-product organization.
+[00:00:37.780 --> 00:00:41.860]   In the fully decomposed organization, there is no traditional CMO.
+[00:00:41.860 --> 00:00:47.580]   What you have instead is three distinct leaders, an SVP of demand gen who reports to the CRO
+[00:00:47.580 --> 00:00:53.040]   and is laser focused on pipeline, one or more VPs of product marketing who report into the
+[00:00:53.040 --> 00:00:59.600]   CPOO or product GMs and own their individual products, and an SVP of corporate marketing,
+[00:00:59.600 --> 00:01:02.760]   sometimes carrying the CMO title, sometimes not.
+[00:01:02.760 --> 00:01:05.060]   Who owns brand and communications?
+[00:01:05.060 --> 00:01:09.040]   Each product team has its own product marketer or team leader focused on their product's
+[00:01:09.040 --> 00:01:11.000]   positioning, messaging, and launch.
+[00:01:11.000 --> 00:01:15.080]   The CPO loves it because they no longer have to work, that is, waste time with marketing
+[00:01:15.080 --> 00:01:16.540]   to build their story.
+[00:01:16.540 --> 00:01:19.320]   The product marketers love it because they're not spread thin.
+[00:01:19.320 --> 00:01:23.160]   The demand gen leader even likes it because they know who to work with on product-specific
+[00:01:23.160 --> 00:01:24.160]   campaigns.
+[00:01:24.160 --> 00:01:27.520]   The problem is that you now have three product marketers, each telling the story of their
+[00:01:27.520 --> 00:01:29.200]   individual product.
+[00:01:29.200 --> 00:01:34.320]   Each one is perfectly capable of answering "why buy mine" for their specific product.
+[00:01:34.320 --> 00:01:37.840]   None of them is positioned, organizationally or politically.
+[00:01:37.840 --> 00:01:42.040]   To answer a different question, why buy this product line and where is it going?
+[00:01:42.040 --> 00:01:45.760]   That question falls through the org chart, and it matters enormously.
+[00:01:45.760 --> 00:01:50.520]   Because buyers, especially enterprise buyers, don't just buy products, they buy into a
+[00:01:50.520 --> 00:01:53.200]   vision, they're making a bet on a vendor.
+[00:01:53.200 --> 00:01:56.860]   They want to know, does this company have a coherent strategy or did they just bolt
+[00:01:56.860 --> 00:01:59.480]   three products together and call it a platform?
+[00:01:59.480 --> 00:02:03.880]   Is this a company I can grow with, or am I buying the first of many painful migrations?
+[00:02:03.880 --> 00:02:07.280]   Nobody in the decomposed org is answering that question well.
+[00:02:07.280 --> 00:02:10.180]   The product marketers are heads down on their products.
+[00:02:10.180 --> 00:02:13.520]   The SVP of demand gen is focused on pipeline.
+[00:02:13.520 --> 00:02:18.160]   The SVP of corporate marketing is telling the brand story, which is emotional, values-driven,
+[00:02:18.160 --> 00:02:19.240]   and important.
+[00:02:19.240 --> 00:02:21.200]   But it isn't a product story.
+[00:02:21.200 --> 00:02:22.840]   Brand is about feeling.
+[00:02:22.840 --> 00:02:27.360]   Product line marketing is about logic, why this set of products, why together, why now,
+[00:02:27.360 --> 00:02:28.560]   and why us.
+[00:02:28.560 --> 00:02:31.120]   In a small startup, the CEO fills this gap.
+[00:02:31.120 --> 00:02:32.120]   That's fine.
+[00:02:32.120 --> 00:02:35.560]   The CEO should be the chief storyteller when the company is young and the product line
+[00:02:35.560 --> 00:02:36.560]   is simple.
+[00:02:36.560 --> 00:02:41.100]   But as the company grows, scales, and adds products, the CEO can no longer own this story
+[00:02:41.100 --> 00:02:42.880]   in any operational sense.
+[00:02:42.880 --> 00:02:44.540]   It becomes nobody's job.
+[00:02:44.540 --> 00:02:48.000]   Which means it either doesn't get done or gets done by someone pinch-hitting in the
+[00:02:48.000 --> 00:02:49.000]   role.
+[00:02:49.000 --> 00:02:53.720]   For example, the VP of brand, doing their best, one of the product marketing VP's moonlighting.
+[00:02:53.720 --> 00:02:57.160]   Given that this integrated story is typically more important to buyers than each of the
+[00:02:57.160 --> 00:02:59.760]   product-specific ones, this is a problem.
+[00:02:59.760 --> 00:03:03.360]   The thing that matters most to buyers is literally no one's day job.
+[00:03:03.360 --> 00:03:04.360]   This isn't theoretical.
+[00:03:04.360 --> 00:03:07.360]   I've seen this gap in practice many times.
+[00:03:07.360 --> 00:03:11.480]   In one case, a growing multi-product SaaS business with strong product marketers, great
+[00:03:11.480 --> 00:03:14.280]   demand generation, and a real brand.
+[00:03:14.280 --> 00:03:17.600]   But nobody whose job it is to walk a prospective customer through the logic of the product
+[00:03:17.600 --> 00:03:22.640]   line, why these products together, how they reinforce each other, what the roadmap implies
+[00:03:22.640 --> 00:03:27.120]   about where the company is going, and why that matters for a buyer making a 3-year bet.
+[00:03:27.120 --> 00:03:31.600]   I also have a friend at a large enterprise software company who was recently given a
+[00:03:31.600 --> 00:03:37.460]   role that, officially, sits somewhere in marketing strategy or marketing operations.
+[00:03:37.460 --> 00:03:41.400]   But when you listen to what they actually do, it's product line marketing.
+[00:03:41.400 --> 00:03:43.740]   They own the integrated product story.
+[00:03:43.740 --> 00:03:47.520]   They work across business units to ensure the message hangs together.
+[00:03:47.520 --> 00:03:51.480]   They work on cross-product expansion playbooks and sales analytics.
+[00:03:51.480 --> 00:03:55.360]   They help the company answer the questions that no individual product team can answer
+[00:03:55.360 --> 00:03:56.360]   alone.
+[00:03:56.360 --> 00:04:01.240]   I think they call it product ops or marketing ops or such, but it's product line marketing.
+[00:04:01.240 --> 00:04:03.320]   Call it what you will, but the job needs to be done.
+[00:04:03.320 --> 00:04:05.640]   What product line marketing actually is.
+[00:04:05.640 --> 00:04:08.520]   Let me be precise, because the naming here matters.
+[00:04:08.520 --> 00:04:11.600]   Product line marketing is holistic, but it's deeper than brand.
+[00:04:11.600 --> 00:04:15.640]   Brand is emotional and important, but it's not about product-oriented arguments.
+[00:04:15.640 --> 00:04:19.560]   And while it certainly involves communications, product line marketing is not a pure comms
+[00:04:19.560 --> 00:04:21.560]   role like public relations.
+[00:04:21.560 --> 00:04:25.320]   Nor is it product marketing in the traditional sense, because that's specific to a given
+[00:04:25.320 --> 00:04:26.320]   product.
+[00:04:26.320 --> 00:04:28.880]   Product line marketing is the discipline of telling the story of a company's product
+[00:04:28.880 --> 00:04:33.520]   portfolio, why these products belong together, what the vision is for the combined offering,
+[00:04:33.520 --> 00:04:37.220]   how a customer should think about buying one versus two versus all of them, and why the
+[00:04:37.220 --> 00:04:39.840]   holistic roadmap is going where it's going.
+[00:04:39.840 --> 00:04:41.440]   It lives between brand and product.
+[00:04:41.440 --> 00:04:45.920]   It's more specific than corporate messaging and more strategic than individual product
+[00:04:45.920 --> 00:04:46.920]   messaging.
+[00:04:46.920 --> 00:04:49.720]   It's the connective tissue that most multi-product companies are missing.
+[00:04:49.720 --> 00:04:53.480]   Beyond the story itself, product line marketing should own some things that are inherently
+[00:04:53.480 --> 00:04:57.360]   cross-product in nature, the standard sales deck and demo.
+[00:04:57.360 --> 00:05:01.520]   Someone has to own the pitch that walks a prospect through the whole portfolio story.
+[00:05:01.520 --> 00:05:04.780]   If three product teams each own a piece of it, you don't have a deck.
+[00:05:04.780 --> 00:05:06.400]   You have a franken deck.
+[00:05:06.400 --> 00:05:08.000]   Owning the sales deck is obvious.
+[00:05:08.000 --> 00:05:13.080]   What's less obvious is that product line marketing should also own the standard demo,
+[00:05:13.080 --> 00:05:16.760]   because the demo is just the same story told with the product as the visual instead of
+[00:05:16.760 --> 00:05:18.040]   slides.
+[00:05:18.040 --> 00:05:21.560]   If the deck and the demo tell different stories, you have a problem.
+[00:05:21.560 --> 00:05:26.560]   They should be the same narrative, expressed in two different media, analyst relations.
+[00:05:26.560 --> 00:05:30.240]   Because product to analyst mapping is rarely one-to-one, and because analysts themselves
+[00:05:30.240 --> 00:05:34.640]   want to understand the integrated story, analyst and influencer relations should be in the
+[00:05:34.640 --> 00:05:36.520]   product line marketing team.
+[00:05:36.520 --> 00:05:40.200]   This also enables you to hire a top-class analyst relations leader and leverage them
+[00:05:40.200 --> 00:05:41.640]   across products.
+[00:05:41.640 --> 00:05:46.800]   It also centralizes basic but important things like contract negotiation, inquiry management,
+[00:05:46.800 --> 00:05:50.500]   briefing and strategy day scheduling, and the general responsibility for squeezing every
+[00:05:50.500 --> 00:05:53.620]   last drop of value out of the money you've invested.
+[00:05:53.620 --> 00:05:57.580]   Too many vendors write the big check, and then fail to get value.
+[00:05:57.580 --> 00:05:58.800]   Social media.
+[00:05:58.800 --> 00:06:02.400]   Maintaining a consistent social presence is too important to leave to chance, and too
+[00:06:02.400 --> 00:06:07.640]   expensive to duplicate across product teams. Individual PMMs can and should contribute
+[00:06:07.640 --> 00:06:11.880]   to social conversations in their area, but owning and maintaining the social presence
+[00:06:11.880 --> 00:06:14.640]   needs to be someone's actual job.
+[00:06:14.640 --> 00:06:18.320]   Centralizing it in product line marketing delivers both economies of scale and consistency
+[00:06:18.320 --> 00:06:19.520]   of message.
+[00:06:19.520 --> 00:06:23.240]   The alternative, having each product team manage their own presence, or delegating it
+[00:06:23.240 --> 00:06:28.200]   to a PR/COMS person whose instincts are corporate rather than product, produces the kind of
+[00:06:28.200 --> 00:06:33.280]   F — fragmented, low-signal output that gets tolerated but rarely drives results.
+[00:06:33.280 --> 00:06:37.400]   Why this is coming back product line marketing isn't a new idea. At Business Objects back
+[00:06:37.400 --> 00:06:41.800]   in the day, when we had a portfolio of BI products, someone had to own the story of
+[00:06:41.800 --> 00:06:43.280]   how they fit together.
+[00:06:43.280 --> 00:06:48.680]   Big enterprise software companies, IBM, SAP, Oracle, have always had versions of this role
+[00:06:48.680 --> 00:06:50.480]   even if they called it something else.
+[00:06:50.480 --> 00:06:55.880]   What's new is that the org structures that made product line marketing unnecessary. Single-product
+[00:06:55.880 --> 00:07:00.880]   companies, integrated marketing teams, CMOs who owned both message and demand, are now
+[00:07:00.880 --> 00:07:04.060]   widely being replaced by decomposed structures.
+[00:07:04.060 --> 00:07:08.240]   More companies are going multi-product faster. More are moving product marketing into the
+[00:07:08.240 --> 00:07:09.400]   product org.
+[00:07:09.400 --> 00:07:14.160]   And as they do, the gap grows. The solution isn't to reverse the decomposition. Putting
+[00:07:14.160 --> 00:07:18.680]   product marketing back under marketing doesn't necessarily produce better product marketing.
+[00:07:18.680 --> 00:07:23.800]   The decomposition, in many cases, is the right call. The solution is to recognize that decomposition
+[00:07:23.800 --> 00:07:27.440]   creates a new need. When you break marketing apart, you need someone to hold the whole
+[00:07:27.440 --> 00:07:31.520]   story together. That's product line marketing. Call it what you want.
+[00:07:31.520 --> 00:07:35.720]   But make sure someone's doing it. If you're running a decomposed marketing organization,
+[00:07:35.720 --> 00:07:40.000]   or if you've recently moved in that direction, ask yourself, who owns the following, the
+[00:07:40.000 --> 00:07:44.680]   integrated product line story, the standard sales deck and demo, analyst relations, and
+[00:07:44.680 --> 00:07:45.760]   social media.
+[00:07:45.760 --> 00:07:49.800]   If the answer is nobody, or everyone's sort of, or we cover that patchwork by the product
+[00:07:49.800 --> 00:07:52.680]   units, that's your answer. You have a gap.
+[00:07:52.680 --> 00:07:56.480]   And the fix is to create a product line marketing function, give it a real mandate, and staff
+[00:07:56.480 --> 00:07:59.960]   it with someone who can speak credibly to the whole portfolio. The thing that matters
+[00:07:59.960 --> 00:08:03.800]   most to your buyers shouldn't be nobody's job. Have you dealt with this problem? I'd
+[00:08:03.800 --> 00:08:08.040]   love to hear how you've solved it, or not. Leave a comment, or drop me a note.
+[00:08:08.040 --> 00:08:12.040]   This audio version was created by Grant Duncan and AI with permission from Dave.
+the-re-emergence-of-product-line-marketing: repetition 15 > 12 repeated 3-grams 
+(coverage=97.9%, tail=100.0%, repeat3=15)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+=== QA the-rule-of-40-down-but-not-out ===
+
+[00:00:00.000 --> 00:00:06.400]   This is an audio version of a Dave Kellogg post from May 21, 2019 titled "The Rule of 40, Down
+[00:00:06.400 --> 00:00:12.480]   but Not Out." Neeraj Agrawal and Logan Bartlett of Battery Ventures recently published the 2019
+[00:00:12.480 --> 00:00:17.680]   version of its outstanding annual Software Roundup report. I highly recommend this report.
+[00:00:17.680 --> 00:00:23.680]   It's 78 pages chock-full of great data about topics like "Why Battery is Long Software Overall,
+[00:00:23.680 --> 00:00:28.160]   The Four Errors of Software Evolution," "The Five Forces Driving Software's Accelerating Growth,"
+[00:00:28.160 --> 00:00:32.800]   key trends in 2018, including setting records in three areas, one public company revenue,
+[00:00:32.800 --> 00:00:38.400]   multiples, two IPO volume by over two times, and three M and A volume by over two times.
+[00:00:38.400 --> 00:00:43.520]   Key trends from their 2017 report that are still alive, well, and driving software businesses.
+[00:00:43.520 --> 00:00:47.600]   But, most of all, it has some great charts on the Rule of 40 that I want to present and discuss here.
+[00:00:47.600 --> 00:00:51.280]   Before doing that, I must note that I drank today's morning coffee reading Alex Clayton's
+[00:00:51.280 --> 00:00:56.480]   closed. Rec. IPO Breakdown. A great post about a cloud security company with absolutely stunning
+[00:00:56.480 --> 00:01:03.920]   growth at scale. 21% growth to $3-2 million and ending ARR in FY19. And, despite my headline,
+[00:01:03.920 --> 00:01:09.360]   well in compliance with the Rule of 40. Do 110% revenue growth. Person-to-revenue growth,
+[00:01:09.360 --> 00:01:14.720]   percent-free cash flow margin, 84%, one of the highest Rule of 40 scores that I've ever seen.
+[00:01:14.720 --> 00:01:19.680]   Keep an eye on this company, I expect it should have a strong IPO. However, finding one superstar
+[00:01:19.680 --> 00:01:24.720]   neither proves nor disproves the rule. Let's turn to the battery data to do that. When discussing the
+[00:01:24.720 --> 00:01:29.440]   Rule of 40, most financial analysts make one of two plots. They do a scatter plot with revenue
+[00:01:29.440 --> 00:01:34.720]   growth on the x-axis and fcf margin on the y-axis. The Rule of 40 then becomes a line that separates
+[00:01:34.720 --> 00:01:39.040]   the chart into two zones, compliant and non-compliant. Note that a minority of public
+[00:01:39.040 --> 00:01:43.840]   companies actually comply suggesting the Rule of 40 is a pretty high bar. Or, more interestingly,
+[00:01:43.840 --> 00:01:49.040]   they do a linear regression of Rule of 40 score versus enterprise, value/revenue EV multiple.
+[00:01:49.040 --> 00:01:53.600]   This puts focus on the question, what's the relationship between Rule of 40 score and company
+[00:01:53.600 --> 00:01:58.560]   value? But that thing has always bugged me is that nobody does the linear regress. I own against both
+[00:01:58.560 --> 00:02:04.400]   the Rule of 40 score and revenue growth. Nobody until battery. Here's what it shows. First,
+[00:02:04.400 --> 00:02:09.120]   let's look at the classic Rule of 40 regression. Recall that R squared is a statistical measure
+[00:02:09.120 --> 00:02:13.440]   that explains the dependence of the dependent variable, in this case, EV multiple on the
+[00:02:13.440 --> 00:02:17.920]   independent variable, Rule of 40 score. Here you can see that about 58% of the
+[00:02:17.920 --> 00:02:22.400]   variation in enterprise value multiple is explained by Rule of 40 score. You can intuit
+[00:02:22.400 --> 00:02:26.560]   that by looking at the dots relative to the line. While there is clearly some linear correlation
+[00:02:26.560 --> 00:02:31.760]   between the data, it's a long way from perfect. That is, lots of dots are pretty far from the line.
+[00:02:31.760 --> 00:02:35.840]   Now, the fun part. Let's see the same regression against revenue growth alone.
+[00:02:35.840 --> 00:02:41.360]   R squared here is 51%. So the explanatory power of the Rule of 40 is only 7% higher
+[00:02:41.360 --> 00:02:45.760]   than revenue growth alone. Probably still worth looking at, but it sure gets a lot of PR for
+[00:02:45.760 --> 00:02:50.800]   explaining only an incremental 7%. It could be worse, I suppose. Rule of 40 could have a lower
+[00:02:50.800 --> 00:02:56.000]   R squared than revenue growth alone. In fact, it did back in 2008 and in 2012.
+[00:02:56.000 --> 00:03:00.320]   In the vein, for some real fun, let's look at how this relationship has changed over time.
+[00:03:00.320 --> 00:03:06.240]   The first thing you'll notice is that pre-2012, both last 12-month, LTM revenue growth and the
+[00:03:06.240 --> 00:03:11.120]   Rule of 40 had far weaker explanatory power. I suspect because profitability played a more
+[00:03:11.120 --> 00:03:16.320]   important role in the equation. In 2012, the explanatory power of both metrics doubled.
+[00:03:16.320 --> 00:03:22.080]   In 2015 and 2018, the Rule of 40 explained nearly 20% more than revenue growth alone.
+[00:03:22.080 --> 00:03:28.800]   In 2010 and 2018, however, that's dropped to 7-8%. I still think the Rule of 40 is a nice way to
+[00:03:28.800 --> 00:03:33.200]   think about balancing growth vs. profit and Rule of 40 compliant companies still command a
+[00:03:33.200 --> 00:03:37.920]   disproportionate share of market value. But remember, its explanatory power has
+[00:03:37.920 --> 00:03:41.520]   dropped in recent years and, if you're running an early or mid-stage startup,
+[00:03:41.520 --> 00:03:45.920]   there is very little comparative data available on the Rule of 40 scores of today's giants when
+[00:03:45.920 --> 00:03:49.920]   they were at early or mid-stage scale. That's why I think early.
+[00:03:49.920 --> 00:03:54.080]   And mid-stage startups need to think about the Rule of 40 in terms of glideslope planning.
+[00:03:54.080 --> 00:03:57.440]   Thanks to the folks at Battery for producing and sharing this great report.
+[00:03:57.440 --> 00:04:02.960]   MyT9LFi notes Rule of 40 score, typically calculated as revenue growth plus free cash
+[00:04:02.960 --> 00:04:08.640]   flow, FCF margin. When FCF margin is not available, I typically use operating margin.
+[00:04:08.640 --> 00:04:16.000]   Using GAAP operating margin here would result in 110% plus 55% 55% much lower,
+[00:04:16.000 --> 00:04:20.640]   but still in Rule of 40 compliance. If calculated using subscription revenue growth,
+[00:04:20.640 --> 00:04:26.880]   it's 137% plus 26% E11% even more amazing.
+[00:04:26.880 --> 00:04:31.760]   One thing I don't like about the fluidity of Rule of 40 calculations, as you can see here,
+[00:04:31.760 --> 00:04:36.640]   is that depending what might seem small nuances in calculations, you can produce a very broad range
+[00:04:36.640 --> 00:04:44.480]   of scores, here from 55% to 137%. To me, this means ending day one with a strong valuation.
+[00:04:44.480 --> 00:04:48.560]   The degree to which that is up or down from the opening price is really about how the bankers
+[00:04:48.560 --> 00:04:53.840]   priced the offer. I am not a financial analyst and do not make buy or sell recommendations.
+[00:04:53.840 --> 00:04:58.480]   See my disclaimers here. In fact, it's actually a double bar. First, you need to have been
+[00:04:58.480 --> 00:05:02.400]   successful enough to go public, and second, you need to clear the Rule of 40.
+[00:05:02.400 --> 00:05:07.040]   Despite a minority of public companies actually clearing this bar, financial analysts are quick
+[00:05:07.040 --> 00:05:10.800]   to point out the minority who do command a disproportionate share of market cap,
+[00:05:10.800 --> 00:05:16.080]   and via the resultant R-squared score, to what extent does the Rule of 40 score explain or drive
+[00:05:16.080 --> 00:05:21.600]   the EV/R multiple? If R-squared were 1.U, all the dots would fall on the least squares fit line,
+[00:05:21.600 --> 00:05:25.360]   which continues with further analysis breaking the Rule of 40 into four zones.
+[00:05:25.360 --> 00:05:29.760]   This audio version was created by Grant Duncan and AI, with permission from Dave.
+the-rule-of-40-down-but-not-out: repetition 26 > 12 repeated 3-grams 
+(coverage=94.1%, tail=93.8%, repeat3=26)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+=== QA the-saas-rule-of-40 ===
+
+[00:00:00.000 --> 00:00:06.280]   This is an audio version of a Dave Kellogg post from July 25, 2017, titled "The SaaS
+[00:00:06.280 --> 00:00:07.780]   Rule of 40".
+[00:00:07.780 --> 00:00:12.960]   After the SaaS acre of early 2016, investors generally backed off a growth at all costs
+[00:00:12.960 --> 00:00:17.520]   mindset and started to value SaaS companies using an appropriate balance of growth and
+[00:00:17.520 --> 00:00:18.520]   profitability.
+[00:00:18.520 --> 00:00:20.840]   The question then became, what's appropriate?
+[00:00:20.840 --> 00:00:23.040]   The answer was, the rule of 40.
+[00:00:23.040 --> 00:00:24.400]   What's the rule of 40?
+[00:00:24.400 --> 00:00:28.120]   Growth rate plus profit should be greater than or equal to 40%.
+[00:00:28.120 --> 00:00:31.280]   There are a number of options for deciding what to use to represent growth.
+[00:00:31.280 --> 00:00:36.960]   For example, ARR, and profit for example, EBITDA, operating margin.
+[00:00:36.960 --> 00:00:40.960]   For public companies, it usually translates to revenue growth rate and free cash flow
+[00:00:40.960 --> 00:00:41.960]   margin.
+[00:00:41.960 --> 00:00:45.220]   It's important to understand that such rules are not black and white.
+[00:00:45.220 --> 00:00:49.200]   As we'll see in a minute, lots of companies deviate from the rule of 40.
+[00:00:49.200 --> 00:00:52.480]   The right way to think about these rules of thumb is as predictors.
+[00:00:52.480 --> 00:00:55.880]   Back in the day, what best predicted the value of a SaaS company?
+[00:00:55.880 --> 00:00:58.040]   Revenue growth, without regard for margin.
+[00:00:58.040 --> 00:01:01.060]   In fact, often inversely correlated to margin.
+[00:01:01.060 --> 00:01:05.040]   When that started to break down, people started looking for a better and dependent variable.
+[00:01:05.040 --> 00:01:07.440]   The answer to that search was the rule of 40 score.
+[00:01:07.440 --> 00:01:11.600]   Let's examine a few charts courtesy of the folks at Pacific Crest and as presented at
+[00:01:11.600 --> 00:01:18.600]   the recent Stellar Zawara CFO Forum, a CFO gathering run alongside their subscribed conference.
+[00:01:18.600 --> 00:01:22.880]   This scatter chart plots the two drivers of the rule of 40 score against each other, colors
+[00:01:22.880 --> 00:01:27.400]   each dot with the company's rule of 40 score, and adds a line that indicates the rule of
+[00:01:27.400 --> 00:01:28.400]   40 boundary.
+[00:01:28.400 --> 00:01:35.760]   42% of public SaaS companies and 77% of public SaaS market cap is above the rule of 40 line.
+[00:01:35.760 --> 00:01:39.820]   As a quick demonstration of the exception to every rule principle, Tintry recently went
+[00:01:39.820 --> 00:01:46.800]   public off 45% growth with 81% operating margins, reflecting a rule of 40 score of 36%, and
+[00:01:46.800 --> 00:01:50.300]   a placement that would be off the chart in the underneath sense even if corrected for
+[00:01:50.300 --> 00:01:51.900]   non-cash expenses.
+[00:01:51.900 --> 00:01:56.200]   For those interested in company valuations, the more interesting chart is this one.
+[00:01:56.200 --> 00:02:02.040]   This chart plots rule of 40 score on the x-axis, valuation multiple on the y-axis, and produces
+[00:02:02.040 --> 00:02:05.420]   a pretty good regression line that shows the relationship between the two.
+[00:02:05.420 --> 00:02:10.120]   In short, the rule of 40 alone explains nearly 50% of SaaS company valuation.
+[00:02:10.120 --> 00:02:13.640]   I believe that outliers fall into one of two categories.
+[00:02:13.640 --> 00:02:18.320]   Companies in a strategic situation that explains the premium or discount relative to the model,
+[00:02:18.320 --> 00:02:22.740]   for example, the premium for Cladara Strawn Market position in the Hadoop space.
+[00:02:22.740 --> 00:02:26.400]   Companies whose valuations go non-linear at the high end due to scarcity.
+[00:02:26.400 --> 00:02:29.040]   For example, Viva.
+[00:02:29.040 --> 00:02:32.960]   Executives and employees at startups should understand the rule of 40 as it explains the
+[00:02:32.960 --> 00:02:37.440]   general tendency of SaaS companies to focus on a balance of growth and profitability as
+[00:02:37.440 --> 00:02:41.920]   opposed to a growth at all-cost strategy that was more popular several years back.
+[00:02:41.920 --> 00:02:44.080]   Ignore the rule of 40 at your peril.
+[00:02:44.080 --> 00:02:45.640]   Notes follow.
+[00:02:45.640 --> 00:02:49.560]   While the rule of 40 concept preceded the SaaS acre, I do believe that the SaaS acre
+[00:02:49.560 --> 00:02:53.560]   was the wake-up call that made more investors and companies pay attention to.
+[00:02:53.560 --> 00:02:57.080]   Using operating margin here somewhat lazily as I don't want to go find unlovered free
+[00:02:57.080 --> 00:03:01.080]   cash flow margin, but I don't think it materially changes the point.
+[00:03:01.080 --> 00:03:05.480]   Other good rule of 40 posts are available from Thomas Tungus, Cindy Pichu, and Jeff
+[00:03:05.480 --> 00:03:07.040]   Epstein and Josh Harder.
+[00:03:07.040 --> 00:03:11.520]   This audio version was created by Grant Duncan and AI with permission from Dave.
+the-saas-rule-of-40: repetition 15 > 12 repeated 3-grams (coverage=95.5%, 
+tail=92.5%, repeat3=15)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+=== QA the-saas-talk-50th-episode-anniversary-credits ===
+
+[00:00:00.000 --> 00:00:04.480]   This is an audio version of a Dave Kellogg post from August 2, 2024,
+[00:00:04.480 --> 00:00:09.600]   titled "The Sas Talk 50th Episode Credits." As readers will hopefully know, I've been running
+[00:00:09.600 --> 00:00:14.320]   a podcast with Ray Reich for about the past year called "Sas Talk with the Metrics Brothers,
+[00:00:14.320 --> 00:00:20.880]   Growth and CAC Raise." Growth and I'm CAC. If that name rings familiar, it's because our naming
+[00:00:20.880 --> 00:00:24.960]   inspiration was "Car Talk with the Tappic Brothers," click and clack. We ended up not
+[00:00:24.960 --> 00:00:29.360]   duplicating "Car Talk's" radio call and format, and unlike many podcasts, we've also chosen not
+[00:00:29.360 --> 00:00:33.920]   to center the podcast around guest interviews. Instead, we talk, some might say "bicker,"
+[00:00:33.920 --> 00:00:38.320]   for about 20 minutes, roughly every week about SaaS metrics, benchmarks, and reports.
+[00:00:38.320 --> 00:00:42.960]   We are the perfect treadmill companions. For example, some of our recent episodes were focused
+[00:00:42.960 --> 00:00:48.480]   on SaaS metrics, like the burn multiple, the rule of X, and the LTV/CAC ratio.
+[00:00:48.480 --> 00:00:53.040]   We've also recently covered the rubric S1 and the 2024 Besmer state of the cloud report.
+[00:00:53.040 --> 00:00:58.880]   This week, we published our 50th episode, which was on the one-stream S1 and subsequent IPO.
+[00:00:58.880 --> 00:01:04.800]   Because these topics can be, well, kind of dry, we try to have some fun with the podcast,
+[00:01:04.800 --> 00:01:09.440]   squeezing in the odd bad, and some would say "dad joke," and generally trying to seize any
+[00:01:09.440 --> 00:01:13.040]   opportunity to lighten up the content. One example is our legal trailer,
+[00:01:13.040 --> 00:01:17.120]   which not only covers important legal terms, but does so in a lighthearted way.
+[00:01:17.120 --> 00:01:21.200]   Then again, we rarely get feedback on the jokes, so I wonder if people aren't listening to the
+[00:01:21.200 --> 00:01:25.440]   trailer. It couldn't possibly be that the jokes don't land. So in the spirit of fun,
+[00:01:25.440 --> 00:01:30.240]   we decided to do some Car Talk-style credits to celebrate our 50th episode. Here they are.
+[00:01:30.240 --> 00:01:33.680]   While the first three rows are real, the rest are Car Talk-style.
+[00:01:33.680 --> 00:01:36.320]   You can listen to the credits at the end of the episode.
+[00:01:36.320 --> 00:01:38.080]   The SaaS Talk official credits.
+[00:01:38.080 --> 00:01:41.840]   Early Presenting sponsors Maxio and Gainsite Podcast, Agency Ben Shapiro,
+[00:01:41.840 --> 00:01:45.360]   I Hear Everything production team tag Kurt Hubis and Vivian Nelson customer,
+[00:01:45.360 --> 00:01:50.400]   Success Analyst, Ivano Lowell startup liquidation, expert Renata, cash Italian growth marketing,
+[00:01:50.400 --> 00:01:55.040]   specialist Annada, Mopi B. Demangan consultant, Seymour Leeds sales productivity expert,
+[00:01:55.040 --> 00:02:00.000]   Kari Akota federal, sales advisor, major commit PE roll-up, strategist Tucker in growth,
+[00:02:00.000 --> 00:02:04.240]   profitability consultant, Derul up strategist, Tucker in growth profitability consultant,
+[00:02:04.240 --> 00:02:08.320]   Derul Offerly, NIN sales, ROI specialist CP, prolonged budgeting consultant,
+[00:02:08.320 --> 00:02:11.840]   auto plan classification, analyst K nearest neighbors OPEX benchmarker,
+[00:02:11.840 --> 00:02:15.120]   E.B. Iddity ED sales, Seymour Leeds sales productivity expert,
+[00:02:15.120 --> 00:02:19.760]   Kari Akota federal sales advisor, major commit PE roll-up, allow forecast manager Noah Cluhott
+[00:02:19.760 --> 00:02:24.720]   takes advisor Vinn, dollar zoom productivity consultant, Diana calls GTM efficiency expert,
+[00:02:24.720 --> 00:02:30.640]   CAC.EPE financing strategist Lever Up. This audio version was created by Grant Duncan and AI,
+[00:02:30.640 --> 00:02:32.400]   with permission from Dave.
+the-saas-talk-50th-episode-anniversary-credits: coverage 84.5% < 85%; tail 
+similarity 36.2% < 70% (coverage=84.5%, tail=36.2%, repeat3=2)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+=== QA things-a-vc-will-never-say ===
+
+[00:00:00.000 --> 00:00:05.180]   This is an audio version of a Dave Kellogg post from June 12th, 2009 titled "Things
+[00:00:05.180 --> 00:00:06.680]   a VC Will Never Say."
+[00:00:06.680 --> 00:00:11.240]   I picked up this pretty funny and, shall I say, quite cynical deck on the ABC blog by
+[00:00:11.240 --> 00:00:13.920]   NYC-based venture capitalist Fred Wilson.
+[00:00:13.920 --> 00:00:14.920]   Enjoy!
+[00:00:14.920 --> 00:00:22.240]   Slideshare ID 1549-1590 and DocD Vicky Non-Admissions, UNO 96081150-036PAPEP2.
+[00:00:22.240 --> 00:00:26.320]   This audio version was created by Grant Duncan and AI, with permission from Dave.
+things-a-vc-will-never-say: coverage 72.2% < 85% (coverage=72.2%, tail=72.2%, 
+repeat3=1)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+=== QA what-drives-saas-company-valuation-growth ===
+
+[00:00:00.000 --> 00:00:04.720]   This is an audio version of a Dave Kellogg post from June 5, 2013 titled,
+[00:00:04.720 --> 00:00:07.520]   "What drives SaaS company valuation? Growth."
+[00:00:07.520 --> 00:00:10.960]   If you've ever wondered what drives the valuation of a SaaS vendor,
+[00:00:10.960 --> 00:00:14.320]   then take a look at this chart that a banker showed me the other day.
+[00:00:14.320 --> 00:00:18.880]   The answer, pretty clearly, is revenue growth. The correlation is stunning.
+[00:00:18.880 --> 00:00:22.960]   Taking some points off the line, 10% growth gets you an on-premises,
+[00:00:22.960 --> 00:00:28.960]   like valuation of 2x forward revenues. 20% growth gets you 3x 30% growth,
+[00:00:28.960 --> 00:00:34.960]   gets you 4x 50% growth, gets you nearly 6x. Basically, a growth rate percent growth gets
+[00:00:34.960 --> 00:00:40.320]   you nearly 6x, basically, growth revenue multiple. You might think that profitability played some
+[00:00:40.320 --> 00:00:44.560]   role in the valuation equation, but if you did, you're wrong. Let's demonstrate this
+[00:00:44.560 --> 00:00:48.960]   by looking at CY13EBI TDA margins as reported by the same banker.
+[00:00:48.960 --> 00:00:55.760]   Marketo MKTO for 4/4% with A4 times revenue multiple Maron software MRion,
+[00:00:55.760 --> 00:01:02.560]   40% with AT4 times revenue multiple Workday WD-ADUDA, 22% with AT1,
+[00:01:02.560 --> 00:01:09.200]   22% with AT5 times revenue multiple Bazaar Voice BV, 6% with AT5 times,
+[00:01:09.200 --> 00:01:14.160]   Revenue Multiple Cornerstone on demand, CISO D0% with AE8 times revenue,
+[00:01:14.160 --> 00:01:19.600]   Multiple Click Technologies (QLIKE), 13% with AE3 times revenue multiple,
+[00:01:19.600 --> 00:01:25.360]   Tango TNGO 17% with ACE3 times revenue multiple. As you can see, there's basically no
+[00:01:25.360 --> 00:01:30.560]   reward for profitability. In real estate, what matters is location, and growth.
+[00:01:30.560 --> 00:01:35.360]   This audio version was created by Grant Duncan and AI, with permission from Dave.
+what-drives-saas-company-valuation-growth: coverage 73.6% < 85%; tail similarity
+58.8% < 70% (coverage=73.6%, tail=58.8%, repeat3=7)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+=== QA what-the-ceo-really-thinks-of-marketing-and-5-things-you-can-do-about-it ===
+
+[00:00:00.000 --> 00:00:06.080]   This is an audio version of a Dave Kellogg post from July 12, 2011 titled "What the CEO Really
+[00:00:06.080 --> 00:00:11.120]   Thinks of Marketing and 5 Things You Can Do About It." As a marketing guy turned CEO, I have the
+[00:00:11.120 --> 00:00:15.360]   relatively rare experience of having seen marketing from inside the organization as well
+[00:00:15.360 --> 00:00:20.640]   as from above it. Yesterday, the SB Forum Marketing SIG invited me to give a presentation where I
+[00:00:20.640 --> 00:00:25.040]   discussed marketing from the CEO's perspective. I've embedded the slides below for your viewing
+[00:00:25.040 --> 00:00:34.320]   pleasure. Slideshare I'd 80 t5 7 5 9 9 9 and docs before him speech 1107 1 2 o l 1 1 1 o l 1.
+[00:00:34.320 --> 00:00:38.880]   This audio version was created by Grant Duncan and AI with permission from Dave.
+what-the-ceo-really-thinks-of-marketing-and-5-things-you-can-do-about-it: 
+coverage 81.8% < 85% (coverage=81.8%, tail=81.8%, repeat3=2)
+QA sweep complete: selected=1 checked=1 passed=0 failed=1 errored=0 
+queued-for-rerun=0
+QA batch complete

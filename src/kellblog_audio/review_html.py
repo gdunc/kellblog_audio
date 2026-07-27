@@ -1,4 +1,4 @@
-"""Generate the collaborator listening review page."""
+"""Generate the public Kellblog audio listening page."""
 
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ from urllib.parse import quote
 
 from kellblog_audio.catalog import Catalog, PostRow
 from kellblog_audio.config import OUTPUT_DIR, PUBLIC_BASE_URL, QA_TRANSCRIPTS_DIR
+from kellblog_audio.qa import qa_report_passed
 
 MIN_REVIEW_COVERAGE = 0.93
 MIN_REVIEW_TAIL = 0.82
@@ -27,6 +28,7 @@ class ReviewItem:
 
 
 def concern_reasons(data: dict[str, Any] | None) -> list[str]:
+    """Internal QA soft-threshold helpers (not shown on the public listening page)."""
     if not data:
         return ["missing QA"]
 
@@ -57,10 +59,13 @@ def collect_review_items(
     catalog: Catalog,
     *,
     qa_dir: Path = QA_TRANSCRIPTS_DIR,
+    require_qa: bool = False,
 ) -> list[ReviewItem]:
     items: list[ReviewItem] = []
     for post in catalog.list_by_filter(audio_status="done"):
         if not post.audio_path:
+            continue
+        if require_qa and not qa_report_passed(post.slug, output_dir=qa_dir):
             continue
         qa = _read_qa(qa_dir / f"{post.slug}.qa.json")
         items.append(ReviewItem(post=post, qa=qa, concerns=concern_reasons(qa)))
@@ -72,158 +77,81 @@ def write_review_page(
     *,
     out_path: Path = OUTPUT_DIR / "index.html",
     qa_dir: Path = QA_TRANSCRIPTS_DIR,
+    require_qa: bool = False,
     updated_at: str | None = None,
 ) -> Path:
-    items = collect_review_items(catalog, qa_dir=qa_dir)
-    counts = catalog.counts()
-    qa_passed = sum(1 for item in items if item.qa and item.qa.get("passed") is True)
-    qa_artifacts = sum(1 for item in items if item.qa)
-    concerning = [item for item in items if item.concerns]
+    items = collect_review_items(catalog, qa_dir=qa_dir, require_qa=require_qa)
     updated = updated_at or datetime.now().strftime("%Y-%m-%d %H:%M")
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(
-        _render_page(
-            items=items,
-            concerning=concerning,
-            qa_passed=qa_passed,
-            qa_artifacts=qa_artifacts,
-            counts=counts,
-            updated_at=updated,
-        ),
+        _render_page(items=items, updated_at=updated),
         encoding="utf-8",
     )
     _remove_stale_feedback_redirect(out_path.parent)
     return out_path
 
 
-def _render_page(
-    *,
-    items: list[ReviewItem],
-    concerning: list[ReviewItem],
-    qa_passed: int,
-    qa_artifacts: int,
-    counts: dict[str, int],
-    updated_at: str,
-) -> str:
-    episode_word = "MP3" if len(items) == 1 else "MP3s"
-    review_url = _public_review_url()
-    cards = "\n".join(_render_article(item, review_url=review_url) for item in items)
-    concerns = _render_concerns(concerning)
-    mailto_href = _mailto_review_href(review_url)
+def _render_page(*, items: list[ReviewItem], updated_at: str) -> str:
+    episode_word = "episode" if len(items) == 1 else "episodes"
+    page_url = _public_page_url()
+    cards = "\n".join(_render_article(item, page_url=page_url) for item in items)
+    mailto_href = _mailto_page_href(page_url)
     return f"""<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kellblog Audio Review Batch</title>
+  <title>Kellblog Audio</title>
   <style>{_css()}</style>
 </head>
 <body>
   <header>
     <div class="wrap">
-      <h1>Kellblog Audio Review Batch</h1>
-      <p class="lede">AI-narrated Kellblog episodes ready for collaborator listening. Please focus on audio quality, pronunciation of technical terms and company names, repeated phrases, pacing, and whether endings feel complete.</p>
-      <div class="status">
-        <span class="pill ok">{qa_passed} QA passed</span>
-        <span class="pill">{qa_artifacts} QA artifacts</span>
-        <span class="pill">{counts.get("audio_pending", 0)} still rebuilding</span>
-        <span class="pill">{counts.get("audio_skip", 0)} skipped</span>
-        <span class="pill">{counts.get("publish_pending", 0)} publish pending</span>
-        <span class="pill">Updated {html.escape(updated_at)}</span>
+      <h1>Kellblog Audio</h1>
+      <p class="lede">AI-narrated archive of Dave Kellogg’s Kellblog posts. Browse and listen below.</p>
+      <div class="share-actions" aria-label="Share this page">
+        <button type="button" class="share-button" data-copy-page-url="{html.escape(page_url)}">Copy page link</button>
+        <a class="share-link" href="{html.escape(mailto_href)}">Email page link</a>
+        <span class="updated">Updated {html.escape(updated_at)}</span>
       </div>
     </div>
   </header>
   <main class="wrap">
-    <section class="review-brief" aria-labelledby="review-heading">
-      <div>
-        <h2 id="review-heading">What to review</h2>
-        <p>Start with the manual-audit list, then sample a few normal episodes. Send notes in the same thread where this page was shared, with the episode title and timestamp when possible.</p>
-      </div>
-      <div class="share-actions" aria-label="Share review page">
-        <button type="button" class="share-button" data-copy-review-url="{html.escape(review_url)}">Copy page link</button>
-        <a class="share-link" href="{html.escape(mailto_href)}">Email review link</a>
-        <a class="share-link" href="/feed.xml">RSS feed</a>
-      </div>
-    </section>
-    {concerns}
     <div class="toolbar">
-      <span>{len(items)} published {episode_word} available for review.</span>
+      <span>{len(items)} {episode_word}</span>
     </div>
     <section class="episodes" aria-label="Episodes">
 {cards}
     </section>
   </main>
-  <footer class="wrap">
-    <div class="notes">
-      Whisper QA transcribes each episode and checks the audio passes basic quality gates. Pace is words per minute from the Whisper transcript.
-    </div>
-  </footer>
   <script>{_share_script()}</script>
 </body>
 </html>
 """
 
 
-def _render_concerns(items: list[ReviewItem]) -> str:
-    if not items:
-        return """<section class="audit" aria-labelledby="audit-heading">
-      <h2 id="audit-heading">Needs manual audit</h2>
-      <p>No current QA warning thresholds were triggered.</p>
-    </section>"""
-
-    rows = "\n".join(
-        "        "
-        + f'<li><a href="#{_anchor(item.post.slug)}">{html.escape(item.post.title or item.post.slug)}</a>'
-        + f' <span>{html.escape(", ".join(item.concerns))}</span></li>'
-        for item in items
-    )
-    return f"""<section class="audit" aria-labelledby="audit-heading">
-      <h2 id="audit-heading">Needs manual audit</h2>
-      <p>These passed or have artifacts, but their metrics make them the best candidates to regenerate or spot-check before promotion.</p>
-      <ol>
-{rows}
-      </ol>
-    </section>"""
-
-
-def _render_article(item: ReviewItem, *, review_url: str) -> str:
+def _render_article(item: ReviewItem, *, page_url: str) -> str:
     post = item.post
-    qa = item.qa or {}
     title = html.escape(post.title or post.slug)
     meta_bits = [_format_date(post.published_at), _format_duration(post.duration_sec)]
     if post.word_count:
         meta_bits.append(f"{post.word_count:,} words")
-    concern_badge = ""
-    concern_details = ""
-    if item.concerns:
-        concern_badge = '<span class="badge warn">Manual audit</span>'
-        concern_details = (
-            '<div class="concerns"><span>Review focus</span><strong>'
-            + html.escape(", ".join(item.concerns))
-            + "</strong></div>"
-        )
     audio_url = _public_audio_path(post.audio_path)
     anchor = _anchor(post.slug)
-    return f"""      <article id="{_anchor(post.slug)}">
+    return f"""      <article id="{anchor}">
         <div class="episode-head">
           <div>
             <h2>{title}</h2>
             <div class="meta">{html.escape(" · ".join(bit for bit in meta_bits if bit))}</div>
           </div>
           <div class="links">
-            {concern_badge}
             <a href="{html.escape(post.url)}">Original</a>
             <a href="{html.escape(audio_url)}">MP3</a>
-            <button type="button" data-copy-review-url="{html.escape(review_url)}#{anchor}" data-share-label="{title}">Copy review link</button>
+            <button type="button" data-copy-page-url="{html.escape(page_url)}#{anchor}" data-share-label="{title}">Copy link</button>
           </div>
         </div>
         <audio controls preload="metadata" src="{html.escape(audio_url)}"></audio>
-        {concern_details}
-        <div class="qa">
-          <div class="metric"><span>Whisper QA</span><strong>{_qa_status(qa)}</strong></div>
-          <div class="metric"><span>Pace</span><strong>{_wpm(qa.get("body_wpm"))}</strong></div>
-        </div>
       </article>"""
 
 
@@ -237,9 +165,6 @@ def _css() -> str:
       --line: #d8dee8;
       --accent: #12646f;
       --accent-soft: #e6f3f4;
-      --ok: #20744a;
-      --warn: #8a5a00;
-      --warn-soft: #fff4dc;
     }
     * { box-sizing: border-box; }
     body {
@@ -272,69 +197,15 @@ def _css() -> str:
     }
     .lede {
       max-width: 850px;
-      margin: 0;
+      margin: 0 0 16px;
       color: var(--muted);
       font-size: 1rem;
-    }
-    .status {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 18px;
-    }
-    .pill, .badge {
-      display: inline-flex;
-      align-items: center;
-      min-height: 30px;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 4px 10px;
-      background: var(--surface);
-      color: var(--muted);
-      font-size: 0.875rem;
-      white-space: nowrap;
-    }
-    .pill.ok {
-      border-color: #b7dbc9;
-      background: #eef8f3;
-      color: var(--ok);
-      font-weight: 600;
-    }
-    .badge.warn {
-      border-color: #e0bd70;
-      background: var(--warn-soft);
-      color: var(--warn);
-      font-weight: 700;
-    }
-    main { padding: 24px 0 40px; }
-    a {
-      color: var(--accent);
-      font-weight: 600;
-      text-decoration: none;
-    }
-    a:hover { text-decoration: underline; }
-    .review-brief, .audit {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      margin-bottom: 16px;
-      padding: 18px;
-    }
-    .review-brief {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 16px;
-      align-items: start;
-    }
-    .review-brief p, .audit p {
-      margin: 6px 0 0;
-      color: var(--muted);
     }
     .share-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      justify-content: flex-end;
+      align-items: center;
     }
     .share-link, .share-button, .links button {
       border: 1px solid var(--line);
@@ -352,22 +223,24 @@ def _css() -> str:
       border-color: #9fcdd2;
       text-decoration: none;
     }
-    .audit ol {
-      margin: 12px 0 0;
-      padding-left: 24px;
-    }
-    .audit li + li { margin-top: 6px; }
-    .audit li span {
+    .updated {
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 0.875rem;
     }
+    main { padding: 24px 0 40px; }
+    a {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
     .toolbar {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
       align-items: center;
       justify-content: space-between;
-      margin: 18px 0;
+      margin: 0 0 18px;
       color: var(--muted);
     }
     .episodes {
@@ -413,56 +286,17 @@ def _css() -> str:
     audio {
       display: block;
       width: 100%;
-      margin: 8px 0 12px;
-    }
-    .concerns {
-      border: 1px solid #e0bd70;
-      border-radius: 6px;
-      background: var(--warn-soft);
-      margin-bottom: 10px;
-      padding: 8px 10px;
-    }
-    .concerns span, .metric span {
-      display: block;
-      color: var(--muted);
-      font-size: 0.76rem;
-    }
-    .concerns strong, .metric strong {
-      display: block;
-      margin-top: 2px;
-      font-size: 0.95rem;
-      overflow-wrap: anywhere;
-    }
-    .qa {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(128px, 1fr));
-      gap: 8px;
-    }
-    .metric {
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 8px 10px;
-      background: #fbfcfd;
-      min-width: 0;
-    }
-    footer {
-      color: var(--muted);
-      font-size: 0.9rem;
-      padding: 18px 0 36px;
-    }
-    .notes {
-      border-top: 1px solid var(--line);
-      padding-top: 16px;
+      margin: 8px 0 0;
     }
     @media (max-width: 760px) {
-      .review-brief, .episode-head { grid-template-columns: 1fr; }
+      .episode-head { grid-template-columns: 1fr; }
       .links, .share-actions { justify-content: flex-start; }
     }
     @media (max-width: 460px) {
       .wrap { width: min(100% - 20px, 1120px); }
       header .wrap { padding-top: 22px; }
       h1 { font-size: 1.55rem; }
-      article, .review-brief, .audit { padding: 14px; }
+      article { padding: 14px; }
     }
     """
 
@@ -507,45 +341,24 @@ def _format_duration(duration_sec: int | None) -> str:
     return f"{minutes}:{seconds:02d}"
 
 
-def _qa_status(data: dict[str, Any]) -> str:
-    if not data:
-        return "Missing"
-    return "Pass" if data.get("passed") is True else "Fail"
-
-
-def _pct(value: Any) -> str:
-    number = _float_or_none(value)
-    return "n/a" if number is None else f"{number:.1%}"
-
-
-def _wpm(value: Any) -> str:
-    number = _float_or_none(value)
-    return "n/a" if number is None else f"{number:.0f} WPM"
-
-
-def _repeat(value: Any) -> str:
-    number = _int_or_none(value)
-    return "n/a" if number is None else str(number)
-
-
 def _anchor(slug: str) -> str:
     return "episode-" + "".join(ch if ch.isalnum() or ch == "-" else "-" for ch in slug)
 
 
-def _public_review_url() -> str:
+def _public_page_url() -> str:
     return f"{PUBLIC_BASE_URL.rstrip('/')}/index.html"
 
 
-def _mailto_review_href(review_url: str) -> str:
-    subject = quote("Kellblog audio review batch")
-    body = quote(f"Please review the generated Kellblog audio here:\n\n{review_url}")
+def _mailto_page_href(page_url: str) -> str:
+    subject = quote("Kellblog Audio")
+    body = quote(f"Listen to the Kellblog audio archive here:\n\n{page_url}")
     return f"mailto:?subject={subject}&body={body}"
 
 
 def _share_script() -> str:
     return """
     (function () {
-      function reviewUrl(target) {
+      function pageUrl(target) {
         return new URL(target, window.location.href).href;
       }
       function fallbackCopy(text) {
@@ -564,9 +377,9 @@ def _share_script() -> str:
         button.textContent = "Copied";
         window.setTimeout(function () { button.textContent = original; }, 1400);
       }
-      document.querySelectorAll("[data-copy-review-url]").forEach(function (button) {
+      document.querySelectorAll("[data-copy-page-url]").forEach(function (button) {
         button.addEventListener("click", function () {
-          var url = reviewUrl(button.getAttribute("data-copy-review-url"));
+          var url = pageUrl(button.getAttribute("data-copy-page-url"));
           if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(url).then(function () { flash(button); });
           } else {
