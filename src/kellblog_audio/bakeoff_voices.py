@@ -17,10 +17,6 @@ class BakeoffVariant:
 
 # Curated variants: multiple voices per engine for side-by-side comparison.
 BAKEOFF_VARIANTS: tuple[BakeoffVariant, ...] = (
-    # Kokoro — American English males (podcast-friendly)
-    BakeoffVariant("kokoro", "am_michael", "Michael", "Default production voice (C+)"),
-    BakeoffVariant("kokoro", "am_fenrir", "Fenrir", "Male, grade C+"),
-    BakeoffVariant("kokoro", "am_puck", "Puck", "Male, grade C+"),
     # Chatterbox — single built-in voice; exaggeration changes delivery
     BakeoffVariant(
         "chatterbox",
@@ -63,19 +59,12 @@ BAKEOFF_SLUGS: tuple[str, ...] = (
 )
 
 PROVIDER_DEMO_URLS: dict[str, str] = {
-    "kokoro": "https://huggingface.co/spaces/hexgrad/Kokoro-TTS",
     "chatterbox": "https://huggingface.co/ResembleAI/chatterbox",
     "piper": "https://rhasspy.github.io/piper-samples/",
     "styletts2": "https://styletts2.github.io/",
 }
 
 PROVIDER_META: dict[str, dict[str, str]] = {
-    "kokoro": {
-        "label": "Kokoro 82M",
-        "license": "Apache 2.0",
-        "cloning": "No (54 preset voices)",
-        "notes": "Try voices at the Hugging Face demo; American English uses lang_code a.",
-    },
     "chatterbox": {
         "label": "Chatterbox",
         "license": "MIT",
@@ -98,7 +87,7 @@ PROVIDER_META: dict[str, dict[str, str]] = {
 
 
 def bakeoff_filename(slug: str, variant: BakeoffVariant) -> str:
-    """Stable MP3 basename: sample__kokoro__am_michael or slug__piper__en_US-ryan-medium."""
+    """Stable MP3 basename: sample__chatterbox__builtin-0.4 or slug__piper__en_US-ryan-medium."""
     prefix = "sample" if slug == "__sample__" else slug
     return f"{prefix}__{variant.provider}__{variant.voice_id}.mp3"
 

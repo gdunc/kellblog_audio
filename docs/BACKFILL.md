@@ -78,8 +78,8 @@ On Apple Silicon, `auto` selects the Metal/MPS GPU path when PyTorch reports it 
 ## Local-only fallback commands
 
 ```bash
-uv sync --extra kokoro
-export KELLBLOG_TTS_PROVIDER=kokoro
+uv sync --extra chatterbox
+export KELLBLOG_TTS_PROVIDER=chatterbox
 uv run kellblog-audio run-backfill
 ```
 
@@ -87,7 +87,7 @@ Or stepwise (recommended for long runs):
 
 ```bash
 uv run kellblog-audio ingest          # ~15–30 min (network)
-uv run kellblog-audio synthesize --pending   # ~1–2 days Kokoro on M-series Mac
+uv run kellblog-audio synthesize --pending   # Chatterbox CPU/MPS; use the configured archive voice
 uv run kellblog-audio publish --local-only   # keep the fallback fully local
 ```
 
@@ -95,6 +95,30 @@ uv run kellblog-audio publish --local-only   # keep the fallback fully local
 
 Every step is idempotent. Re-run after crash; completed rows are skipped unless `--force`.
 Each episode is committed to the catalog only after its MP3 is fully written, so an interrupted run loses at most the in-progress episode.
+
+## Long local MPS jobs (watchdog)
+
+Cursor/`nohup` agent shells are unreliable for multi-hour Chatterbox runs: macOS idle sleep, reboots, and tool-shell teardown kill MPS jobs without a Python traceback.
+
+For ordinary pending synth:
+
+```bash
+# Prefer tmux/Terminal — not a Cursor agent shell
+tmux new -s kellblog-synth
+cd /path/to/kellblog_audio
+bash scripts/synth_watchdog.sh
+```
+
+For a fixed QA re-run slug list (chunk-loop retry + calmer TTS):
+
+```bash
+tmux new -s kellblog-qa
+cd /path/to/kellblog_audio
+bash scripts/qa_rerun_watchdog.sh
+# optional: KELLBLOG_QA_RERUN_SLUGS=artifacts/repetition-rerun-remaining.txt
+```
+
+Both scripts hold `caffeinate -i -s -w $$`, restart after silent deaths, and process work in small units so a kill loses at most one episode.
 
 ## Speed (Chatterbox on Apple Silicon)
 
@@ -115,7 +139,7 @@ Parallel workers are available via `--shard i/N` (stable hash split, WAL-mode SQ
 but on a single-GPU Mac they don't beat one MPS worker. They help only on multi-GPU /
 CUDA machines, e.g. `synthesize --pending --shard 0/2` and `--shard 1/2` on two GPUs.
 
-## Runtime (M-series Mac, CPU, Kokoro `am_michael`)
+## Runtime (M-series Mac, Chatterbox)
 
 | Step | Estimate |
 |------|----------|

@@ -30,7 +30,7 @@ def discover_bakeoff_files(bakeoff_dir: Path) -> dict[str, dict[str, dict[str, P
 def _provider_sections(
     providers: dict[str, dict[str, Path]],
 ) -> list[dict]:
-    order = ["kokoro", "chatterbox", "piper", "styletts2"]
+    order = ["chatterbox", "piper", "styletts2"]
     sections: list[dict] = []
     for name in order:
         voices_on_disk = providers.get(name, {})
@@ -249,7 +249,6 @@ def render_html(posts: list[dict]) -> str:
     const DEMO_URLS = {demos_json};
 
     const demoLabels = {{
-      kokoro: "Kokoro — try all 54 voices online",
       chatterbox: "Chatterbox on Hugging Face",
       piper: "Piper — browse 100+ voice samples",
       styletts2: "StyleTTS 2 paper demo (LibriTTS / VCTK samples)",

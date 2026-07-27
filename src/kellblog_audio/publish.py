@@ -24,6 +24,7 @@ from kellblog_audio.config import (
     get_settings,
 )
 from kellblog_audio.podcast import write_feed
+from kellblog_audio.qa import qa_report_passed
 from kellblog_audio.review_html import write_review_page
 
 
@@ -78,46 +79,79 @@ def publish_local(catalog: Catalog, *, local_audio: bool = True) -> Path:
     settings.ensure_dirs()
     catalog.assign_episode_numbers()
     feed_path = FEEDS_DIR / "feed.xml"
-    write_feed(catalog, feed_path, local_audio=local_audio)
+    write_feed(catalog, feed_path, local_audio=local_audio, require_qa=True)
     (OUTPUT_DIR / "feed.xml").write_text(feed_path.read_text(encoding="utf-8"), encoding="utf-8")
-    write_review_page(catalog)
+    write_review_page(catalog, require_qa=True)
     return feed_path
+
+
+def _upload_done_audio(catalog: Catalog, client, *, settings) -> list[str]:
+    published_slugs: list[str] = []
+    for post in catalog.list_by_filter(audio_status="done"):
+        if not post.audio_path:
+            continue
+        local = settings.root / post.audio_path
+        if not local.exists():
+            continue
+        year = post.year or 1970
+        key = f"audio/{year}/{post.slug}.mp3"
+        upload_file(client, local, key, "audio/mpeg")
+        published_slugs.append(post.slug)
+    return published_slugs
+
+
+def _upload_site_assets(catalog: Catalog, client, *, require_qa: bool) -> Path:
+    artwork = Path(__file__).parent / "assets" / "show-artwork.png"
+    if artwork.exists():
+        upload_file(client, artwork, "show-artwork.png", "image/png")
+
+    review_page = write_review_page(catalog, require_qa=require_qa)
+    upload_file(client, review_page, "index.html", "text/html; charset=utf-8")
+    client.delete_object(Bucket=R2_BUCKET, Key="feedback/index.html")
+    return review_page
+
+
+def publish_site_to_r2(catalog: Catalog, *, upload_audio: bool = True) -> str:
+    """Upload listening page (+ optional MP3s) without updating the podcast feed."""
+    client = get_s3_client()
+    settings = get_settings()
+    settings.ensure_dirs()
+
+    if upload_audio:
+        _upload_done_audio(catalog, client, settings=settings)
+
+    _upload_site_assets(catalog, client, require_qa=False)
+    return f"{PUBLIC_BASE_URL}/index.html"
 
 
 def publish_to_r2(catalog: Catalog, *, upload_audio: bool = True) -> str:
     client = get_s3_client()
     settings = get_settings()
     catalog.assign_episode_numbers()
-    published_slugs: list[str] = []
+    done_posts = catalog.list_by_filter(audio_status="done")
+    unqualified_posts = [
+        post for post in done_posts if not qa_report_passed(post.slug)
+    ]
+    if unqualified_posts:
+        sample = ", ".join(post.slug for post in unqualified_posts[:5])
+        suffix = "" if len(unqualified_posts) <= 5 else " …"
+        raise RuntimeError(
+            "QA gate blocked publish: "
+            f"{len(unqualified_posts)} done episode(s) lack passing QA "
+            f"({sample}{suffix})"
+        )
 
     if upload_audio:
-        posts = catalog.list_by_filter(audio_status="done")
-        for post in posts:
-            if not post.audio_path:
-                continue
-            local = settings.root / post.audio_path
-            if not local.exists():
-                continue
-            year = post.year or 1970
-            key = f"audio/{year}/{post.slug}.mp3"
-            upload_file(client, local, key, "audio/mpeg")
-            published_slugs.append(post.slug)
+        published_slugs = _upload_done_audio(catalog, client, settings=settings)
     else:
-        published_slugs = [post.slug for post in catalog.list_by_filter(audio_status="done")]
+        published_slugs = [post.slug for post in done_posts]
 
-    # Show artwork
-    artwork = Path(__file__).parent / "assets" / "show-artwork.png"
-    if artwork.exists():
-        upload_file(client, artwork, "show-artwork.png", "image/png")
-
-    review_page = write_review_page(catalog)
-    upload_file(client, review_page, "index.html", "text/html; charset=utf-8")
-    client.delete_object(Bucket=R2_BUCKET, Key="feedback/index.html")
+    _upload_site_assets(catalog, client, require_qa=True)
 
     # Atomic feed swap (public URLs for podcast clients)
     settings.ensure_dirs()
     feed_path = FEEDS_DIR / "feed.xml"
-    write_feed(catalog, feed_path, local_audio=False)
+    write_feed(catalog, feed_path, local_audio=False, require_qa=True)
     tmp_key = "feed.xml.tmp"
     upload_file(client, feed_path, tmp_key, "application/rss+xml")
     client.copy_object(

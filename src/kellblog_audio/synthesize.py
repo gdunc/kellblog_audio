@@ -424,7 +424,8 @@ def synthesize_batch(
                 qa_checked += 1
                 qa_result = qa_post_audio(catalog, post.slug)
                 if not qa_result.passed:
-                    queue_audio_rerun(catalog, post.slug, qa_result.reason)
+                    if getattr(qa_result, "auto_rerun", True):
+                        queue_audio_rerun(catalog, post.slug, qa_result.reason)
                     err += 1
                     if manifest_enabled:
                         manifest_items.append(
@@ -438,6 +439,9 @@ def synthesize_batch(
                     if progress:
                         progress(
                             f"qa failed {post.slug}; queued for rerun: "
+                            f"{qa_result.reason}"
+                            if getattr(qa_result, "auto_rerun", True)
+                            else f"qa failed {post.slug} (no auto-rerun): "
                             f"{qa_result.reason}"
                         )
                     invocation_err += 1

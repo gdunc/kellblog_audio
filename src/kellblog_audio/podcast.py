@@ -27,6 +27,7 @@ from kellblog_audio.intro_outro import (
     build_episode_description_html,
     build_episode_description_plain,
 )
+from kellblog_audio.qa import qa_report_passed
 from kellblog_audio.text_clean import excerpt_from_body, html_to_plain
 
 
@@ -53,7 +54,13 @@ def pub_date_rfc2822(iso: str) -> str:
     return format_datetime(dt)
 
 
-def build_feed(catalog: Catalog, *, local_audio: bool = False) -> str:
+def build_feed(
+    catalog: Catalog,
+    *,
+    local_audio: bool = False,
+    require_qa: bool = False,
+    qa_dir: Path | None = None,
+) -> str:
     """Build RSS XML for all published episodes."""
     fg = FeedGenerator()
     fg.load_extension("podcast")
@@ -84,6 +91,7 @@ def build_feed(catalog: Catalog, *, local_audio: bool = False) -> str:
         if p.audio_status == "done"
         and p.published_at
         and p.title
+        and (not require_qa or qa_report_passed(p.slug, output_dir=qa_dir) if qa_dir else not require_qa or qa_report_passed(p.slug))
     ]
     # Newest first in feed (podcast convention)
     episodes.sort(key=lambda p: p.published_at or "", reverse=True)
@@ -151,8 +159,20 @@ def _remote_length(post: PostRow) -> int:
     return post.audio_bytes or 0
 
 
-def write_feed(catalog: Catalog, out_path: Path, *, local_audio: bool = False) -> Path:
-    xml = build_feed(catalog, local_audio=local_audio)
+def write_feed(
+    catalog: Catalog,
+    out_path: Path,
+    *,
+    local_audio: bool = False,
+    require_qa: bool = False,
+    qa_dir: Path | None = None,
+) -> Path:
+    xml = build_feed(
+        catalog,
+        local_audio=local_audio,
+        require_qa=require_qa,
+        qa_dir=qa_dir,
+    )
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(xml, encoding="utf-8")
     return out_path

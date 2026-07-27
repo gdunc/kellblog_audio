@@ -1,4 +1,22 @@
+import pytest
+
+from kellblog_audio import qa
 from kellblog_audio.qa import analyze_transcript
+
+
+def test_ensure_local_whisper_ready_requires_installed_cli(monkeypatch):
+    monkeypatch.setattr(qa.shutil, "which", lambda _cmd: None)
+
+    with pytest.raises(RuntimeError, match="Local Whisper CLI not found"):
+        qa.ensure_local_whisper_ready()
+
+
+def test_ensure_local_whisper_ready_requires_existing_model(tmp_path, monkeypatch):
+    monkeypatch.setattr(qa.shutil, "which", lambda _cmd: "/usr/local/bin/whisper-cli")
+    monkeypatch.setattr(qa, "WHISPER_MODEL", str(tmp_path / "missing-model.bin"))
+
+    with pytest.raises(RuntimeError, match="Local Whisper model not found"):
+        qa.ensure_local_whisper_ready()
 
 
 def test_analyze_transcript_passes_matching_audio_text():
@@ -70,3 +88,40 @@ def test_analyze_transcript_matches_spelled_and_joined_acronyms():
 
     assert result.passed
     assert result.source_coverage == 1.0
+
+
+def test_chunk_has_loop_detects_repeated_trigrams():
+    words = ["the", "rule", "of"] * 20
+    assert qa.chunk_has_loop(" ".join(words)) is True
+
+
+def test_chunk_has_loop_clean_text_is_false():
+    assert (
+        qa.chunk_has_loop("hello world this is a normal sentence about saas metrics")
+        is False
+    )
+
+
+def test_analyze_transcript_short_coverage_fail_disables_auto_rerun():
+    result = analyze_transcript(
+        "One two three four five six seven eight",
+        "One two three four five",
+        duration_sec=5,
+        intro_text="",
+        outro_text="",
+    )
+    assert result.passed is False
+    assert "coverage" in result.reason
+    assert result.auto_rerun is False
+
+
+def test_analyze_transcript_repetition_fail_keeps_auto_rerun():
+    source = " ".join(f"word{i}" for i in range(120))
+    repeated = "bad loop phrase " * 20
+    transcript = source[:300] + " " + repeated + " " + source[-300:]
+
+    result = analyze_transcript(source, transcript, duration_sec=60)
+
+    assert result.passed is False
+    assert "repetition" in result.reason
+    assert result.auto_rerun is True
