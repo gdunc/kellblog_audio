@@ -3,6 +3,7 @@ import tempfile
 from pathlib import Path
 
 from kellblog_audio.catalog import Catalog
+from kellblog_audio.config import PUBLIC_BASE_URL
 from kellblog_audio.review_html import concern_reasons, write_review_page
 
 
@@ -78,7 +79,8 @@ def test_write_review_page_is_clean_listening_page():
         assert "QA passed" not in html
         assert "Whisper QA" not in html
         assert "Manual audit" not in html
-        assert "RSS feed" not in html
+        assert f"{PUBLIC_BASE_URL}/feed.xml" in html or "/feed.xml" in html
+        assert "Subscribe via" in html
         assert "Feedback" not in html
         assert "repetition 16" not in html
 

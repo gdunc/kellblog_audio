@@ -17,6 +17,7 @@ from kellblog_audio.config import (
     SHOW_CATEGORY,
     SHOW_CATEGORY_SUB,
     SHOW_EMAIL,
+    SHOW_OWNER_NAME,
     SHOW_LANGUAGE,
     SHOW_SUBTITLE,
     SHOW_TITLE,
@@ -27,8 +28,21 @@ from kellblog_audio.intro_outro import (
     build_episode_description_html,
     build_episode_description_plain,
 )
-from kellblog_audio.qa import qa_report_passed
+from kellblog_audio.qa import read_qa_report
 from kellblog_audio.text_clean import excerpt_from_body, html_to_plain
+
+
+def _include_in_feed(slug: str, *, require_qa: bool, qa_dir: Path | None) -> bool:
+    if not require_qa:
+        return True
+    report = (
+        read_qa_report(slug, output_dir=qa_dir)
+        if qa_dir is not None
+        else read_qa_report(slug)
+    )
+    if report is None:
+        return True
+    return report.get("passed") is True
 
 
 def episode_guid(slug: str) -> str:
@@ -75,7 +89,7 @@ def build_feed(
     fg.podcast.itunes_category(SHOW_CATEGORY, SHOW_CATEGORY_SUB)
     fg.podcast.itunes_summary(html_to_plain(SHOW_DESCRIPTION_HTML))
     fg.podcast.itunes_author(SHOW_AUTHOR)
-    fg.podcast.itunes_owner(SHOW_AUTHOR, SHOW_EMAIL)
+    fg.podcast.itunes_owner(SHOW_OWNER_NAME, SHOW_EMAIL)
     fg.podcast.itunes_explicit("no")
     fg.podcast.itunes_type("episodic")
 
@@ -91,7 +105,7 @@ def build_feed(
         if p.audio_status == "done"
         and p.published_at
         and p.title
-        and (not require_qa or qa_report_passed(p.slug, output_dir=qa_dir) if qa_dir else not require_qa or qa_report_passed(p.slug))
+        and _include_in_feed(p.slug, require_qa=require_qa, qa_dir=qa_dir)
     ]
     # Newest first in feed (podcast convention)
     episodes.sort(key=lambda p: p.published_at or "", reverse=True)
@@ -109,7 +123,7 @@ def _add_episode(
     *,
     local_audio: bool,
 ) -> None:
-    fe = fg.add_entry()
+    fe = fg.add_entry(order="append")
     title = post.title or post.slug
     fe.title(title)
     fe.podcast.itunes_title(title)

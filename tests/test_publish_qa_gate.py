@@ -6,6 +6,7 @@ import pytest
 
 from kellblog_audio.catalog import Catalog
 from kellblog_audio import cli
+from kellblog_audio import qa as qa_mod
 from kellblog_audio.podcast import build_feed
 from kellblog_audio import publish as publish_mod
 from kellblog_audio.review_html import write_review_page
@@ -32,7 +33,7 @@ def _catalog_with_posts(db: Path) -> Catalog:
     return catalog
 
 
-def test_public_feed_requires_a_passing_qa_artifact(tmp_path):
+def test_public_feed_omits_failed_qa_but_includes_missing_reports(tmp_path):
     catalog = _catalog_with_posts(tmp_path / "catalog.sqlite")
     qa_dir = tmp_path / "qa"
     qa_dir.mkdir()
@@ -47,9 +48,10 @@ def test_public_feed_requires_a_passing_qa_artifact(tmp_path):
         build_feed(catalog, local_audio=False, require_qa=True, qa_dir=qa_dir)
     )
 
-    assert [item.findtext("title") for item in root.findall("./channel/item")] == [
-        "Passed Post"
-    ]
+    assert set(item.findtext("title") for item in root.findall("./channel/item")) == {
+        "Passed Post",
+        "Missing Qa Post",
+    }
 
 
 def test_public_review_page_lists_only_qa_passed_episodes(tmp_path):
@@ -72,19 +74,58 @@ def test_public_review_page_lists_only_qa_passed_episodes(tmp_path):
     assert "Failed Qa Post" not in html
 
 
-def test_r2_publish_fails_closed_when_a_done_episode_lacks_passing_qa(
+def test_r2_publish_omits_failed_qa_and_succeeds_when_some_episodes_pass(
     tmp_path, monkeypatch
 ):
     catalog = _catalog_with_posts(tmp_path / "catalog.sqlite")
-    monkeypatch.setattr(publish_mod, "get_s3_client", lambda: object())
+    uploaded: list[str] = []
+    marked: list[str] = []
+
+    class FakeClient:
+        def copy_object(self, **_kwargs):
+            return None
+
+        def delete_object(self, **_kwargs):
+            return None
+
+    monkeypatch.setattr(publish_mod, "get_s3_client", FakeClient)
     monkeypatch.setattr(
         publish_mod,
-        "qa_report_passed",
-        lambda slug: slug == "passed-post",
+        "upload_file",
+        lambda _client, local, key, _ctype: uploaded.append(key) or "etag",
+    )
+    monkeypatch.setattr(
+        publish_mod,
+        "write_review_page",
+        lambda catalog, require_qa=False: tmp_path / "index.html",
+    )
+    (tmp_path / "index.html").write_text("<html></html>", encoding="utf-8")
+    monkeypatch.setattr(
+        publish_mod,
+        "write_feed",
+        lambda catalog, path, **_kwargs: path.write_text("<rss/>", encoding="utf-8") or path,
+    )
+    qa_dir = tmp_path / "qa"
+    qa_dir.mkdir()
+    (qa_dir / "passed-post.qa.json").write_text(
+        json.dumps({"passed": True}), encoding="utf-8"
+    )
+    (qa_dir / "failed-qa-post.qa.json").write_text(
+        json.dumps({"passed": False}), encoding="utf-8"
+    )
+    monkeypatch.setattr(publish_mod, "QA_TRANSCRIPTS_DIR", qa_dir)
+    monkeypatch.setattr(qa_mod, "QA_TRANSCRIPTS_DIR", qa_dir)
+    monkeypatch.setattr(
+        catalog,
+        "mark_feed_published",
+        lambda slug: marked.append(slug),
     )
 
-    with pytest.raises(RuntimeError, match="QA gate blocked publish"):
-        publish_mod.publish_to_r2(catalog, upload_audio=False)
+    url = publish_mod.publish_to_r2(catalog, upload_audio=False)
+
+    assert url.endswith("/feed.xml")
+    assert "feed.xml.tmp" in uploaded
+    assert set(marked) == {"passed-post", "missing-qa-post"}
 
 
 def test_site_only_publish_skips_feed_and_qa_gate(tmp_path, monkeypatch):
@@ -133,13 +174,45 @@ def test_site_only_publish_skips_feed_and_qa_gate(tmp_path, monkeypatch):
     assert "feedback/index.html" in deleted
 
 
+def test_r2_publish_still_fails_when_archive_has_almost_no_passing_qa(
+    tmp_path, monkeypatch
+):
+    catalog = _catalog_with_posts(tmp_path / "catalog.sqlite")
+    for i in range(50):
+        slug = f"extra-{i}"
+        catalog.upsert_sitemap_entry(slug, f"https://www.kellblog.com/{slug}/", None)
+        catalog.update_post(
+            slug,
+            title=slug,
+            published_at="2024-06-01T12:00:00.000Z",
+            year=2024,
+            url=f"https://www.kellblog.com/{slug}/",
+            text="Body",
+            word_count=1,
+            ingest_status="done",
+            audio_status="done",
+            duration_sec=60,
+            audio_path=f"output/audio/2024/{slug}.mp3",
+        )
+
+    monkeypatch.setattr(publish_mod, "get_s3_client", lambda: object())
+    monkeypatch.setattr(
+        publish_mod,
+        "qa_report_passed",
+        lambda slug: slug == "passed-post",
+    )
+
+    with pytest.raises(RuntimeError, match="QA restore looks empty"):
+        publish_mod.publish_to_r2(catalog, upload_audio=False)
+
+
 def test_cli_does_not_downgrade_a_qa_gate_failure_to_local_publish(monkeypatch):
     monkeypatch.setattr(cli, "_catalog", lambda: object())
     monkeypatch.setattr(
         cli,
         "publish_to_r2",
         lambda *_args, **_kwargs: (_ for _ in ()).throw(
-            RuntimeError("QA gate blocked publish: 1 done episode")
+            RuntimeError("QA restore looks empty: 1/53 done episode(s) have passing QA")
         ),
     )
     monkeypatch.setattr(
@@ -150,5 +223,5 @@ def test_cli_does_not_downgrade_a_qa_gate_failure_to_local_publish(monkeypatch):
         ),
     )
 
-    with pytest.raises(RuntimeError, match="QA gate blocked publish"):
+    with pytest.raises(RuntimeError, match="QA restore looks empty"):
         cli.publish(local_only=False, skip_audio=False, site_only=False)

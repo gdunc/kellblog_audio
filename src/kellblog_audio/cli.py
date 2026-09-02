@@ -34,10 +34,12 @@ from kellblog_audio.maintenance import reset_generated_audio
 from kellblog_audio.ingest import ingest_all
 from kellblog_audio.publish import (
     backup_catalog,
+    backup_qa_reports,
     publish_local,
     publish_site_to_r2,
     publish_to_r2,
     restore_catalog,
+    restore_qa_reports,
 )
 from kellblog_audio.qa import ensure_local_whisper_ready, qa_post_audio, queue_audio_rerun
 from kellblog_audio.review_html import collect_review_items, write_review_page
@@ -510,6 +512,26 @@ def backup_catalog_cmd(
     resolved_key = _resolve_catalog_backup_key(key=key, run_id=run_id, kind=kind)
     uploaded_key = backup_catalog(cat, key=resolved_key)
     console.print(f"Backed up to s3://{uploaded_key}")
+
+
+@app.command("restore-qa")
+def restore_qa_cmd(
+    key: Optional[str] = typer.Option(None, "--key", help="Explicit R2 key to restore"),
+) -> None:
+    """Download latest QA report zip from R2 into output/transcribe/qa."""
+    if restore_qa_reports(key=key):
+        console.print(f"Restored QA reports to {QA_TRANSCRIPTS_DIR}")
+    else:
+        console.print("No QA backup found in R2")
+
+
+@app.command("backup-qa")
+def backup_qa_cmd(
+    key: Optional[str] = typer.Option(None, "--key", help="Explicit R2 key to upload to"),
+) -> None:
+    """Upload QA JSON reports to R2 (transcripts stay local)."""
+    uploaded_key = backup_qa_reports(key=key)
+    console.print(f"Backed up QA reports to s3://{uploaded_key}")
 
 
 @app.command("create-backfill-baseline")

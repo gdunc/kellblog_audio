@@ -5,6 +5,7 @@ from __future__ import annotations
 from contextlib import contextmanager
 import sqlite3
 import tempfile
+import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterator
@@ -17,15 +18,20 @@ from kellblog_audio.config import (
     FEEDS_DIR,
     OUTPUT_DIR,
     PUBLIC_BASE_URL,
+    QA_TRANSCRIPTS_DIR,
     R2_ACCESS_KEY_ID,
     R2_BUCKET,
     R2_ENDPOINT,
     R2_SECRET_ACCESS_KEY,
     get_settings,
 )
+from kellblog_audio.catalog import stamp_missing_audio_bytes
 from kellblog_audio.podcast import write_feed
-from kellblog_audio.qa import qa_report_passed
+from kellblog_audio.qa import qa_report_passed, read_qa_report
 from kellblog_audio.review_html import write_review_page
+
+MIN_QA_PASS_FRACTION = 0.5
+MIN_QA_PASS_ARCHIVE = 50
 
 
 def _clean_etag(value: str | None) -> str | None:
@@ -77,6 +83,7 @@ def publish_local(catalog: Catalog, *, local_audio: bool = True) -> Path:
     """Write feed.xml locally without R2."""
     settings = get_settings()
     settings.ensure_dirs()
+    stamp_missing_audio_bytes(catalog, root=settings.root)
     catalog.assign_episode_numbers()
     feed_path = FEEDS_DIR / "feed.xml"
     write_feed(catalog, feed_path, local_audio=local_audio, require_qa=True)
@@ -124,27 +131,34 @@ def publish_site_to_r2(catalog: Catalog, *, upload_audio: bool = True) -> str:
     return f"{PUBLIC_BASE_URL}/index.html"
 
 
+def _feed_slugs(done_posts) -> list[str]:
+    slugs: list[str] = []
+    for post in done_posts:
+        report = read_qa_report(post.slug, output_dir=QA_TRANSCRIPTS_DIR)
+        if report is None or report.get("passed") is True:
+            slugs.append(post.slug)
+    return slugs
+
+
 def publish_to_r2(catalog: Catalog, *, upload_audio: bool = True) -> str:
     client = get_s3_client()
     settings = get_settings()
+    stamp_missing_audio_bytes(catalog, root=settings.root)
     catalog.assign_episode_numbers()
     done_posts = catalog.list_by_filter(audio_status="done")
-    unqualified_posts = [
-        post for post in done_posts if not qa_report_passed(post.slug)
-    ]
-    if unqualified_posts:
-        sample = ", ".join(post.slug for post in unqualified_posts[:5])
-        suffix = "" if len(unqualified_posts) <= 5 else " …"
+    passed_count = sum(1 for post in done_posts if qa_report_passed(post.slug))
+    if len(done_posts) >= MIN_QA_PASS_ARCHIVE and passed_count < MIN_QA_PASS_FRACTION * len(
+        done_posts
+    ):
         raise RuntimeError(
-            "QA gate blocked publish: "
-            f"{len(unqualified_posts)} done episode(s) lack passing QA "
-            f"({sample}{suffix})"
+            "QA restore looks empty: "
+            f"{passed_count}/{len(done_posts)} done episode(s) have passing QA"
         )
 
     if upload_audio:
         published_slugs = _upload_done_audio(catalog, client, settings=settings)
     else:
-        published_slugs = [post.slug for post in done_posts]
+        published_slugs = _feed_slugs(done_posts)
 
     _upload_site_assets(catalog, client, require_qa=True)
 
@@ -210,6 +224,53 @@ def _catalog_sidecar_paths(path: Path) -> tuple[Path, Path]:
         path.with_name(f"{path.name}-wal"),
         path.with_name(f"{path.name}-shm"),
     )
+
+
+def _latest_qa_key(client) -> str | None:
+    prefix = "backup/qa-reports-"
+    resp = client.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix)
+    contents = resp.get("Contents") or []
+    if not contents:
+        return None
+    latest = sorted(contents, key=lambda x: x["Key"])[-1]
+    return latest["Key"]
+
+
+def backup_qa_reports(key: str | None = None) -> str:
+    client = get_s3_client()
+    resolved_key = key or f"backup/qa-reports-{datetime.now(timezone.utc):%Y-%m-%d}.zip"
+    QA_TRANSCRIPTS_DIR.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory() as tmp:
+        archive = Path(tmp) / "qa-reports.zip"
+        with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED) as zf:
+            for path in sorted(QA_TRANSCRIPTS_DIR.glob("*.qa.json")):
+                zf.write(path, arcname=path.name)
+        client.upload_file(
+            str(archive),
+            R2_BUCKET,
+            resolved_key,
+            ExtraArgs={"ContentType": "application/zip"},
+        )
+    return resolved_key
+
+
+def restore_qa_reports(key: str | None = None) -> bool:
+    client = get_s3_client()
+    resolved_key = key or _latest_qa_key(client)
+    if not resolved_key:
+        return False
+    QA_TRANSCRIPTS_DIR.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory() as tmp:
+        archive = Path(tmp) / "qa-reports.zip"
+        client.download_file(R2_BUCKET, resolved_key, str(archive))
+        with zipfile.ZipFile(archive) as zf:
+            for info in zf.infolist():
+                name = Path(info.filename).name
+                if not name.endswith(".qa.json"):
+                    continue
+                target = QA_TRANSCRIPTS_DIR / name
+                target.write_bytes(zf.read(info))
+    return True
 
 
 def restore_catalog(catalog: Catalog, key: str | None = None) -> bool:

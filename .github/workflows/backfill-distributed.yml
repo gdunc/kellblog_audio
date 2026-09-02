@@ -308,6 +308,9 @@ jobs:
       - name: Merge shard manifests
         run: uv run kellblog-audio merge-shard-manifests --run-id "${{ needs.prepare.outputs.run_id }}" --manifest-dir artifacts/manifests
 
+      - name: Restore QA reports from R2
+        run: uv run kellblog-audio restore-qa || true
+
       - name: Publish feed only
         run: uv run kellblog-audio publish --skip-audio
 

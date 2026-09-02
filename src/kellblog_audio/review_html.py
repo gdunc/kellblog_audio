@@ -109,7 +109,7 @@ def _render_page(*, items: list[ReviewItem], updated_at: str) -> str:
   <header>
     <div class="wrap">
       <h1>Kellblog Audio</h1>
-      <p class="lede">AI-narrated archive of Dave Kellogg’s Kellblog posts. Browse and listen below.</p>
+      <p class="lede">AI-narrated audio editions of Dave Kellogg’s <a href="https://www.kellblog.com">Kellblog</a>. Produced by <a href="https://thisisgrant.com">Grant Duncan</a>. Subscribe via <a href="{html.escape(PUBLIC_BASE_URL)}/feed.xml">RSS</a>.</p>
       <div class="share-actions" aria-label="Share this page">
         <button type="button" class="share-button" data-copy-page-url="{html.escape(page_url)}">Copy page link</button>
         <a class="share-link" href="{html.escape(mailto_href)}">Email page link</a>
