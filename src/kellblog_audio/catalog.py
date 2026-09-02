@@ -224,3 +224,19 @@ class Catalog:
     def mark_feed_published(self, slug: str) -> None:
         now = datetime.now(timezone.utc).isoformat()
         self.update_post(slug, feed_published_at=now)
+
+
+def stamp_missing_audio_bytes(catalog: Catalog, *, root: Path) -> int:
+    """Fill blank audio_bytes from local MP3 files so RSS enclosure lengths are real."""
+    stamped = 0
+    for post in catalog.list_by_filter(audio_status="done"):
+        if post.audio_bytes:
+            continue
+        if not post.audio_path:
+            continue
+        audio_path = root / post.audio_path
+        if not audio_path.is_file():
+            continue
+        catalog.update_post(post.slug, audio_bytes=audio_path.stat().st_size)
+        stamped += 1
+    return stamped

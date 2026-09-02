@@ -4,7 +4,7 @@ from types import SimpleNamespace
 from xml.etree import ElementTree as ET
 
 from kellblog_audio import podcast, synthesize as synth
-from kellblog_audio.catalog import Catalog
+from kellblog_audio.catalog import Catalog, stamp_missing_audio_bytes
 from kellblog_audio.podcast import build_feed, episode_guid
 
 
@@ -41,6 +41,71 @@ def test_build_feed_contains_itunes_season():
         assert "Test Post" in xml
         assert "thisisgrant.com" in xml
         assert episode_guid("test-post") in xml
+        assert "<itunes:author>Kellblog Audio</itunes:author>" in xml
+        assert "<itunes:name>Grant Duncan</itunes:name>" in xml
+
+
+def test_build_feed_lists_newest_episode_first():
+    with tempfile.TemporaryDirectory() as tmp:
+        db = Path(tmp) / "test.sqlite"
+        cat = Catalog(db)
+        cat.init_schema()
+        for slug, published, title in (
+            ("old-post", "2020-01-01T12:00:00.000Z", "Old Post"),
+            ("new-post", "2026-08-01T12:00:00.000Z", "New Post"),
+        ):
+            cat.upsert_sitemap_entry(slug, f"https://www.kellblog.com/{slug}/", None)
+            cat.update_post(
+                slug,
+                title=title,
+                published_at=published,
+                year=int(published[:4]),
+                url=f"https://www.kellblog.com/{slug}/",
+                rss_excerpt="Excerpt.",
+                text="Body text.",
+                word_count=2,
+                ingest_status="done",
+                audio_status="done",
+                duration_sec=60,
+                episode_in_season=1,
+                audio_bytes=2048,
+            )
+        root = ET.fromstring(build_feed(cat, local_audio=False))
+        titles = [item.findtext("title") for item in root.findall("./channel/item")]
+        assert titles == ["New Post", "Old Post"]
+
+
+def test_build_feed_stamps_missing_audio_bytes_from_local_files(tmp_path, monkeypatch):
+    cat = Catalog(tmp_path / "test.sqlite")
+    cat.init_schema()
+    audio = tmp_path / "output" / "audio" / "2024" / "sized-post.mp3"
+    audio.parent.mkdir(parents=True)
+    audio.write_bytes(b"x" * 4096)
+    cat.upsert_sitemap_entry("sized-post", "https://www.kellblog.com/sized-post/", None)
+    cat.update_post(
+        "sized-post",
+        title="Sized Post",
+        published_at="2024-06-01T12:00:00.000Z",
+        year=2024,
+        url="https://www.kellblog.com/sized-post/",
+        rss_excerpt="Excerpt.",
+        text="Body text.",
+        word_count=2,
+        ingest_status="done",
+        audio_status="done",
+        duration_sec=60,
+        audio_path="output/audio/2024/sized-post.mp3",
+        audio_bytes=None,
+    )
+    settings = SimpleNamespace(root=tmp_path)
+    monkeypatch.setattr(podcast, "get_settings", lambda: settings)
+
+    stamped = stamp_missing_audio_bytes(cat, root=tmp_path)
+    assert stamped == 1
+    root = ET.fromstring(build_feed(cat, local_audio=False))
+    enclosure = root.find("./channel/item/enclosure")
+    assert enclosure is not None
+    assert enclosure.attrib["length"] == "4096"
 
 
 def test_build_feed_omits_skipped_external_audio_items_and_links_homepage():

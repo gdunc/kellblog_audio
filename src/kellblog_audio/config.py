@@ -81,7 +81,8 @@ R2_ENDPOINT = os.environ.get(
 
 SHOW_TITLE = "Kellblog Audio"
 SHOW_SUBTITLE = "Dave Kellogg on Enterprise Software Startups (AI-narrated)"
-SHOW_AUTHOR = "Dave Kellogg"
+SHOW_AUTHOR = "Kellblog Audio"
+SHOW_OWNER_NAME = "Grant Duncan"
 SHOW_LANGUAGE = "en-us"
 SHOW_CATEGORY = "Business"
 SHOW_CATEGORY_SUB = "Management"
