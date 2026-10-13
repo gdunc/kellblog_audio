@@ -66,7 +66,7 @@ env:
 
 jobs:
   prepare:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       run_id: ${{ steps.plan.outputs.run_id }}
       shard_count: ${{ steps.plan.outputs.shard_count }}
@@ -81,9 +81,9 @@ jobs:
       completed_shards: ${{ steps.plan.outputs.completed_shards }}
       missing_shards: ${{ steps.plan.outputs.missing_shards }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: astral-sh/setup-uv@v3
+      - uses: astral-sh/setup-uv@v6
 
       - name: Install system deps
         run: sudo apt-get update && sudo apt-get install -y espeak-ng ffmpeg
@@ -196,14 +196,14 @@ jobs:
   synthesize:
     needs: prepare
     if: ${{ needs.prepare.outputs.gha_shard_count != '0' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.prepare.outputs.gha_matrix) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: astral-sh/setup-uv@v3
+      - uses: astral-sh/setup-uv@v6
 
       - name: Install system deps
         run: sudo apt-get update && sudo apt-get install -y espeak-ng ffmpeg
@@ -242,7 +242,7 @@ jobs:
           "${cmd[@]}"
 
       - name: Upload shard manifest artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: shard-manifest-${{ matrix.shard }}
           path: artifacts/manifests/shard-${{ matrix.shard }}-of-${{ needs.prepare.outputs.shard_count }}.json
@@ -251,11 +251,11 @@ jobs:
   finalize:
     needs: [prepare, synthesize]
     if: ${{ always() && needs.prepare.result == 'success' && (needs.synthesize.result == 'success' || needs.synthesize.result == 'skipped') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: astral-sh/setup-uv@v3
+      - uses: astral-sh/setup-uv@v6
 
       - name: Install system deps
         run: sudo apt-get update && sudo apt-get install -y espeak-ng ffmpeg
@@ -391,7 +391,7 @@ jobs:
           PY
 
       - name: Upload finalize artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: backfill-finalize-${{ needs.prepare.outputs.run_id }}
           path: |
@@ -403,11 +403,11 @@ jobs:
   auto-restart:
     needs: [prepare, synthesize, finalize]
     if: ${{ always() && needs.prepare.result == 'success' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: astral-sh/setup-uv@v3
+      - uses: astral-sh/setup-uv@v6
 
       - name: Install Python package
         run: uv sync --frozen --extra chatterbox
