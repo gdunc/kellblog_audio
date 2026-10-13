@@ -44,6 +44,7 @@ def test_ingest_refresh_marks_done_audio_stale_when_cleaned_text_changes(tmp_pat
         lambda _html, _url: SimpleNamespace(
             body_html="Body",
             has_heavy_images=False,
+            paywalled=False,
             published_at="2024-06-01T12:00:00.000Z",
             title="Test Post",
         ),
@@ -68,6 +69,7 @@ def test_ingest_refresh_preserves_done_audio_when_cleaned_text_is_unchanged(tmp_
         lambda _html, _url: SimpleNamespace(
             body_html="Body",
             has_heavy_images=False,
+            paywalled=False,
             published_at="2024-06-01T12:00:00.000Z",
             title="Test Post",
         ),

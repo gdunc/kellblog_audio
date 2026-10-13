@@ -107,13 +107,18 @@ def build_feed(
         and p.title
         and _include_in_feed(p.slug, require_qa=require_qa, qa_dir=qa_dir)
     ]
-    # Newest first in feed (podcast convention)
-    episodes.sort(key=lambda p: p.published_at or "", reverse=True)
+    # Newest first in feed (podcast convention), by when the episode became available
+    episodes.sort(key=lambda p: _release_iso(p), reverse=True)
 
     for post in episodes:
         _add_episode(fg, post, catalog, local_audio=local_audio)
 
     return fg.rss_str(pretty=True).decode("utf-8")
+
+
+def _release_iso(post: PostRow) -> str:
+    """pubDate source: when a once-paywalled post went free, else its publish date."""
+    return post.released_at or post.published_at or ""
 
 
 def _add_episode(
@@ -143,7 +148,7 @@ def _add_episode(
     fe.guid(episode_guid(post.slug), permalink=False)
     fe.link(href=post.url)
     if post.published_at:
-        fe.pubDate(pub_date_rfc2822(post.published_at))
+        fe.pubDate(pub_date_rfc2822(_release_iso(post)))
 
     if post.year:
         fe.podcast.itunes_season(post.year)
