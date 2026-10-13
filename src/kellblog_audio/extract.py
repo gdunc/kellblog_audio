@@ -19,6 +19,7 @@ class ExtractedPost:
     published_at: str
     body_html: str
     has_heavy_images: bool
+    paywalled: bool = False
 
 
 def slug_from_url(url: str) -> str:
@@ -34,12 +35,13 @@ def extract_from_html(html: str, url: str) -> ExtractedPost:
     soup = BeautifulSoup(html, "lxml")
     title = _extract_title(soup)
     published_at = _extract_published_at(soup)
-    body_html, has_images = _extract_body(soup)
+    body_html, has_images, paywalled = _extract_body(soup)
     return ExtractedPost(
         title=title,
         published_at=published_at,
         body_html=body_html,
         has_heavy_images=has_images,
+        paywalled=paywalled,
     )
 
 
@@ -74,7 +76,27 @@ def _extract_published_at(soup: BeautifulSoup) -> str:
     return "1970-01-01T00:00:00.000Z"
 
 
-def _extract_body(soup: BeautifulSoup) -> tuple[str, bool]:
+# Ghost renders this block after the preview of members-only / paid posts. The class
+# name also appears in every page's CSS, so match the element, not the string.
+PAYWALL_CTA_SELECTOR = "aside.gh-post-upgrade-cta"
+PAYWALL_LINE = re.compile(r"^\s*This post is for (paying )?subscribers only\s*$", re.I | re.M)
+
+
+def _strip_paywall(target) -> bool:
+    """Remove the subscribe call-to-action from `target`; True if the post is paywalled."""
+    paywalled = False
+    for el in target.select(PAYWALL_CTA_SELECTOR):
+        el.decompose()
+        paywalled = True
+    # Fallback if the theme changes the markup: the heading text alone is enough.
+    for heading in target.find_all(["h1", "h2", "h3", "h4", "p"]):
+        if PAYWALL_LINE.match(heading.get_text()):
+            heading.decompose()
+            paywalled = True
+    return paywalled
+
+
+def _extract_body(soup: BeautifulSoup) -> tuple[str, bool, bool]:
     article = soup.find("article")
     if article:
         content = article.find(class_=re.compile(r"gh-content|post-content|article-body"))
@@ -83,9 +105,10 @@ def _extract_body(soup: BeautifulSoup) -> tuple[str, bool]:
         target = soup.find(class_=re.compile(r"gh-content|post-content")) or soup.body
     if not target:
         target = soup
+    paywalled = _strip_paywall(target)
     imgs = len(target.find_all("img"))
     # Remove read-more / footer cruft
     for sel in [".read-more", ".kg-card-teaser", "footer"]:
         for el in target.select(sel):
             el.decompose()
-    return str(target), imgs > 3
+    return str(target), imgs > 3, paywalled

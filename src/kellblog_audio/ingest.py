@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 import time
 import xml.etree.ElementTree as ET
-from datetime import datetime
+from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 from typing import Callable
 
@@ -79,6 +79,18 @@ def sync_sitemap(catalog: Catalog, client: httpx.Client) -> int:
     return len(entries)
 
 
+def _cleared_audio_fields() -> dict[str, object]:
+    return {
+        "audio_path": None,
+        "audio_bytes": None,
+        "audio_etag": None,
+        "audio_error": None,
+        "duration_sec": None,
+        "feed_published_at": None,
+        "backfill_run_id": None,
+    }
+
+
 def ingest_posts(
     catalog: Catalog,
     client: httpx.Client,
@@ -112,16 +124,21 @@ def ingest_posts(
             time.sleep(min_interval - elapsed)
 
         headers: dict[str, str] = {}
-        if post.etag and not force_refresh:
+        # A post that is pending again after being ingested was re-queued because it
+        # changed upstream, so always fetch it in full rather than trust a validator.
+        revalidate = not post.content_hash
+        if post.etag and not force_refresh and revalidate:
             headers["If-None-Match"] = post.etag
-        if post.last_modified and not force_refresh:
+        if post.last_modified and not force_refresh and revalidate:
             headers["If-Modified-Since"] = post.last_modified
 
         try:
             resp = client.get(post.url, headers=headers, timeout=60, follow_redirects=True)
             last_request = time.monotonic()
             if resp.status_code == 304:
-                catalog.update_post(post.slug, ingest_status="done")
+                catalog.update_post(
+                    post.slug, ingest_status="done", ingested_lastmod=post.sitemap_lastmod
+                )
                 ok += 1
                 continue
             resp.raise_for_status()
@@ -140,17 +157,34 @@ def ingest_posts(
                 rss_excerpt = excerpt_from_body(plain_body)
 
             existing = catalog.get(post.slug)
+            was_paywalled = bool(existing and existing.paywalled)
+            now_paywalled = extracted.paywalled
+            released_at = existing.released_at if existing else None
+            reset_audio: dict[str, object] = {}
             if is_skip:
                 audio_status = "skip"
+            elif now_paywalled:
+                # Preview-only text: never narrate it, and take any episode off the feed.
+                audio_status = "paywalled"
+                if existing and existing.audio_status != "paywalled":
+                    reset_audio = _cleared_audio_fields()
             else:
                 audio_status = existing.audio_status if existing else "pending"
-                if not audio_status or audio_status == "skip":
+                if not audio_status or audio_status in {"skip", "paywalled"}:
                     audio_status = "pending"
                 if existing and existing.content_hash != h:
                     if existing.audio_status == "done":
                         audio_status = "stale"
                     elif existing.audio_status not in {"pending", "stale"}:
                         audio_status = "pending"
+                if was_paywalled:
+                    # Flipped to free: the full text replaces the preview, so any audio
+                    # made from the preview is wrong, and the episode is new to listeners.
+                    if audio_status == "done":
+                        audio_status = "stale"
+                    released_at = post.sitemap_lastmod or datetime.now(timezone.utc).isoformat()
+                    if audio_status != "done":
+                        reset_audio = _cleared_audio_fields()
 
             etag = resp.headers.get("etag")
             lm = resp.headers.get("last-modified")
@@ -170,9 +204,17 @@ def ingest_posts(
                 last_modified=lm,
                 ingest_status="done",
                 ingest_error=None,
+                ingested_lastmod=post.sitemap_lastmod,
+                paywalled=1 if now_paywalled else 0,
+                released_at=released_at,
                 audio_status=audio_status,
                 skip_reason="configured skip slug (external audio)" if is_skip else None,
+                **reset_audio,
             )
+            if now_paywalled and not was_paywalled and progress:
+                progress(f"paywalled {post.slug}: held out of the feed")
+            if was_paywalled and not now_paywalled and progress:
+                progress(f"now free {post.slug}: queued for narration")
             ok += 1
             if progress:
                 progress(f"ingested {post.slug}")
@@ -205,6 +247,10 @@ def ingest_all(
     with httpx.Client(headers={"User-Agent": "KellblogAudioBot/1.0 (+https://thisisgrant.com)"}) as client:
         n = sync_sitemap(catalog, client)
         print(f"Synced {n} URLs from sitemap")
+        if slug is None:
+            rechecks = catalog.queue_paywall_rechecks()
+            if rechecks:
+                print(f"Re-checking {rechecks} paywalled post(s) for a flip to free")
         ok, err = ingest_posts(
             catalog,
             client,

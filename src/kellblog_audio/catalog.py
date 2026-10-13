@@ -48,7 +48,21 @@ POSTS_ADDITIONAL_COLUMNS = {
     "audio_bytes": "INTEGER",
     "audio_etag": "TEXT",
     "backfill_run_id": "TEXT",
+    # Sitemap lastmod at the last successful fetch; a different sitemap value means the
+    # post changed upstream (edit, or a paywalled post flipped to free) and is re-fetched.
+    "ingested_lastmod": "TEXT",
+    # 1 while the post is members-only; these are re-checked every ingest.
+    "paywalled": "INTEGER",
+    # When a once-paywalled post became free; used as the feed pubDate so listeners
+    # see it as a new episode. NULL for posts that were never paywalled.
+    "released_at": "TEXT",
 }
+
+# Footer the site added to paywalled previews before ingest learned to strip it.
+LEGACY_PAYWALL_SQL = (
+    "text LIKE '%This post is for paying subscribers only%' "
+    "OR text LIKE '%This post is for subscribers only%'"
+)
 
 
 @dataclass
@@ -79,6 +93,9 @@ class PostRow:
     feed_published_at: str | None = None
     skip_reason: str | None = None
     backfill_run_id: str | None = None
+    ingested_lastmod: str | None = None
+    paywalled: int | None = None
+    released_at: str | None = None
 
     @classmethod
     def from_row(cls, row: sqlite3.Row) -> PostRow:
@@ -113,6 +130,17 @@ class Catalog:
             for name, column_type in POSTS_ADDITIONAL_COLUMNS.items():
                 if name not in existing_columns:
                     conn.execute(f"ALTER TABLE posts ADD COLUMN {name} {column_type}")
+            if "ingested_lastmod" not in existing_columns:
+                # One-time upgrade: treat everything ingested so far as current, except
+                # posts stored with the paywall footer, which are flagged and re-fetched.
+                conn.execute(
+                    "UPDATE posts SET ingested_lastmod = sitemap_lastmod "
+                    "WHERE ingest_status = 'done'"
+                )
+                conn.execute(
+                    f"UPDATE posts SET paywalled = 1, ingested_lastmod = NULL "
+                    f"WHERE ingest_status = 'done' AND ({LEGACY_PAYWALL_SQL})"
+                )
 
     def upsert_sitemap_entry(
         self, slug: str, url: str, sitemap_lastmod: str | None
@@ -124,10 +152,26 @@ class Catalog:
                 VALUES (?, ?, ?, 'pending')
                 ON CONFLICT(slug) DO UPDATE SET
                     url = excluded.url,
-                    sitemap_lastmod = excluded.sitemap_lastmod
+                    sitemap_lastmod = excluded.sitemap_lastmod,
+                    ingest_status = CASE
+                        WHEN posts.ingest_status = 'done'
+                         AND excluded.sitemap_lastmod IS NOT NULL
+                         AND COALESCE(posts.ingested_lastmod, '') != excluded.sitemap_lastmod
+                        THEN 'pending'
+                        ELSE posts.ingest_status
+                    END
                 """,
                 (slug, url, sitemap_lastmod),
             )
+
+    def queue_paywall_rechecks(self) -> int:
+        """Re-fetch every paywalled post, in case a flip to free did not move the sitemap."""
+        with self.connect() as conn:
+            cur = conn.execute(
+                "UPDATE posts SET ingest_status = 'pending' "
+                "WHERE paywalled = 1 AND ingest_status = 'done'"
+            )
+            return cur.rowcount
 
     def update_post(self, slug: str, **fields: Any) -> None:
         if not fields:
@@ -185,6 +229,9 @@ class Catalog:
             audio_skip = conn.execute(
                 "SELECT COUNT(*) FROM posts WHERE audio_status = 'skip'"
             ).fetchone()[0]
+            audio_paywalled = conn.execute(
+                "SELECT COUNT(*) FROM posts WHERE audio_status = 'paywalled'"
+            ).fetchone()[0]
             publish_pending = conn.execute(
                 """
                 SELECT COUNT(*) FROM posts
@@ -197,6 +244,7 @@ class Catalog:
             "audio_pending": audio_pending,
             "audio_done": audio_done,
             "audio_skip": audio_skip,
+            "audio_paywalled": audio_paywalled,
             "publish_pending": publish_pending,
         }
 
