@@ -5,7 +5,7 @@ Podcast feed URL: `https://kellblog.thisisgrant.com/feed.xml`
 Account detected via Wrangler (gdunc718@gmail.com):
 
 - **Account name:** This Is Grant Website
-- **Account ID:** `REDACTED-ACCOUNT-ID`
+- **Account ID:** `<your-cloudflare-account-id>`
 
 ## Current blockers (as of setup)
 
@@ -113,7 +113,7 @@ dig kellblog.thisisgrant.com
 ## Step 7: Configure `.env`
 
 ```bash
-R2_ACCOUNT_ID=REDACTED-ACCOUNT-ID
+R2_ACCOUNT_ID=<your-cloudflare-account-id>
 R2_ACCESS_KEY_ID=...
 R2_SECRET_ACCESS_KEY=...
 R2_BUCKET=kellblog-audio
@@ -145,7 +145,7 @@ Then open:
 
 | Secret | Value |
 |--------|--------|
-| `R2_ACCOUNT_ID` | `REDACTED-ACCOUNT-ID` |
+| `R2_ACCOUNT_ID` | `<your-cloudflare-account-id>` |
 | `R2_ACCESS_KEY_ID` | from Step 6 |
 | `R2_SECRET_ACCESS_KEY` | from Step 6 |
 | `R2_BUCKET` | `kellblog-audio` |
