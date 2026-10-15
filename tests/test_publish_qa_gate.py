@@ -54,7 +54,7 @@ def test_public_feed_omits_failed_qa_but_includes_missing_reports(tmp_path):
     }
 
 
-def test_public_review_page_lists_only_qa_passed_episodes(tmp_path):
+def test_public_review_page_matches_feed_qa_rule(tmp_path):
     catalog = _catalog_with_posts(tmp_path / "catalog.sqlite")
     qa_dir = tmp_path / "qa"
     qa_dir.mkdir()
@@ -70,7 +70,7 @@ def test_public_review_page_lists_only_qa_passed_episodes(tmp_path):
 
     html = out.read_text(encoding="utf-8")
     assert "Passed Post" in html
-    assert "Missing Qa Post" not in html
+    assert "Missing Qa Post" in html  # no report: unchecked, but listed like the feed does
     assert "Failed Qa Post" not in html
 
 

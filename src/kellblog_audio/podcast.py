@@ -80,8 +80,8 @@ def build_feed(
     fg.load_extension("podcast")
     fg.title(SHOW_TITLE)
     fg.link(href=FEED_URL, rel="self")
-    fg.link(href=PUBLIC_BASE_URL, rel="alternate")
-    fg.description(SHOW_DESCRIPTION_HTML)
+    fg.link(href=f"{PUBLIC_BASE_URL}/index.html", rel="alternate")
+    fg.description(html_to_plain(SHOW_DESCRIPTION_HTML))
     fg.language(SHOW_LANGUAGE)
     fg.generator("kellblog-audio")
     fg.author({"name": SHOW_AUTHOR, "email": SHOW_EMAIL})
@@ -113,7 +113,9 @@ def build_feed(
     for post in episodes:
         _add_episode(fg, post, catalog, local_audio=local_audio)
 
-    return fg.rss_str(pretty=True).decode("utf-8")
+    xml = fg.rss_str(pretty=True).decode("utf-8")
+    # feedgen only accepts yes/no/clean, but validators want the true/false form.
+    return xml.replace("<itunes:explicit>no</itunes:explicit>", "<itunes:explicit>false</itunes:explicit>")
 
 
 def _release_iso(post: PostRow) -> str:
@@ -171,11 +173,14 @@ def _add_episode(
 
 
 def _remote_length(post: PostRow) -> int:
+    # audio_bytes tracks what was uploaded; a leftover local MP3 can be an older render.
+    if post.audio_bytes:
+        return post.audio_bytes
     if post.audio_path:
         local = get_settings().root / post.audio_path
         if local.exists():
             return local.stat().st_size
-    return post.audio_bytes or 0
+    return 0
 
 
 def write_feed(
