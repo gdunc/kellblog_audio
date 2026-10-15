@@ -12,7 +12,7 @@ from urllib.parse import quote
 
 from kellblog_audio.catalog import Catalog, PostRow
 from kellblog_audio.config import OUTPUT_DIR, PUBLIC_BASE_URL, QA_TRANSCRIPTS_DIR
-from kellblog_audio.qa import qa_report_passed
+from kellblog_audio.qa import read_qa_report, report_accepted
 
 MIN_REVIEW_COVERAGE = 0.93
 MIN_REVIEW_TAIL = 0.82
@@ -55,6 +55,12 @@ def concern_reasons(data: dict[str, Any] | None) -> list[str]:
     return reasons
 
 
+def _feed_eligible(slug: str, qa_dir: Path) -> bool:
+    """Same rule as the feed: a missing QA report is fine, a failing one is not."""
+    report = read_qa_report(slug, output_dir=qa_dir)
+    return report is None or report_accepted(report)
+
+
 def collect_review_items(
     catalog: Catalog,
     *,
@@ -65,7 +71,7 @@ def collect_review_items(
     for post in catalog.list_by_filter(audio_status="done"):
         if not post.audio_path:
             continue
-        if require_qa and not qa_report_passed(post.slug, output_dir=qa_dir):
+        if require_qa and not _feed_eligible(post.slug, qa_dir):
             continue
         qa = _read_qa(qa_dir / f"{post.slug}.qa.json")
         items.append(ReviewItem(post=post, qa=qa, concerns=concern_reasons(qa)))
@@ -151,7 +157,7 @@ def _render_article(item: ReviewItem, *, page_url: str) -> str:
             <button type="button" data-copy-page-url="{html.escape(page_url)}#{anchor}" data-share-label="{title}">Copy link</button>
           </div>
         </div>
-        <audio controls preload="metadata" src="{html.escape(audio_url)}"></audio>
+        <audio controls preload="none" src="{html.escape(audio_url)}"></audio>
       </article>"""
 
 
