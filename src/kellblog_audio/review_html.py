@@ -13,6 +13,7 @@ from urllib.parse import quote
 from kellblog_audio.catalog import Catalog, PostRow
 from kellblog_audio.config import OUTPUT_DIR, PUBLIC_BASE_URL, QA_TRANSCRIPTS_DIR
 from kellblog_audio.qa import read_qa_report, report_accepted
+from kellblog_audio.text_clean import excerpt_from_body, html_to_plain
 
 MIN_REVIEW_COVERAGE = 0.93
 MIN_REVIEW_TAIL = 0.82
@@ -101,7 +102,10 @@ def write_review_page(
 def _render_page(*, items: list[ReviewItem], updated_at: str) -> str:
     episode_word = "episode" if len(items) == 1 else "episodes"
     page_url = _public_page_url()
-    cards = "\n".join(_render_article(item, page_url=page_url) for item in items)
+    sections, years = _render_year_sections(items, page_url=page_url)
+    year_links = "\n".join(
+        f'        <a href="#year-{year}">{year}</a>' for year, _count in years
+    )
     mailto_href = _mailto_page_href(page_url)
     return f"""<!doctype html>
 <html lang="en">
@@ -125,11 +129,14 @@ def _render_page(*, items: list[ReviewItem], updated_at: str) -> str:
   </header>
   <main class="wrap">
     <div class="toolbar">
-      <span>{len(items)} {episode_word}</span>
+      <span id="episode-count" data-total="{len(items)}">{len(items)} {episode_word}</span>
+      <input id="episode-search" type="search" placeholder="Search titles and summaries" aria-label="Search episodes">
     </div>
-    <section class="episodes" aria-label="Episodes">
-{cards}
-    </section>
+    <nav class="years" aria-label="Jump to year">
+{year_links}
+    </nav>
+    <p id="no-results" class="no-results" hidden>No episodes match that search.</p>
+{sections}
   </main>
   <script>{_share_script()}</script>
 </body>
@@ -137,26 +144,69 @@ def _render_page(*, items: list[ReviewItem], updated_at: str) -> str:
 """
 
 
+def _release_key(post: PostRow) -> str:
+    return post.released_at or post.published_at or ""
+
+
+def _render_year_sections(
+    items: list[ReviewItem], *, page_url: str
+) -> tuple[str, list[tuple[int, int]]]:
+    """Newest episodes first, grouped by year (the same year the feed uses as its season)."""
+    by_year: dict[int, list[ReviewItem]] = {}
+    for item in items:
+        by_year.setdefault(item.post.year or 0, []).append(item)
+
+    sections: list[str] = []
+    years: list[tuple[int, int]] = []
+    for year in sorted(by_year, reverse=True):
+        group = sorted(by_year[year], key=lambda it: _release_key(it.post), reverse=True)
+        years.append((year, len(group)))
+        cards = "\n".join(_render_article(item, page_url=page_url) for item in group)
+        label = str(year) if year else "Undated"
+        count = len(group)
+        sections.append(
+            f'''    <section class="year" id="year-{year}" aria-labelledby="year-{year}-title">
+      <h2 class="year-title" id="year-{year}-title">{label} <span>{count} {"episode" if count == 1 else "episodes"}</span></h2>
+      <div class="episodes">
+{cards}
+      </div>
+    </section>'''
+        )
+    return "\n".join(sections), years
+
+
+def _summary(post: PostRow, max_chars: int = 240) -> str:
+    raw = post.rss_excerpt or ""
+    text = html_to_plain(raw) if "<" in raw else raw
+    if not text.strip():
+        text = excerpt_from_body(post.text or "", max_chars=max_chars)
+    text = " ".join(text.split())
+    if len(text) <= max_chars:
+        return text
+    cut = text[:max_chars].rsplit(" ", 1)[0].rstrip(",;:-")
+    return cut + "…"
+
+
 def _render_article(item: ReviewItem, *, page_url: str) -> str:
     post = item.post
     title = html.escape(post.title or post.slug)
-    meta_bits = [_format_date(post.published_at), _format_duration(post.duration_sec)]
-    if post.word_count:
-        meta_bits.append(f"{post.word_count:,} words")
+    meta_bits = [_format_date(_release_key(post)), _format_duration(post.duration_sec)]
     audio_url = _public_audio_path(post.audio_path)
     anchor = _anchor(post.slug)
+    summary = _summary(post)
+    summary_html = f'\n        <p class="excerpt">{html.escape(summary)}</p>' if summary else ""
     return f"""      <article id="{anchor}">
         <div class="episode-head">
           <div>
-            <h2>{title}</h2>
+            <h3>{title}</h3>
             <div class="meta">{html.escape(" · ".join(bit for bit in meta_bits if bit))}</div>
           </div>
           <div class="links">
-            <a href="{html.escape(post.url)}">Original</a>
-            <a href="{html.escape(audio_url)}">MP3</a>
+            <a href="{html.escape(post.url)}">Read original</a>
+            <a href="{html.escape(audio_url)}" download>Download MP3</a>
             <button type="button" data-copy-page-url="{html.escape(page_url)}#{anchor}" data-share-label="{title}">Copy link</button>
           </div>
-        </div>
+        </div>{summary_html}
         <audio controls preload="none" src="{html.escape(audio_url)}"></audio>
       </article>"""
 
@@ -294,6 +344,49 @@ def _css() -> str:
       width: 100%;
       margin: 8px 0 0;
     }
+    h3 { margin: 0; font-size: 1.15rem; line-height: 1.25; letter-spacing: 0; }
+    .excerpt {
+      margin: 0 0 4px;
+      color: var(--ink);
+      font-size: 0.95rem;
+    }
+    .year { margin: 0 0 28px; scroll-margin-top: 12px; }
+    .year-title {
+      margin: 0 0 12px;
+      font-size: 1.5rem;
+      line-height: 1.2;
+    }
+    .year-title span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 400;
+      margin-left: 6px;
+    }
+    .years {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 22px;
+    }
+    .years a {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+      padding: 4px 9px;
+      font-size: 0.875rem;
+    }
+    .years a:hover { background: var(--accent-soft); border-color: #9fcdd2; text-decoration: none; }
+    #episode-search {
+      flex: 1 1 260px;
+      max-width: 380px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font: inherit;
+      background: var(--surface);
+      color: var(--ink);
+    }
+    .no-results { color: var(--muted); }
     @media (max-width: 760px) {
       .episode-head { grid-template-columns: 1fr; }
       .links, .share-actions { justify-content: flex-start; }
@@ -302,6 +395,7 @@ def _css() -> str:
       .wrap { width: min(100% - 20px, 1120px); }
       header .wrap { padding-top: 22px; }
       h1 { font-size: 1.55rem; }
+      #episode-search { max-width: none; }
       article { padding: 14px; }
     }
     """
@@ -394,6 +488,34 @@ def _share_script() -> str:
           }
         });
       });
+      var search = document.getElementById("episode-search");
+      var count = document.getElementById("episode-count");
+      var none = document.getElementById("no-results");
+      if (search) {
+        var cards = Array.prototype.slice.call(document.querySelectorAll("section.year article"));
+        cards.forEach(function (card) {
+          var h = card.querySelector("h3"), e = card.querySelector(".excerpt");
+          card.searchText = ((h ? h.textContent : "") + " " + (e ? e.textContent : "")).toLowerCase();
+        });
+        var sections = Array.prototype.slice.call(document.querySelectorAll("section.year"));
+        var yearLinks = document.querySelector("nav.years");
+        search.addEventListener("input", function () {
+          var q = search.value.trim().toLowerCase();
+          var shown = 0;
+          cards.forEach(function (card) {
+            var match = !q || card.searchText.indexOf(q) !== -1;
+            card.hidden = !match;
+            if (match) { shown += 1; }
+          });
+          sections.forEach(function (sec) {
+            sec.hidden = !sec.querySelector("article:not([hidden])");
+          });
+          if (yearLinks) { yearLinks.hidden = !!q; }
+          var total = parseInt(count.getAttribute("data-total"), 10);
+          count.textContent = q ? shown + " of " + total + " episodes" : total + (total === 1 ? " episode" : " episodes");
+          none.hidden = shown !== 0;
+        });
+      }
     }());
     """
 
