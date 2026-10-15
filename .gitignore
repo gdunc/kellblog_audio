@@ -9,3 +9,4 @@ output/
 *.sqlite
 .env
 .DS_Store
+.wrangler/
