@@ -41,7 +41,12 @@ from kellblog_audio.publish import (
     restore_catalog,
     restore_qa_reports,
 )
-from kellblog_audio.qa import ensure_local_whisper_ready, qa_post_audio, queue_audio_rerun
+from kellblog_audio.qa import (
+    ensure_local_whisper_ready,
+    qa_post_audio,
+    queue_audio_rerun,
+    waive_qa_report,
+)
 from kellblog_audio.review_html import collect_review_items, write_review_page
 from kellblog_audio.synthesize import synthesize_batch
 from kellblog_audio.tts import list_available_providers
@@ -379,6 +384,17 @@ def qa_audio(
         f"selected={selected} checked={checked} passed={passed} "
         f"failed={failed} errored={errored} queued-for-rerun={queued}"
     )
+
+
+@app.command("qa-waive")
+def qa_waive(
+    slug: list[str] = typer.Option(..., "--slug", "-s", help="Episode slug (repeatable)"),
+    reason: str = typer.Option(..., "--reason", help="Why the failing report is acceptable"),
+) -> None:
+    """Accept failing QA reports so the episodes stay in the feed."""
+    for item in slug:
+        ok = waive_qa_report(item, reason)
+        console.print(f"{'waived' if ok else 'no QA report for'} {item}")
 
 
 @app.command("qa-stats")

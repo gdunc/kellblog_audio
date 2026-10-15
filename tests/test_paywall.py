@@ -287,3 +287,22 @@ def test_feed_pubdate_is_the_release_date_for_flipped_posts(tmp_path):
     assert items["always-free"].isoformat().startswith("2026-08-04T12:00:00")
     # Newest first: the just-released episode leads the feed.
     assert xml.index("flipped") < xml.index("always-free")
+
+
+# --- QA waiver ---------------------------------------------------------------------------
+
+
+def test_waived_failing_qa_report_stays_in_the_feed(tmp_path):
+    import json
+
+    from kellblog_audio.qa import qa_report_passed, waive_qa_report
+
+    qa_dir = tmp_path / "qa"
+    qa_dir.mkdir()
+    (qa_dir / "shaky.qa.json").write_text(json.dumps({"passed": False, "reason": "coverage"}))
+    assert not qa_report_passed("shaky", output_dir=qa_dir)
+    assert waive_qa_report("shaky", "narration is fine", output_dir=qa_dir)
+    assert qa_report_passed("shaky", output_dir=qa_dir)
+    saved = json.loads((qa_dir / "shaky.qa.json").read_text())
+    assert saved["passed"] is False and saved["reason"] == "coverage"
+    assert not waive_qa_report("missing", "x", output_dir=qa_dir)

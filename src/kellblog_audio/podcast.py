@@ -28,7 +28,7 @@ from kellblog_audio.intro_outro import (
     build_episode_description_html,
     build_episode_description_plain,
 )
-from kellblog_audio.qa import read_qa_report
+from kellblog_audio.qa import read_qa_report, report_accepted
 from kellblog_audio.text_clean import excerpt_from_body, html_to_plain
 
 
@@ -42,7 +42,7 @@ def _include_in_feed(slug: str, *, require_qa: bool, qa_dir: Path | None) -> boo
     )
     if report is None:
         return True
-    return report.get("passed") is True
+    return report_accepted(report)
 
 
 def episode_guid(slug: str) -> str:
