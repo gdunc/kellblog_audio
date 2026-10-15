@@ -322,13 +322,34 @@ def read_qa_report(
     return payload if isinstance(payload, dict) else None
 
 
+def report_accepted(report: dict[str, object]) -> bool:
+    """A report counts as publishable if it passed or was explicitly waived."""
+    return report.get("passed") is True or report.get("waived") is True
+
+
 def qa_report_passed(
     slug: str,
     *,
     output_dir: Path = QA_TRANSCRIPTS_DIR,
 ) -> bool:
     report = read_qa_report(slug, output_dir=output_dir)
-    return bool(report and report.get("passed") is True)
+    return bool(report and report_accepted(report))
+
+
+def waive_qa_report(
+    slug: str,
+    reason: str,
+    *,
+    output_dir: Path = QA_TRANSCRIPTS_DIR,
+) -> bool:
+    """Mark a failing QA report as accepted; the failure details stay in the report."""
+    report = read_qa_report(slug, output_dir=output_dir)
+    if report is None:
+        return False
+    report["waived"] = True
+    report["waived_reason"] = reason
+    (output_dir / f"{slug}.qa.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    return True
 
 
 def queue_audio_rerun(catalog: Catalog, slug: str, reason: str) -> None:

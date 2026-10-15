@@ -27,7 +27,7 @@ from kellblog_audio.config import (
 )
 from kellblog_audio.catalog import stamp_missing_audio_bytes
 from kellblog_audio.podcast import write_feed
-from kellblog_audio.qa import qa_report_passed, read_qa_report
+from kellblog_audio.qa import qa_report_passed, read_qa_report, report_accepted
 from kellblog_audio.review_html import write_review_page
 
 MIN_QA_PASS_FRACTION = 0.5
@@ -135,7 +135,7 @@ def _feed_slugs(done_posts) -> list[str]:
     slugs: list[str] = []
     for post in done_posts:
         report = read_qa_report(post.slug, output_dir=QA_TRANSCRIPTS_DIR)
-        if report is None or report.get("passed") is True:
+        if report is None or report_accepted(report):
             slugs.append(post.slug)
     return slugs
 
