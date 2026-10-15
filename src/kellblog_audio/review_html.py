@@ -446,7 +446,8 @@ def _anchor(slug: str) -> str:
 
 
 def _public_page_url() -> str:
-    return f"{PUBLIC_BASE_URL.rstrip('/')}/index.html"
+    # The bare root is served by the infra/home-worker Worker.
+    return f"{PUBLIC_BASE_URL.rstrip('/')}/"
 
 
 def _mailto_page_href(page_url: str) -> str:
