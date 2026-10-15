@@ -152,7 +152,7 @@ def test_build_feed_omits_skipped_external_audio_items_and_links_homepage():
         assert channel is not None
         items = channel.findall("item")
 
-        assert channel.findtext("link") == "https://kellblog.thisisgrant.com"
+        assert channel.findtext("link") == "https://kellblog.thisisgrant.com/index.html"
         assert [item.findtext("title") for item in items] == ["Done Post"]
         assert items[0].find("enclosure") is not None
 

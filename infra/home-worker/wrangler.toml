@@ -1,8 +1,0 @@
-name = "kellblog-audio-home"
-main = "worker.js"
-compatibility_date = "2026-10-01"
-workers_dev = false
-
-# Exact-root route only (never "/*", which would run the Worker on every audio and feed
-# request). Cloudflare routes cannot match query strings, so "/?utm=x" is not covered.
-routes = [{ pattern = "kellblog.thisisgrant.com/", zone_name = "thisisgrant.com" }]
