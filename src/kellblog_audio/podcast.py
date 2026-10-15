@@ -80,7 +80,7 @@ def build_feed(
     fg.load_extension("podcast")
     fg.title(SHOW_TITLE)
     fg.link(href=FEED_URL, rel="self")
-    fg.link(href=PUBLIC_BASE_URL, rel="alternate")
+    fg.link(href=f"{PUBLIC_BASE_URL}/index.html", rel="alternate")
     fg.description(html_to_plain(SHOW_DESCRIPTION_HTML))
     fg.language(SHOW_LANGUAGE)
     fg.generator("kellblog-audio")
