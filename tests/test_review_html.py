@@ -98,11 +98,11 @@ def test_write_review_page_includes_share_controls():
         write_review_page(cat, out_path=out, qa_dir=tmp_path / "qa", updated_at="2026-06-08 10:00")
 
         html = out.read_text(encoding="utf-8")
-        assert 'data-copy-page-url="https://kellblog.thisisgrant.com/index.html"' in html
+        assert 'data-copy-page-url="https://kellblog.thisisgrant.com/"' in html
         assert "subject=Kellblog%20Audio" in html
         assert "body=Listen%20to%20the%20Kellblog%20audio%20archive%20here" in html
         assert (
-            'data-copy-page-url="https://kellblog.thisisgrant.com/index.html#episode-share-me"'
+            'data-copy-page-url="https://kellblog.thisisgrant.com/#episode-share-me"'
             in html
         )
         assert 'data-share-label="Share Me"' in html
