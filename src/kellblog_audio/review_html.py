@@ -446,7 +446,7 @@ def _anchor(slug: str) -> str:
 
 
 def _public_page_url() -> str:
-    return f"{PUBLIC_BASE_URL.rstrip('/')}/index.html"
+    return f"{PUBLIC_BASE_URL.rstrip('/')}/"
 
 
 def _mailto_page_href(page_url: str) -> str:
