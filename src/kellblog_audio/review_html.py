@@ -11,7 +11,8 @@ from typing import Any
 from urllib.parse import quote
 
 from kellblog_audio.catalog import Catalog, PostRow
-from kellblog_audio.config import OUTPUT_DIR, PUBLIC_BASE_URL, QA_TRANSCRIPTS_DIR
+from kellblog_audio.config import FEED_URL, OUTPUT_DIR, PUBLIC_BASE_URL, QA_TRANSCRIPTS_DIR
+from kellblog_audio.listen_platforms import RSS_ICON, ListenPlatform, listen_platforms
 from kellblog_audio.qa import read_qa_report, report_accepted
 from kellblog_audio.text_clean import excerpt_from_body, html_to_plain
 
@@ -113,18 +114,22 @@ def _render_page(*, items: list[ReviewItem], updated_at: str) -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kellblog Audio</title>
+  <link rel="alternate" type="application/rss+xml" title="Kellblog Audio" href="{html.escape(FEED_URL)}">
   <style>{_css()}</style>
 </head>
 <body>
   <header>
     <div class="wrap">
-      <h1>Kellblog Audio</h1>
-      <p class="lede">AI-narrated audio editions of Dave Kellogg’s <a href="https://www.kellblog.com">Kellblog</a>. Produced by <a href="https://thisisgrant.com">Grant Duncan</a>. Subscribe via <a href="{html.escape(PUBLIC_BASE_URL)}/feed.xml">RSS</a>.</p>
-      <div class="share-actions" aria-label="Share this page">
-        <button type="button" class="share-button" data-copy-page-url="{html.escape(page_url)}">Copy page link</button>
-        <a class="share-link" href="{html.escape(mailto_href)}">Email page link</a>
-        <span class="updated">Updated {html.escape(updated_at)}</span>
+      <div class="title-row">
+        <h1>Kellblog Audio</h1>
+        <div class="share-actions" aria-label="Share this page">
+          <button type="button" class="share-quiet" data-copy-page-url="{html.escape(page_url)}">{_svg(_LINK_ICON, stroke=True)}<span class="label">Copy link</span></button>
+          <a class="share-quiet" href="{html.escape(mailto_href)}">{_svg(_MAIL_ICON, stroke=True)}<span class="label">Email</span></a>
+        </div>
       </div>
+      <p class="lede">AI-narrated audio editions of Dave Kellogg’s <a href="https://www.kellblog.com">Kellblog</a>. Produced by <a href="https://thisisgrant.com">Grant Duncan</a>.</p>
+{_render_subscribe()}
+      <p class="updated">Updated {html.escape(updated_at)}</p>
     </div>
   </header>
   <main class="wrap">
@@ -203,12 +208,53 @@ def _render_article(item: ReviewItem, *, page_url: str) -> str:
           </div>
           <div class="links">
             <a href="{html.escape(post.url)}">Read original</a>
-            <a href="{html.escape(audio_url)}" download>Download MP3</a>
             <button type="button" data-copy-page-url="{html.escape(page_url)}#{anchor}" data-share-label="{title}">Copy link</button>
           </div>
         </div>{summary_html}
         <audio controls preload="none" src="{html.escape(audio_url)}"></audio>
       </article>"""
+
+
+_LINK_ICON = '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>'
+_MAIL_ICON = '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>'
+
+
+def _svg(inner: str, *, stroke: bool = False) -> str:
+    """Inline 24x24 icon, hidden from screen readers (the button text labels it)."""
+    paint = (
+        ' fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"'
+        if stroke
+        else ""
+    )
+    return f'<svg class="icon" viewBox="0 0 24 24" width="18" height="18"{paint} aria-hidden="true" focusable="false">{inner}</svg>'
+
+
+def _render_platform(p: ListenPlatform) -> str:
+    icon = _svg(p.icon_svg)
+    name = html.escape(p.name)
+    if p.url:
+        return (
+            f'          <a class="listen-btn" href="{html.escape(p.url)}" '
+            f'target="_blank" rel="noopener" data-platform="{p.key}">{icon}<span>{name}</span></a>'
+        )
+    return (
+        f'          <span class="listen-btn is-pending" aria-disabled="true" '
+        f'title="{name} listing coming soon" data-platform="{p.key}">{icon}<span>{name}</span>'
+        f'<span class="soon">Soon</span></span>'
+    )
+
+
+def _render_subscribe(platforms: list[ListenPlatform] | None = None) -> str:
+    buttons = "\n".join(_render_platform(p) for p in (platforms or listen_platforms()))
+    rss_icon = _svg(f'<path fill="#EE802F" d="{RSS_ICON}"/>')
+    return f'''      <section class="subscribe" aria-labelledby="subscribe-title">
+        <h2 id="subscribe-title">Subscribe free in your podcast app</h2>
+        <div class="listen-buttons">
+{buttons}
+          <button type="button" class="listen-btn" data-copy-page-url="{html.escape(FEED_URL)}">{rss_icon}<span class="label">Copy RSS feed</span></button>
+        </div>
+        <p class="subscribe-hint">Using another app? Copy the RSS feed and paste it into the app’s “Add podcast by URL” option.</p>
+      </section>'''
 
 
 def _css() -> str:
@@ -257,13 +303,88 @@ def _css() -> str:
       color: var(--muted);
       font-size: 1rem;
     }
+    .title-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
     .share-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 4px;
       align-items: center;
     }
-    .share-link, .share-button, .links button {
+    .share-quiet {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 0;
+      border-radius: 6px;
+      padding: 6px 8px;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .share-quiet:hover { background: var(--bg); color: var(--ink); text-decoration: none; }
+    .share-quiet .icon { width: 16px; height: 16px; }
+    .subscribe {
+      margin: 4px 0 14px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--bg);
+    }
+    .subscribe h2 { margin: 0 0 12px; font-size: 1rem; }
+    .listen-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .listen-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 14px;
+      background: var(--surface);
+      color: var(--ink);
+      font: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .listen-btn .icon { width: 22px; height: 22px; flex: none; }
+    a.listen-btn:hover, button.listen-btn:hover {
+      border-color: #9fcdd2;
+      background: var(--accent-soft);
+      text-decoration: none;
+    }
+    .listen-btn.is-pending { cursor: default; color: var(--muted); }
+    .listen-btn.is-pending .icon { opacity: 0.55; }
+    .listen-btn .soon {
+      border-radius: 999px;
+      padding: 1px 7px;
+      background: var(--bg);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .subscribe-hint {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .links button {
       border: 1px solid var(--line);
       border-radius: 6px;
       padding: 6px 10px;
@@ -274,14 +395,15 @@ def _css() -> str:
       cursor: pointer;
       white-space: nowrap;
     }
-    .share-link:hover, .share-button:hover, .links button:hover {
+    .links button:hover {
       background: var(--accent-soft);
       border-color: #9fcdd2;
       text-decoration: none;
     }
     .updated {
+      margin: 0;
       color: var(--muted);
-      font-size: 0.875rem;
+      font-size: 0.8rem;
     }
     main { padding: 24px 0 40px; }
     a {
@@ -389,7 +511,7 @@ def _css() -> str:
     .no-results { color: var(--muted); }
     @media (max-width: 760px) {
       .episode-head { grid-template-columns: 1fr; }
-      .links, .share-actions { justify-content: flex-start; }
+      .links { justify-content: flex-start; }
     }
     @media (max-width: 460px) {
       .wrap { width: min(100% - 20px, 1120px); }
@@ -397,6 +519,8 @@ def _css() -> str:
       h1 { font-size: 1.55rem; }
       #episode-search { max-width: none; }
       article { padding: 14px; }
+      .listen-btn { padding: 8px 10px; font-size: 0.875rem; }
+      .subscribe { padding: 14px 12px; }
     }
     """
 
@@ -473,9 +597,10 @@ def _share_script() -> str:
         document.body.removeChild(input);
       }
       function flash(button) {
-        var original = button.textContent;
-        button.textContent = "Copied";
-        window.setTimeout(function () { button.textContent = original; }, 1400);
+        var target = button.querySelector(".label") || button;
+        var original = target.textContent;
+        target.textContent = "Copied";
+        window.setTimeout(function () { target.textContent = original; }, 1400);
       }
       document.querySelectorAll("[data-copy-page-url]").forEach(function (button) {
         button.addEventListener("click", function () {

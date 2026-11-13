@@ -80,7 +80,7 @@ def test_write_review_page_is_clean_listening_page():
         assert "Whisper QA" not in html
         assert "Manual audit" not in html
         assert f"{PUBLIC_BASE_URL}/feed.xml" in html or "/feed.xml" in html
-        assert "Subscribe via" in html
+        assert "Subscribe free in your podcast app" in html
         assert "Feedback" not in html
         assert "repetition 16" not in html
 
