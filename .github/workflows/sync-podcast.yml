@@ -37,6 +37,8 @@ jobs:
 
       - name: Ingest new posts
         run: uv run kellblog-audio ingest
+        env:
+          SLACK_WEBHOOK_URL_KELLBLOG: ${{ secrets.SLACK_WEBHOOK_URL_KELLBLOG }}
 
       - name: Synthesize pending
         run: uv run kellblog-audio synthesize --pending
@@ -54,6 +56,12 @@ jobs:
           R2_BUCKET: ${{ secrets.R2_BUCKET }}
           KELLBLOG_AUDIO_PUBLIC_URL: ${{ vars.KELLBLOG_AUDIO_PUBLIC_URL }}
 
+      - name: Check audio sanity (alerts Slack on findings)
+        run: uv run kellblog-audio check-audio
+        continue-on-error: true
+        env:
+          SLACK_WEBHOOK_URL_KELLBLOG: ${{ secrets.SLACK_WEBHOOK_URL_KELLBLOG }}
+
       - name: Backup catalog
         run: uv run kellblog-audio backup-catalog
         env:
@@ -69,3 +77,14 @@ jobs:
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           R2_BUCKET: ${{ secrets.R2_BUCKET }}
+
+      - name: Alert Slack on failure
+        if: failure()
+        env:
+          SLACK_WEBHOOK_URL_KELLBLOG: ${{ secrets.SLACK_WEBHOOK_URL_KELLBLOG }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          [ -n "$SLACK_WEBHOOK_URL_KELLBLOG" ] || exit 0
+          curl -sS -X POST -H 'Content-type: application/json' \
+            --data "{\"text\": \":rotating_light: Kellblog Audio nightly sync failed: $RUN_URL\"}" \
+            "$SLACK_WEBHOOK_URL_KELLBLOG" || true
