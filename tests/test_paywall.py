@@ -306,3 +306,39 @@ def test_waived_failing_qa_report_stays_in_the_feed(tmp_path):
     saved = json.loads((qa_dir / "shaky.qa.json").read_text())
     assert saved["passed"] is False and saved["reason"] == "coverage"
     assert not waive_qa_report("missing", "x", output_dir=qa_dir)
+
+
+# --- Slack alerts on state changes --------------------------------------------------
+
+
+def _capture_slack(monkeypatch):
+    sent: list[str] = []
+    monkeypatch.setattr(ingest.alerts, "send_slack", lambda msg: sent.append(msg) or True)
+    return sent
+
+
+def test_slack_alert_when_a_published_episode_goes_paywalled(tmp_path, monkeypatch):
+    sent = _capture_slack(monkeypatch)
+    cat = new_catalog(tmp_path)
+    cat.update_post(
+        SLUG,
+        title="Test Post",
+        published_at="2026-08-04T12:00:00.000Z",
+        year=2026,
+        content_hash="old",
+        ingest_status="done",
+        audio_status="done",
+    )
+    cat.update_post(SLUG, ingest_status="pending")
+    run_ingest(cat, PAID_HTML)
+    assert len(sent) == 1 and "paywall" in sent[0] and SLUG in sent[0]
+
+
+def test_slack_alert_when_a_paywalled_post_goes_free(tmp_path, monkeypatch):
+    sent = _capture_slack(monkeypatch)
+    cat = new_catalog(tmp_path)
+    run_ingest(cat, PAID_HTML)
+    assert sent == []  # a brand-new paywalled post is not news
+    cat.upsert_sitemap_entry(SLUG, URL, "2026-09-16T14:34:11.000Z")
+    run_ingest(cat, FREE_HTML)
+    assert len(sent) == 1 and "now free" in sent[0]

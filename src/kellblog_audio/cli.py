@@ -386,6 +386,34 @@ def qa_audio(
     )
 
 
+@app.command("check-audio")
+def check_audio(
+    alert: bool = typer.Option(True, "--alert/--no-alert", help="Post findings to Slack"),
+) -> None:
+    """Flag finished episodes that look truncated, preview-only, or paywalled."""
+    from kellblog_audio import alerts
+
+    findings = alerts.audio_findings(_catalog())
+    if not findings:
+        console.print("[green]All finished episodes look sane.[/green]")
+        return
+    message = alerts.format_findings(findings)
+    console.print(message)
+    if alert and not alerts.send_slack(message):
+        console.print("[yellow]Slack alert not sent (no webhook, or Slack rejected it).[/yellow]")
+    raise typer.Exit(code=1)
+
+
+@app.command("slack-test")
+def slack_test() -> None:
+    """Send a test message to confirm the Slack webhook works."""
+    from kellblog_audio import alerts
+
+    ok = alerts.send_slack(":white_check_mark: Kellblog Audio alerts are connected.")
+    console.print("sent" if ok else "[red]not sent: set SLACK_WEBHOOK_URL_KELLBLOG[/red]")
+    raise typer.Exit(code=0 if ok else 1)
+
+
 @app.command("qa-waive")
 def qa_waive(
     slug: list[str] = typer.Option(..., "--slug", "-s", help="Episode slug (repeatable)"),

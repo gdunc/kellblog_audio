@@ -108,6 +108,19 @@ Submit `https://kellblog.thisisgrant.com/feed.xml` to:
 
 Spotify and Apple poll the feed; new Kellblog posts are picked up automatically by the nightly GitHub Action.
 
+### Slack alerts
+
+Alerts post to a Slack incoming webhook stored as the GitHub secret `SLACK_WEBHOOK_URL_KELLBLOG` (locally: the same name in `.env`). With no webhook set, alerts are silently skipped.
+
+| Alert | Trigger |
+|-------|---------|
+| Nightly sync failed | any step of `sync-podcast.yml` fails |
+| Episodes need a look | `kellblog-audio check-audio`: paywalled post with audio, subscribe-wall text in narrated copy, or 300+ word post whose audio runs outside 130–260 words/min (truncated) |
+| Post went paywalled / went free | ingest sees Dave flip a post; paywalled MP3s are also deleted from R2 on publish |
+| Post shrank sharply | re-ingest loses over half the text of a 150+ word post (undetected paywall or markup change) |
+
+Test the connection with `uv run kellblog-audio slack-test`.
+
 ### GitHub Actions secrets / vars
 
 These power both `.github/workflows/sync-podcast.yml` and `.github/workflows/backfill-distributed.yml`.
@@ -118,6 +131,7 @@ These power both `.github/workflows/sync-podcast.yml` and `.github/workflows/bac
 | `R2_ACCESS_KEY_ID` | R2 API key |
 | `R2_SECRET_ACCESS_KEY` | R2 API secret |
 | `R2_BUCKET` | Bucket name |
+| `SLACK_WEBHOOK_URL_KELLBLOG` | Slack alerts (optional) |
 
 Repository variable: `KELLBLOG_AUDIO_PUBLIC_URL` (optional).
 

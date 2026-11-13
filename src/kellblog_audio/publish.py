@@ -107,6 +107,21 @@ def _upload_done_audio(catalog: Catalog, client, *, settings) -> list[str]:
     return published_slugs
 
 
+def _remove_paywalled_audio(catalog: Catalog, client) -> list[str]:
+    """Delete public MP3s for paywalled posts.
+
+    A post that goes behind the paywall leaves the feed, but its MP3 would otherwise stay
+    reachable at a guessable URL. Deleting a missing key is a no-op, so this is safe to run
+    on every publish.
+    """
+    removed: list[str] = []
+    for post in catalog.list_by_filter(audio_status="paywalled"):
+        key = f"audio/{post.year or 1970}/{post.slug}.mp3"
+        client.delete_object(Bucket=R2_BUCKET, Key=key)
+        removed.append(post.slug)
+    return removed
+
+
 def _upload_site_assets(catalog: Catalog, client, *, require_qa: bool) -> Path:
     artwork = Path(__file__).parent / "assets" / "show-artwork.png"
     if artwork.exists():
@@ -160,6 +175,7 @@ def publish_to_r2(catalog: Catalog, *, upload_audio: bool = True) -> str:
     else:
         published_slugs = _feed_slugs(done_posts)
 
+    _remove_paywalled_audio(catalog, client)
     _upload_site_assets(catalog, client, require_qa=True)
 
     # Atomic feed swap (public URLs for podcast clients)

@@ -11,6 +11,7 @@ from typing import Callable
 
 import httpx
 
+from kellblog_audio import alerts
 from kellblog_audio.catalog import Catalog
 from kellblog_audio.config import (
     BLOG_BASE,
@@ -211,10 +212,33 @@ def ingest_posts(
                 skip_reason="configured skip slug (external audio)" if is_skip else None,
                 **reset_audio,
             )
-            if now_paywalled and not was_paywalled and progress:
-                progress(f"paywalled {post.slug}: held out of the feed")
-            if was_paywalled and not now_paywalled and progress:
-                progress(f"now free {post.slug}: queued for narration")
+            if now_paywalled and not was_paywalled:
+                if progress:
+                    progress(f"paywalled {post.slug}: held out of the feed")
+                if existing and existing.audio_status == "done":
+                    alerts.send_slack(
+                        f":lock: Kellblog Audio: `{post.slug}` went behind the paywall. "
+                        "Its episode leaves the feed and the MP3 is removed on the next publish."
+                    )
+            if was_paywalled and not now_paywalled:
+                if progress:
+                    progress(f"now free {post.slug}: queued for narration")
+                alerts.send_slack(
+                    f":unlock: Kellblog Audio: `{post.slug}` is now free. "
+                    "Full text is queued for narration."
+                )
+            new_words = len(tts_text.split())
+            if (
+                not is_skip
+                and not now_paywalled
+                and existing
+                and alerts.shrank_sharply(existing.word_count, new_words)
+            ):
+                alerts.send_slack(
+                    f":warning: Kellblog Audio: `{post.slug}` shrank from "
+                    f"{existing.word_count} to {new_words} words on re-ingest. "
+                    "Check for an undetected paywall or a markup change."
+                )
             ok += 1
             if progress:
                 progress(f"ingested {post.slug}")
