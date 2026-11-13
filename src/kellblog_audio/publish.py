@@ -15,6 +15,7 @@ from botocore.config import Config
 
 from kellblog_audio.catalog import Catalog
 from kellblog_audio.config import (
+    ARTWORK_FILENAME,
     FEEDS_DIR,
     OUTPUT_DIR,
     PUBLIC_BASE_URL,
@@ -123,9 +124,9 @@ def _remove_paywalled_audio(catalog: Catalog, client) -> list[str]:
 
 
 def _upload_site_assets(catalog: Catalog, client, *, require_qa: bool) -> Path:
-    artwork = Path(__file__).parent / "assets" / "show-artwork.png"
+    artwork = Path(__file__).parent / "assets" / ARTWORK_FILENAME
     if artwork.exists():
-        upload_file(client, artwork, "show-artwork.png", "image/png")
+        upload_file(client, artwork, ARTWORK_FILENAME, "image/png")
 
     review_page = write_review_page(catalog, require_qa=require_qa)
     upload_file(client, review_page, "index.html", "text/html; charset=utf-8")

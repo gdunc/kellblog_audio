@@ -36,12 +36,14 @@ def test_build_feed_contains_itunes_season():
             audio_path="output/audio/2024/test-post.mp3",
         )
         xml = build_feed(cat, local_audio=True)
-        assert "Kellblog Audio" in xml
+        assert "<title>Kellblog Audio (Dave Kellogg)</title>" in xml
+        assert xml.count("AI-narrated") == 2  # once each in description and itunes:summary
+        assert 'itunes:image href="https://kellblog.thisisgrant.com/show-artwork-2026-11.png"' in xml
         assert "itunes:season" in xml or "season" in xml.lower()
         assert "Test Post" in xml
         assert "thisisgrant.com" in xml
         assert episode_guid("test-post") in xml
-        assert "<itunes:author>Kellblog Audio</itunes:author>" in xml
+        assert "<itunes:author>Dave Kellogg</itunes:author>" in xml
         assert "<itunes:name>Grant Duncan</itunes:name>" in xml
 
 

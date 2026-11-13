@@ -79,13 +79,15 @@ R2_ENDPOINT = os.environ.get(
     f"https://{R2_ACCOUNT_ID}.r2.cloudflarestorage.com" if R2_ACCOUNT_ID else "",
 )
 
-SHOW_TITLE = "Kellblog Audio"
+SHOW_TITLE = "Kellblog Audio (Dave Kellogg)"
 SHOW_SUBTITLE = "Dave Kellogg on Enterprise Software Startups (AI-narrated)"
-SHOW_AUTHOR = "Kellblog Audio"
+SHOW_AUTHOR = "Dave Kellogg"
 SHOW_OWNER_NAME = "Grant Duncan"
 SHOW_LANGUAGE = "en-us"
 SHOW_CATEGORY = "Business"
 SHOW_CATEGORY_SUB = "Management"
+# Bump the filename when the art changes: Apple/Spotify cache artwork by URL.
+ARTWORK_FILENAME = "show-artwork-2026-11.png"
 SHOW_EMAIL = os.environ.get("KELLBLOG_PODCAST_EMAIL", "grant@thisisgrant.com")
 
 MAX_CHUNK_CHARS = int(os.environ.get("KELLBLOG_MAX_CHUNK_CHARS", "1500"))
