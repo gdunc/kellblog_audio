@@ -13,6 +13,7 @@ from kellblog_audio.catalog import Catalog, PostRow
 from kellblog_audio.config import (
     FEED_URL,
     PUBLIC_BASE_URL,
+    ARTWORK_FILENAME,
     SHOW_AUTHOR,
     SHOW_CATEGORY,
     SHOW_CATEGORY_SUB,
@@ -94,9 +95,9 @@ def build_feed(
     fg.podcast.itunes_type("episodic")
 
     settings = get_settings()
-    artwork = settings.root / "src" / "kellblog_audio" / "assets" / "show-artwork.png"
+    artwork = settings.root / "src" / "kellblog_audio" / "assets" / ARTWORK_FILENAME
     if artwork.exists():
-        fg.podcast.itunes_image(f"{PUBLIC_BASE_URL}/show-artwork.png")
+        fg.podcast.itunes_image(f"{PUBLIC_BASE_URL}/{ARTWORK_FILENAME}")
 
     posts = catalog.list_by_filter()
     episodes = [

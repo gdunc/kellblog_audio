@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from kellblog_audio.config import SHOW_SUBTITLE
-
 # Spoken outro (audio)
 SPOKEN_OUTRO = (
     "This audio version was created by Grant Duncan and AI, with permission from Dave."
@@ -23,8 +21,9 @@ ATTRIBUTION_PLAIN = (
     "with permission from Dave. Grant can be found at thisisgrant.com."
 )
 
-SHOW_DESCRIPTION_HTML = f"""<p>{SHOW_SUBTITLE}</p>
-<p>AI-narrated audio editions of posts from <a href="https://www.kellblog.com">Kellblog</a>.</p>
+SHOW_DESCRIPTION_HTML = f"""<p>Dave Kellogg on enterprise software startups: AI-narrated audio editions \
+of posts from <a href="https://www.kellblog.com">Kellblog</a>, his long-running blog on SaaS strategy, \
+go-to-market, metrics, and leadership.</p>
 {ATTRIBUTION_HTML}"""
 
 
