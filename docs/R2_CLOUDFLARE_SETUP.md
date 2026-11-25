@@ -2,7 +2,7 @@
 
 Podcast feed URL: `https://kellblog.thisisgrant.com/feed.xml`
 
-Account detected via Wrangler (gdunc718@gmail.com):
+Account detected via Wrangler (grant@thisisgrant.com):
 
 - **Account name:** This Is Grant Website
 - **Account ID:** `<your-cloudflare-account-id>`

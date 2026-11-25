@@ -10,3 +10,7 @@ output/
 .env
 .DS_Store
 .wrangler/
+
+# run output (kept local, not published)
+artifacts/
+logs/
